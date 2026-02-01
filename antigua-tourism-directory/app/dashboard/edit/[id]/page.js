@@ -58,21 +58,31 @@ export default function EditListingPage({ params }) {
   }, [user])
 
   const loadData = async () => {
-    const resolvedParams = await params
-    
-    // Load listing
-    const { data: listingData } = await supabase
-      .from('listings')
-      .select('*')
-      .eq('id', resolvedParams.id)
-      .single()
+  const resolvedParams = await params
+  
+  // Load listing
+  const { data: listingData } = await supabase
+    .from('listings')
+    .select('*')
+    .eq('id', resolvedParams.id)
+    .single()
 
-    if (!listingData) {
-      router.push('/dashboard')
-      return
-    }
+  if (!listingData) {
+    router.push('/dashboard')
+    return
+  }
 
-    // Check if user owns this listing
+  // Check if user is admin
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  const isAdmin = profile?.role === 'admin'
+
+  // Check if user owns this listing (if not admin)
+  if (!isAdmin) {
     const { data: claim } = await supabase
       .from('claimed_listings')
       .select('*')
@@ -84,35 +94,36 @@ export default function EditListingPage({ params }) {
       router.push('/dashboard')
       return
     }
-
-    setListing(listingData)
-    setFormData({
-      business_name: listingData.business_name || '',
-      category_id: listingData.category_id || '',
-      parish_id: listingData.parish_id || '',
-      short_description: listingData.short_description || '',
-      description: listingData.description || '',
-      phone: listingData.phone || '',
-      email: listingData.email || '',
-      website: listingData.website || '',
-      address: listingData.address || '',
-      latitude: listingData.latitude || '',
-      longitude: listingData.longitude || '',
-      facebook_url: listingData.facebook_url || '',
-      instagram_url: listingData.instagram_url || '',
-      google_business_url: listingData.google_business_url || '',
-      tripadvisor_url: listingData.tripadvisor_url || '',
-      twitter_url: listingData.twitter_url || ''
-    })
-
-    // Load categories and parishes
-    const { data: cats } = await supabase.from('categories').select('*').order('name')
-    const { data: pars } = await supabase.from('parishes').select('*').order('name')
-    
-    setCategories(cats || [])
-    setParishes(pars || [])
-    setLoadingData(false)
   }
+
+  setListing(listingData)
+  setFormData({
+    business_name: listingData.business_name || '',
+    category_id: listingData.category_id || '',
+    parish_id: listingData.parish_id || '',
+    short_description: listingData.short_description || '',
+    description: listingData.description || '',
+    phone: listingData.phone || '',
+    email: listingData.email || '',
+    website: listingData.website || '',
+    address: listingData.address || '',
+    latitude: listingData.latitude || '',
+    longitude: listingData.longitude || '',
+    facebook_url: listingData.facebook_url || '',
+    instagram_url: listingData.instagram_url || '',
+    google_business_url: listingData.google_business_url || '',
+    tripadvisor_url: listingData.tripadvisor_url || '',
+    twitter_url: listingData.twitter_url || ''
+  })
+
+  // Load categories and parishes
+  const { data: cats } = await supabase.from('categories').select('*').order('name')
+  const { data: pars } = await supabase.from('parishes').select('*').order('name')
+  
+  setCategories(cats || [])
+  setParishes(pars || [])
+  setLoadingData(false)
+}
 
   const showModal = (title, message, type = 'success', onCloseCallback) => {
     setModal({
