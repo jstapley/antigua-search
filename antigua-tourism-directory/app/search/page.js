@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const query = searchParams.get('q') || ''
@@ -136,8 +136,8 @@ export default function SearchPage() {
                 className="rounded-full"
               />
               <div>
-                <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">TOURISM DIRECTORY</div>
+                <div className="text-xl font-bold text-gray-900">ANTIGUA</div>
+                <div className="text-sm text-indigo-600 font-semibold">SEARCH.COM</div>
               </div>
             </Link>
             <nav className="flex gap-6 items-center">
@@ -372,10 +372,25 @@ export default function SearchPage() {
       <footer className="bg-gray-900 text-white py-12 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-400">
-            © 2026 Antigua Tourism Directory. All rights reserved.
+            © 2026 AntiguaSearch.com. All rights reserved.
           </p>
         </div>
       </footer>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">⏳</div>
+          <p className="text-gray-600">Loading search...</p>
+        </div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   )
 }
