@@ -320,7 +320,7 @@ export default async function ParishPage({ params }) {
                   className="rounded-full"
                 />
                 <div>
-                  <div className="font-bold text-lg">Antigua Tourism</div>
+                  <div className="font-bold text-lg">Antigua Search</div>
                   <div className="text-sm text-gray-400">Directory</div>
                 </div>
               </div>
