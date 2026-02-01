@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/lib/AuthContext'
 import { supabase } from '@/lib/supabase'
 import Modal from '@/components/Modal'
+import { Loader } from '@googlemaps/js-api-loader'
 
 export default function EditListingPage({ params }) {
   const { user, loading } = useAuth()
@@ -16,6 +17,7 @@ export default function EditListingPage({ params }) {
   const [parishes, setParishes] = useState([])
   const [loadingData, setLoadingData] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   
   const [formData, setFormData] = useState({
     business_name: '',
@@ -33,8 +35,22 @@ export default function EditListingPage({ params }) {
     instagram_url: '',
     google_business_url: '',
     tripadvisor_url: '',
-    twitter_url: ''
+    twitter_url: '',
+    image_url: ''
   })
+
+  // Map state
+  const [mapLoaded, setMapLoaded] = useState(false)
+  const [showAdvancedLocation, setShowAdvancedLocation] = useState(false)
+  const mapRef = useRef(null)
+  const mapInstanceRef = useRef(null)
+  const markerRef = useRef(null)
+  const autocompleteRef = useRef(null)
+  const searchInputRef = useRef(null)
+
+  // Image upload state
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -58,72 +74,203 @@ export default function EditListingPage({ params }) {
   }, [user])
 
   const loadData = async () => {
-  const resolvedParams = await params
-  
-  // Load listing
-  const { data: listingData } = await supabase
-    .from('listings')
-    .select('*')
-    .eq('id', resolvedParams.id)
-    .single()
-
-  if (!listingData) {
-    router.push('/dashboard')
-    return
-  }
-
-  // Check if user is admin
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  const isAdmin = profile?.role === 'admin'
-
-  // Check if user owns this listing (if not admin)
-  if (!isAdmin) {
-    const { data: claim } = await supabase
-      .from('claimed_listings')
+    const resolvedParams = await params
+    
+    // Load listing
+    const { data: listingData } = await supabase
+      .from('listings')
       .select('*')
-      .eq('listing_id', resolvedParams.id)
-      .eq('user_id', user.id)
+      .eq('id', resolvedParams.id)
       .single()
 
-    if (!claim) {
+    if (!listingData) {
       router.push('/dashboard')
       return
     }
+
+    // Check if user is admin
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const isAdmin = profile?.role === 'admin'
+
+    // Check if user owns this listing (if not admin)
+    if (!isAdmin) {
+      const { data: claim } = await supabase
+        .from('claimed_listings')
+        .select('*')
+        .eq('listing_id', resolvedParams.id)
+        .eq('user_id', user.id)
+        .single()
+
+      if (!claim) {
+        router.push('/dashboard')
+        return
+      }
+    }
+
+    setListing(listingData)
+    setFormData({
+      business_name: listingData.business_name || '',
+      category_id: listingData.category_id || '',
+      parish_id: listingData.parish_id || '',
+      short_description: listingData.short_description || '',
+      description: listingData.description || '',
+      phone: listingData.phone || '',
+      email: listingData.email || '',
+      website: listingData.website || '',
+      address: listingData.address || '',
+      latitude: listingData.latitude || '',
+      longitude: listingData.longitude || '',
+      facebook_url: listingData.facebook_url || '',
+      instagram_url: listingData.instagram_url || '',
+      google_business_url: listingData.google_business_url || '',
+      tripadvisor_url: listingData.tripadvisor_url || '',
+      twitter_url: listingData.twitter_url || '',
+      image_url: listingData.image_url || ''
+    })
+
+    // Load categories and parishes
+    const { data: cats } = await supabase.from('categories').select('*').order('name')
+    const { data: pars } = await supabase.from('parishes').select('*').order('name')
+    
+    setCategories(cats || [])
+    setParishes(pars || [])
+    setLoadingData(false)
+
+    // Initialize map after data is loaded
+    if (listingData.latitude && listingData.longitude) {
+      setTimeout(() => {
+        initMap(parseFloat(listingData.latitude), parseFloat(listingData.longitude))
+      }, 100)
+    } else {
+      initMap()
+    }
   }
 
-  setListing(listingData)
-  setFormData({
-    business_name: listingData.business_name || '',
-    category_id: listingData.category_id || '',
-    parish_id: listingData.parish_id || '',
-    short_description: listingData.short_description || '',
-    description: listingData.description || '',
-    phone: listingData.phone || '',
-    email: listingData.email || '',
-    website: listingData.website || '',
-    address: listingData.address || '',
-    latitude: listingData.latitude || '',
-    longitude: listingData.longitude || '',
-    facebook_url: listingData.facebook_url || '',
-    instagram_url: listingData.instagram_url || '',
-    google_business_url: listingData.google_business_url || '',
-    tripadvisor_url: listingData.tripadvisor_url || '',
-    twitter_url: listingData.twitter_url || ''
-  })
+  // Initialize Google Maps (same as add-listing)
+  const initMap = async (lat, lng) => {
+    try {
+      const loader = new Loader({
+        apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        version: 'weekly',
+        libraries: ['places', 'geocoding']
+      })
 
-  // Load categories and parishes
-  const { data: cats } = await supabase.from('categories').select('*').order('name')
-  const { data: pars } = await supabase.from('parishes').select('*').order('name')
-  
-  setCategories(cats || [])
-  setParishes(pars || [])
-  setLoadingData(false)
-}
+      const google = await loader.load()
+
+      // Center on listing location or Antigua
+      const center = lat && lng 
+        ? { lat, lng }
+        : { lat: 17.0608, lng: -61.7964 }
+
+      const map = new google.maps.Map(mapRef.current, {
+        center: center,
+        zoom: lat && lng ? 15 : 11,
+        mapTypeControl: true,
+        streetViewControl: false,
+        fullscreenControl: false,
+        styles: [
+          {
+            featureType: 'poi',
+            elementType: 'labels',
+            stylers: [{ visibility: 'on' }]
+          }
+        ]
+      })
+
+      mapInstanceRef.current = map
+
+      // Create draggable marker
+      const marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        title: 'Drag me to your business location'
+      })
+
+      // Set marker position if coordinates exist
+      if (lat && lng) {
+        marker.setPosition({ lat, lng })
+        marker.setVisible(true)
+      }
+
+      markerRef.current = marker
+
+      // Click on map to place marker
+      map.addListener('click', (e) => {
+        placeMarker(e.latLng, google)
+      })
+
+      // Drag marker to update location
+      marker.addListener('dragend', (e) => {
+        updateLocation(e.latLng, google)
+      })
+
+      // Initialize autocomplete for address search
+      if (searchInputRef.current) {
+        const autocomplete = new google.maps.places.Autocomplete(searchInputRef.current, {
+          componentRestrictions: { country: 'ag' },
+          fields: ['geometry', 'formatted_address', 'name']
+        })
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace()
+          
+          if (place.geometry && place.geometry.location) {
+            placeMarker(place.geometry.location, google)
+            map.setCenter(place.geometry.location)
+            map.setZoom(16)
+            
+            const address = place.formatted_address || place.name || ''
+            setFormData(prev => ({ ...prev, address }))
+          }
+        })
+
+        autocompleteRef.current = autocomplete
+      }
+
+      setMapLoaded(true)
+    } catch (err) {
+      console.error('Error loading map:', err)
+    }
+  }
+
+  const placeMarker = (location, google) => {
+    markerRef.current.setPosition(location)
+    markerRef.current.setVisible(true)
+    
+    markerRef.current.setAnimation(google.maps.Animation.BOUNCE)
+    setTimeout(() => markerRef.current.setAnimation(null), 750)
+    
+    updateLocation(location, google)
+  }
+
+  const updateLocation = async (location, google) => {
+    const lat = location.lat()
+    const lng = location.lng()
+
+    setFormData(prev => ({
+      ...prev,
+      latitude: lat.toFixed(6),
+      longitude: lng.toFixed(6)
+    }))
+
+    // Reverse geocode to get address
+    const geocoder = new google.maps.Geocoder()
+    try {
+      const result = await geocoder.geocode({ location })
+      if (result.results && result.results[0]) {
+        const address = result.results[0].formatted_address
+        setFormData(prev => ({ ...prev, address }))
+      }
+    } catch (err) {
+      console.error('Reverse geocoding failed:', err)
+    }
+  }
 
   const showModal = (title, message, type = 'success', onCloseCallback) => {
     setModal({
@@ -146,6 +293,67 @@ export default function EditListingPage({ params }) {
     })
   }
 
+  // Image upload handler
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showModal('Error', 'Please select a valid image file', 'error')
+        return
+      }
+      
+      if (file.size > 5 * 1024 * 1024) {
+        showModal('Error', 'Image size must be less than 5MB', 'error')
+        return
+      }
+
+      setImageFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const removeImage = () => {
+    setImageFile(null)
+    setImagePreview(null)
+  }
+
+  // Upload image to Supabase Storage
+  const uploadImage = async () => {
+    if (!imageFile) return formData.image_url
+
+    setUploadingImage(true)
+    try {
+      const fileExt = imageFile.name.split('.').pop()
+      const fileName = `${listing.id}-${Date.now()}.${fileExt}`
+      const filePath = `listings/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('listing-images')
+        .upload(filePath, imageFile, {
+          cacheControl: '3600',
+          upsert: false
+        })
+
+      if (uploadError) throw uploadError
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('listing-images')
+        .getPublicUrl(filePath)
+
+      setUploadingImage(false)
+      return publicUrl
+    } catch (error) {
+      console.error('Image upload error:', error)
+      setUploadingImage(false)
+      showModal('Error', 'Failed to upload image: ' + error.message, 'error')
+      return formData.image_url
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -156,7 +364,10 @@ export default function EditListingPage({ params }) {
     
     setSaving(true)
 
-    // Use RPC function instead of direct update
+    // Upload image if new one selected
+    const imageUrl = await uploadImage()
+
+    // Use RPC function
     const { error } = await supabase.rpc('update_listing_via_rpc', {
       listing_id: listing.id,
       p_business_name: formData.business_name,
@@ -166,15 +377,16 @@ export default function EditListingPage({ params }) {
       p_description: formData.description,
       p_phone: formData.phone,
       p_email: formData.email,
-      p_website: formData.website || null,
       p_address: formData.address,
+      p_website: formData.website || null,
       p_latitude: formData.latitude ? parseFloat(formData.latitude) : null,
       p_longitude: formData.longitude ? parseFloat(formData.longitude) : null,
       p_facebook_url: formData.facebook_url || null,
       p_instagram_url: formData.instagram_url || null,
       p_google_business_url: formData.google_business_url || null,
       p_tripadvisor_url: formData.tripadvisor_url || null,
-      p_twitter_url: formData.twitter_url || null
+      p_twitter_url: formData.twitter_url || null,
+      p_image_url: imageUrl || null
     })
 
     setSaving(false)
@@ -276,13 +488,75 @@ export default function EditListingPage({ params }) {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Edit Listing</h1>
         <p className="text-lg text-gray-600 mb-8">
           Update your business information
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Current Image & Upload */}
+          <div className="border-t-2 border-gray-200 pt-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Business Image</h3>
+            
+            {/* Current Image */}
+            {formData.image_url && !imagePreview && (
+              <div className="mb-4">
+                <p className="text-sm font-bold text-gray-900 mb-2">Current Image:</p>
+                <div className="relative w-full h-64 rounded-lg overflow-hidden border-2 border-gray-200">
+                  <Image
+                    src={formData.image_url}
+                    alt={formData.business_name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Image Upload */}
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-2">
+                {formData.image_url ? 'Replace Image' : 'Upload Image'}
+              </label>
+              <p className="text-sm text-gray-600 mb-3">
+                Upload a high-quality image of your business (max 5MB, JPG/PNG)
+              </p>
+              
+              {imagePreview ? (
+                <div className="relative">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-64 object-cover rounded-lg border-2 border-indigo-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-semibold hover:bg-red-700 transition"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label htmlFor="image-upload" className="cursor-pointer">
+                    <div className="text-4xl mb-2">📸</div>
+                    <p className="text-gray-600 mb-1">Click to upload an image</p>
+                    <p className="text-sm text-gray-500">JPG, PNG up to 5MB</p>
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Business Name */}
           <div>
             <label className="block text-sm font-bold text-gray-900 mb-2">
@@ -298,46 +572,48 @@ export default function EditListingPage({ params }) {
             />
           </div>
 
-          {/* Category */}
-          <div>
-            <label className="block text-sm font-bold text-gray-900 mb-2">
-              Category *
-            </label>
-            <select
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-            >
-              <option value="">Select a category</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.icon_emoji} {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Category */}
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-2">
+                Category *
+              </label>
+              <select
+                name="category_id"
+                value={formData.category_id}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              >
+                <option value="">Select a category</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.icon_emoji} {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Parish */}
-          <div>
-            <label className="block text-sm font-bold text-gray-900 mb-2">
-              Parish *
-            </label>
-            <select
-              name="parish_id"
-              value={formData.parish_id}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-            >
-              <option value="">Select a parish</option>
-              {parishes.map(par => (
-                <option key={par.id} value={par.id}>
-                  {par.name}
-                </option>
-              ))}
-            </select>
+            {/* Parish */}
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-2">
+                Parish *
+              </label>
+              <select
+                name="parish_id"
+                value={formData.parish_id}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              >
+                <option value="">Select a parish</option>
+                {parishes.map(par => (
+                  <option key={par.id} value={par.id}>
+                    {par.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Short Description */}
@@ -368,7 +644,7 @@ export default function EditListingPage({ params }) {
               onChange={handleChange}
               required
               rows="6"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none resize-none"
             />
           </div>
 
@@ -418,8 +694,49 @@ export default function EditListingPage({ params }) {
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
               />
             </div>
+          </div>
 
-            <div className="mt-6">
+          {/* Interactive Map Location Picker */}
+          <div className="border-t-2 border-gray-200 pt-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">📍 Business Location</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Search for your address or click on the map to mark your exact location
+            </p>
+
+            {/* Address Search */}
+            <div className="mb-4">
+              <label className="block text-sm font-bold text-gray-900 mb-2">
+                Search Address
+              </label>
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                placeholder="Start typing your address..."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Type to search, or click on the map below
+              </p>
+            </div>
+
+            {/* Interactive Map */}
+            <div className="mb-4">
+              <div 
+                ref={mapRef}
+                className="w-full h-96 rounded-lg border-2 border-gray-200 bg-gray-100"
+              />
+              {!mapLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">🗺️</div>
+                    <p className="text-gray-600">Loading map...</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Address Display */}
+            <div className="mb-4">
               <label className="block text-sm font-bold text-gray-900 mb-2">
                 Address *
               </label>
@@ -431,6 +748,80 @@ export default function EditListingPage({ params }) {
                 required
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
               />
+            </div>
+
+            {/* Location Confirmation */}
+            {formData.latitude && formData.longitude && (
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+                <div className="flex items-start">
+                  <div className="text-green-400 mr-3">✓</div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-green-800 mb-1">
+                      Location Set Successfully
+                    </p>
+                    <p className="text-sm text-green-700 mb-2">
+                      {formData.address || 'Location marked on map'}
+                    </p>
+                    <a
+                      href={`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-indigo-600 hover:text-indigo-700 font-semibold"
+                    >
+                      Preview on Google Maps →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Advanced: Manual Coordinate Entry */}
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={() => setShowAdvancedLocation(!showAdvancedLocation)}
+                className="text-sm text-gray-600 hover:text-gray-900 font-semibold flex items-center gap-2"
+              >
+                {showAdvancedLocation ? '▼' : '▶'} Advanced: Manual Coordinates
+              </button>
+              
+              {showAdvancedLocation && (
+                <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-3">
+                    For advanced users: manually enter coordinates
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-900 mb-2">
+                        Latitude
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        name="latitude"
+                        value={formData.latitude}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                        placeholder="17.0608"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-900 mb-2">
+                        Longitude
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        name="longitude"
+                        value={formData.longitude}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                        placeholder="-61.7964"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -512,43 +903,6 @@ export default function EditListingPage({ params }) {
             </div>
           </div>
 
-          {/* Location Coordinates */}
-          <div className="border-t-2 border-gray-200 pt-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Map Location (Optional)</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Latitude
-                </label>
-                <input
-                  type="number"
-                  step="any"
-                  name="latitude"
-                  value={formData.latitude}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-                  placeholder="17.0747"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Longitude
-                </label>
-                <input
-                  type="number"
-                  step="any"
-                  name="longitude"
-                  value={formData.longitude}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-                  placeholder="-61.8175"
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Action Buttons */}
           <div className="border-t-2 border-gray-200 pt-6">
             <div className="flex gap-4 mb-4">
@@ -560,10 +914,10 @@ export default function EditListingPage({ params }) {
               </Link>
               <button
                 type="submit"
-                disabled={saving}
+                disabled={saving || uploadingImage}
                 className="flex-1 bg-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? 'Saving...' : uploadingImage ? 'Uploading Image...' : 'Save Changes'}
               </button>
             </div>
 
