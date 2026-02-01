@@ -8,6 +8,7 @@ import Image from 'next/image'
 export default function HomeClient({ stats, parishes, categories, monthlyVisitors }) {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -18,27 +19,39 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Top Stats Banner */}
+      {/* Top Stats Banner - Mobile Responsive */}
       <div className="bg-indigo-600 text-white py-3 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">📊</span>
-            <span className="font-semibold">{monthlyVisitors} people</span>
-            <span>browsing this month</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm">🏪 Own a business?</span>
-            <Link href="/add-listing" className="underline font-semibold hover:text-yellow-300">
-              Get premium visibility
-            </Link>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+            {/* Visitor Count */}
+            <div className="flex items-center gap-2 text-center md:text-left">
+              <span className="text-2xl">📊</span>
+              <div>
+                <span className="font-bold text-lg md:text-xl">{monthlyVisitors} people</span>
+                <span className="text-sm md:text-base ml-1">browsing this month</span>
+              </div>
+            </div>
+            
+            {/* Business Owner CTA */}
+            <div className="flex items-center gap-2 text-center">
+              <span className="text-xl">🏪</span>
+              <span className="text-sm md:text-base">Own a business?</span>
+              <Link
+                href="/add-listing"
+                className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap"
+              >
+                Get premium visibility
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      {/* Header with Mobile Navigation */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
               <Image 
                 src="/antigua-flag.png" 
@@ -48,17 +61,31 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
                 className="rounded-full"
               />
               <div>
-                <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
+                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
-            <nav className="flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">Login</Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex gap-6 items-center">
+              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
+                Home
+              </Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
+                Browse Parishes
+              </Link>
+              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">
+                Categories
+              </Link>
+              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">
+                About Us
+              </Link>
+              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
+                Contact
+              </Link>
+              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">
+                Login
+              </Link>
               <Link 
                 href="/add-listing" 
                 className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
@@ -66,76 +93,150 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
                 + Add Your Business
               </Link>
             </nav>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden text-gray-700 p-2"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
+              <Link
+                href="/"
+                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                href="/parishes"
+                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Browse Parishes
+              </Link>
+              <Link
+                href="/categories"
+                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Categories
+              </Link>
+              <Link
+                href="/about"
+                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About Us
+              </Link>
+              <Link
+                href="/contact"
+                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <Link
+                href="/login"
+                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Login
+              </Link>
+              <Link
+                href="/add-listing"
+                className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                + Add Your Business
+              </Link>
+            </nav>
+          )}
         </div>
       </header>
 
-      {/* Hero Section - Dark Blue Background with Search */}
-      <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-20">
+      {/* Hero Section - Mobile Responsive */}
+      <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-6xl font-extrabold text-white mb-4 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 tracking-tight leading-tight">
             Discover Antigua & Barbuda
           </h1>
-          <h2 className="text-3xl font-bold text-yellow-300 mb-6">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-300 mb-4 md:mb-6">
             Your Complete Island Guide
           </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-4xl mx-auto">
+          <p className="text-base md:text-xl text-white/90 mb-6 md:mb-8 max-w-4xl mx-auto px-4">
             Find the best restaurants, hotels, tours, and activities across the islands. 
             Discover hidden gems and popular destinations all in one place.
           </p>
 
-          {/* Search Bar */}
-          <div className="max-w-3xl mx-auto mb-12">
-            <form onSubmit={handleSearch} className="relative">
-              <div className="relative flex items-center">
-                <span className="absolute left-6 text-gray-500 text-2xl">🔍</span>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for restaurants, hotels, activities, or businesses..."
-                  className="w-full pl-16 pr-40 py-5 rounded-full text-lg text-gray-900 placeholder-gray-400 bg-white focus:outline-none focus:ring-4 focus:ring-yellow-300/50 shadow-2xl"
-                />
+          {/* Search Bar - Mobile Responsive */}
+          <div className="max-w-3xl mx-auto mb-8 md:mb-12 px-4">
+            <form onSubmit={handleSearch}>
+              <div className="flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-3 shadow-2xl">
+                <div className="relative flex-1">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-2xl">🔍</span>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search for restaurants, hotels, activities..."
+                    className="w-full pl-14 pr-4 py-3 md:py-4 text-gray-900 placeholder-gray-400 bg-white rounded-xl focus:outline-none text-base md:text-lg"
+                  />
+                </div>
                 <button
                   type="submit"
-                  className="absolute right-2 bg-yellow-400 text-indigo-900 px-8 py-3 rounded-full font-bold text-lg hover:bg-yellow-300 transition shadow-lg"
+                  className="bg-yellow-400 text-indigo-900 px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-yellow-300 transition shadow-lg whitespace-nowrap"
                 >
                   Search
                 </button>
               </div>
             </form>
-            <p className="text-white text-sm mt-3">
+            <p className="text-white text-xs md:text-sm mt-3">
               Try: "beach resorts", "fine dining", "water sports", or browse by location
             </p>
           </div>
           
-          {/* Stats Boxes */}
-          <div className="flex justify-center gap-8 mb-12">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-12 py-8 border border-white/20">
-              <div className="text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_listings}</div>
-              <div className="text-white font-semibold text-lg">Business Listings</div>
+          {/* Stats Boxes - Mobile Responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12 px-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20">
+              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_listings}</div>
+              <div className="text-white font-semibold text-base md:text-lg">Business Listings</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-12 py-8 border border-white/20">
-              <div className="text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_parishes}</div>
-              <div className="text-white font-semibold text-lg">Parishes Covered</div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20">
+              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_parishes}</div>
+              <div className="text-white font-semibold text-base md:text-lg">Parishes Covered</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-12 py-8 border border-white/20">
-              <div className="text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_categories}</div>
-              <div className="text-white font-semibold text-lg">Categories</div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20 sm:col-span-2 lg:col-span-1">
+              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_categories}</div>
+              <div className="text-white font-semibold text-base md:text-lg">Categories</div>
             </div>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex gap-4 justify-center">
+          {/* CTA Buttons - Mobile Responsive */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
             <Link 
               href="/parishes" 
-              className="bg-yellow-400 text-indigo-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-lg"
+              className="bg-yellow-400 text-indigo-900 px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-yellow-300 transition shadow-lg text-center"
             >
               Browse All Parishes →
             </Link>
             <Link 
               href="/categories" 
-              className="bg-transparent text-white px-10 py-4 rounded-xl font-bold text-lg border-2 border-white/50 hover:bg-white/10 transition"
+              className="bg-transparent text-white px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg border-2 border-white/50 hover:bg-white/10 transition text-center"
             >
               View Categories ↓
             </Link>
@@ -143,28 +244,28 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
         </div>
       </section>
 
-      {/* Parishes Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h3 className="text-4xl font-bold text-gray-900 mb-8">Browse by Parish</h3>
-        <p className="text-gray-600 text-lg mb-8">
+      {/* Parishes Grid - Mobile Responsive */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8">Browse by Parish</h3>
+        <p className="text-gray-600 text-base md:text-lg mb-6 md:mb-8">
           Explore businesses and attractions across Antigua's parishes. Find everything from restaurants 
           to resorts in your preferred location.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {parishes.map((parish) => (
             <Link 
               key={parish.id} 
               href={`/parish/${parish.slug}`}
-              className="border-2 border-gray-200 rounded-xl p-8 hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group bg-white"
+              className="border-2 border-gray-200 rounded-xl p-6 md:p-8 hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group bg-white"
             >
               <div className="flex items-start justify-between mb-4">
-                <h4 className="text-2xl font-bold text-gray-900 group-hover:text-indigo-600 transition">
+                <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-indigo-600 transition">
                   {parish.name}
                 </h4>
-                <span className="text-3xl">📍</span>
+                <span className="text-2xl md:text-3xl">📍</span>
               </div>
-              <p className="text-gray-600 mb-4 leading-relaxed">{parish.description}</p>
-              <div className="text-indigo-600 font-bold text-lg flex items-center gap-2">
+              <p className="text-gray-600 mb-4 leading-relaxed text-sm md:text-base">{parish.description}</p>
+              <div className="text-indigo-600 font-bold text-base md:text-lg flex items-center gap-2">
                 {parish.listing_count} listings
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
@@ -173,43 +274,43 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="bg-gray-50 py-16">
+      {/* Categories - Mobile Responsive */}
+      <section className="bg-gray-50 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-4xl font-bold text-gray-900 mb-8">Popular Categories</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8">Popular Categories</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {categories.map((category) => (
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
-                className="bg-white border-2 border-gray-200 rounded-xl p-8 text-center hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group"
+                className="bg-white border-2 border-gray-200 rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group"
               >
-                <div className="text-5xl mb-4">{category.icon_emoji}</div>
-                <h4 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-indigo-600 transition">
+                <div className="text-4xl md:text-5xl mb-3 md:mb-4">{category.icon_emoji}</div>
+                <h4 className="font-bold text-base md:text-lg text-gray-900 mb-2 group-hover:text-indigo-600 transition">
                   {category.name}
                 </h4>
-                <div className="text-gray-600 font-semibold">
+                <div className="text-gray-600 font-semibold text-sm md:text-base">
                   {category.listing_count} listings
                 </div>
               </Link>
             ))}
           </div>
-          <div className="text-center mt-10">
+          <div className="text-center mt-8 md:mt-10">
             <Link 
               href="/categories" 
-              className="text-indigo-600 font-bold text-lg hover:text-indigo-700 inline-flex items-center gap-2"
+              className="text-indigo-600 font-bold text-base md:text-lg hover:text-indigo-700 inline-flex items-center gap-2"
             >
               View All Categories
-              <span className="text-2xl">→</span>
+              <span className="text-xl md:text-2xl">→</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      {/* Footer - Mobile Responsive */}
+      <footer className="bg-gray-900 text-white py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <Image 
@@ -220,8 +321,8 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
                   className="rounded-full"
                 />
                 <div>
-                  <div className="font-bold text-lg">Antigua Search</div>
-                  <div className="text-sm text-gray-400">Directory</div>
+                  <div className="font-bold text-base md:text-lg">Antigua Search</div>
+                  <div className="text-xs md:text-sm text-gray-400">Directory</div>
                 </div>
               </div>
               <p className="text-gray-400 text-sm">
@@ -229,8 +330,8 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
               </p>
             </div>
             <div>
-              <h6 className="font-bold mb-4 text-lg">Quick Links</h6>
-              <div className="space-y-2">
+              <h6 className="font-bold mb-4 text-base md:text-lg">Quick Links</h6>
+              <div className="space-y-2 text-sm">
                 <Link href="/" className="block text-gray-400 hover:text-white transition">Home</Link>
                 <Link href="/parishes" className="block text-gray-400 hover:text-white transition">Browse Parishes</Link>
                 <Link href="/categories" className="block text-gray-400 hover:text-white transition">All Categories</Link>
@@ -238,20 +339,20 @@ export default function HomeClient({ stats, parishes, categories, monthlyVisitor
               </div>
             </div>
             <div>
-              <h6 className="font-bold mb-4 text-lg">For Business</h6>
-              <div className="space-y-2">
+              <h6 className="font-bold mb-4 text-base md:text-lg">For Business</h6>
+              <div className="space-y-2 text-sm">
                 <Link href="/add-listing" className="block text-gray-400 hover:text-white transition">List Your Business</Link>
                 <Link href="/advertise" className="block text-gray-400 hover:text-white transition">Advertise With Us</Link>
                 <Link href="/pricing" className="block text-gray-400 hover:text-white transition">Pricing</Link>
               </div>
             </div>
             <div>
-              <h6 className="font-bold mb-4 text-lg">Contact</h6>
+              <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
               <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
               <p className="text-gray-400 text-sm">St. John's, Antigua & Barbuda</p>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-8 text-center">
+          <div className="border-t border-gray-800 pt-6 md:pt-8 text-center">
             <p className="text-gray-400 text-sm">
               © 2026 Antigua Search. All rights reserved.
             </p>
