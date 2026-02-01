@@ -44,7 +44,7 @@ export default function LoginPage() {
             />
             <div className="text-left">
               <div className="text-2xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-              <div className="text-sm text-indigo-600 font-semibold">TOURISM DIRECTORY</div>
+              <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
             </div>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mt-6">Welcome Back</h1>

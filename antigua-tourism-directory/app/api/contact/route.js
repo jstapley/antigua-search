@@ -69,7 +69,7 @@ export async function POST(request) {
               lastName: formData.name.split(' ').slice(1).join(' '),
               email: formData.email,
               phone: formData.phone || '',
-              source: 'Antigua Tourism Directory - Contact Form',
+              source: 'Antigua Search - Contact Form',
               tags: formData.businessInquiry ? ['Business Inquiry', 'Contact Form'] : ['Contact Form'],
               customFields: [
                 {

@@ -252,7 +252,7 @@ export default function EditListingPage({ params }) {
               />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">TOURISM DIRECTORY</div>
+                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
             <Link

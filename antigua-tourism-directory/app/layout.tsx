@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Antigua Tourism Directory",
+  title: "Antigua Search",
   description: "Discover the best of Antigua & Barbuda",
 };
 

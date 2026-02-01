@@ -1,5 +1,5 @@
 // lib/analytics.js
-// Analytics tracking utilities for Antigua Tourism Directory
+// Analytics tracking utilities for Antigua Search
 
 import { createClient } from '@supabase/supabase-js'
 

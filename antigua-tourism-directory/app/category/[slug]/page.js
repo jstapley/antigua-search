@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${category.name} in Antigua - Tourism Directory`,
+    title: `${category.name} in Antigua - ANTIGUA SEARCH`,
     description: category.description || `Discover the best ${category.name.toLowerCase()} in Antigua & Barbuda`,
   }
 }
@@ -122,7 +122,7 @@ export default async function CategoryPage({ params }) {
               />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">TOURISM DIRECTORY</div>
+                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
             <nav className="flex gap-6 items-center">
@@ -346,13 +346,13 @@ export default async function CategoryPage({ params }) {
             </div>
             <div>
               <h6 className="font-bold mb-4 text-lg">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">info@antiguatourismdirectory.com</p>
+              <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
               <p className="text-gray-400 text-sm">St. John's, Antigua & Barbuda</p>
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center">
             <p className="text-gray-400 text-sm">
-              © 2026 Antigua Tourism Directory. All rights reserved.
+              © 2026 Antigua Search. All rights reserved.
             </p>
           </div>
         </div>
