@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
+import { Loader } from '@googlemaps/js-api-loader'
 
 export default function AddListingPage() {
   const [formData, setFormData] = useState({
@@ -32,6 +33,7 @@ export default function AddListingPage() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const [categories, setCategories] = useState([])
   const [parishes, setParishes] = useState([])
@@ -65,20 +67,13 @@ export default function AddListingPage() {
 
   const initMap = async () => {
     try {
-      // Load Google Maps API
-      if (!window.google) {
-        const script = document.createElement('script')
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&callback=Function.prototype`
-        script.async = true
-        script.defer = true
-        document.head.appendChild(script)
-        
-        await new Promise((resolve) => {
-          script.onload = resolve
-        })
-      }
+      const loader = new Loader({
+        apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        version: 'weekly',
+        libraries: ['places', 'geocoding']
+      })
 
-      const google = window.google
+      const google = await loader.load()
 
       // Center on Antigua & Barbuda
       const antiguaCenter = { lat: 17.0608, lng: -61.7964 }
@@ -329,8 +324,8 @@ export default function AddListingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      {/* Header with Mobile Navigation */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center gap-3">
@@ -342,33 +337,70 @@ export default function AddListingPage() {
                 className="rounded-full"
               />
               <div>
-                <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
+                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex gap-6 items-center">
+              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
+            </nav>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden text-gray-700 p-2"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
+              <Link href="/" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/parishes" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
+              <Link href="/categories" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
+              <Link href="/about" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+              <Link href="/contact" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+            </nav>
+          )}
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">List Your Business</h1>
-        <p className="text-lg text-gray-600 mb-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">List Your Business</h1>
+        <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8">
           Get your business in front of thousands of visitors exploring Antigua & Barbuda. 
           Fill out the form below and we'll review your submission.
         </p>
 
         {success && (
-          <div className="bg-green-50 border-l-4 border-green-500 p-6 mb-8">
-            <h3 className="text-lg font-bold text-green-800 mb-2">Success! 🎉</h3>
-            <p className="text-green-700">
+          <div className="bg-green-50 border-l-4 border-green-500 p-4 md:p-6 mb-6 md:mb-8">
+            <h3 className="text-base md:text-lg font-bold text-green-800 mb-2">Success! 🎉</h3>
+            <p className="text-green-700 text-sm md:text-base">
               Your listing has been submitted and is pending review. We'll be in touch soon!
             </p>
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-8">
-            <p className="text-red-700">{error}</p>
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 md:p-6 mb-6 md:mb-8">
+            <p className="text-red-700 text-sm md:text-base">{error}</p>
           </div>
         )}
 
@@ -384,7 +416,7 @@ export default function AddListingPage() {
               value={formData.business_name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
               placeholder="e.g., Paradise Beach Resort"
             />
           </div>
@@ -399,7 +431,7 @@ export default function AddListingPage() {
               value={formData.category_id}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
             >
               <option value="">Select a category</option>
               {categories.map(cat => (
@@ -420,7 +452,7 @@ export default function AddListingPage() {
               value={formData.parish_id}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
             >
               <option value="">Select a parish</option>
               {parishes.map(par => (
@@ -433,12 +465,12 @@ export default function AddListingPage() {
 
           {/* Business Image Upload */}
           <div className="border-t-2 border-gray-200 pt-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Business Image</h3>
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">Business Image</h3>
             <div>
               <label className="block text-sm font-bold text-gray-900 mb-2">
                 Upload Main Image
               </label>
-              <p className="text-sm text-gray-600 mb-3">
+              <p className="text-xs md:text-sm text-gray-600 mb-3">
                 Upload a high-quality image of your business (max 5MB, JPG/PNG)
               </p>
               
@@ -447,7 +479,7 @@ export default function AddListingPage() {
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="w-full h-64 object-cover rounded-lg border-2 border-gray-200"
+                    className="w-full h-48 md:h-64 object-cover rounded-lg border-2 border-gray-200"
                   />
                   <button
                     type="button"
@@ -458,7 +490,7 @@ export default function AddListingPage() {
                   </button>
                 </div>
               ) : (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 md:p-8 text-center hover:border-indigo-400 transition">
                   <input
                     type="file"
                     accept="image/*"
@@ -467,9 +499,9 @@ export default function AddListingPage() {
                     id="image-upload"
                   />
                   <label htmlFor="image-upload" className="cursor-pointer">
-                    <div className="text-4xl mb-2">📸</div>
-                    <p className="text-gray-600 mb-1">Click to upload an image</p>
-                    <p className="text-sm text-gray-500">JPG, PNG up to 5MB</p>
+                    <div className="text-3xl md:text-4xl mb-2">📸</div>
+                    <p className="text-gray-600 mb-1 text-sm md:text-base">Click to upload an image</p>
+                    <p className="text-xs md:text-sm text-gray-500">JPG, PNG up to 5MB</p>
                   </label>
                 </div>
               )}
@@ -488,10 +520,10 @@ export default function AddListingPage() {
               onChange={handleChange}
               required
               maxLength="150"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
               placeholder="Brief one-line description (max 150 characters)"
             />
-            <p className="text-sm text-gray-500 mt-1">{formData.short_description.length}/150</p>
+            <p className="text-xs md:text-sm text-gray-500 mt-1">{formData.short_description.length}/150</p>
           </div>
 
           {/* Full Description */}
@@ -505,16 +537,16 @@ export default function AddListingPage() {
               onChange={handleChange}
               required
               rows="6"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
               placeholder="Detailed description of your business, services, and what makes you unique"
             />
           </div>
 
           {/* Contact Information */}
           <div className="border-t-2 border-gray-200 pt-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-2">
                   Phone *
@@ -525,7 +557,7 @@ export default function AddListingPage() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="+1 (268) 462-0000"
                 />
               </div>
@@ -540,13 +572,13 @@ export default function AddListingPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="info@yourbusiness.com"
                 />
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-4 md:mt-6">
               <label className="block text-sm font-bold text-gray-900 mb-2">
                 Website
               </label>
@@ -555,7 +587,7 @@ export default function AddListingPage() {
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                 placeholder="https://yourbusiness.com"
               />
             </div>
@@ -563,8 +595,8 @@ export default function AddListingPage() {
 
           {/* Interactive Map Location Picker */}
           <div className="border-t-2 border-gray-200 pt-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">📍 Business Location</h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">📍 Business Location</h3>
+            <p className="text-xs md:text-sm text-gray-600 mb-4">
               Search for your address or click on the map to mark your exact location
             </p>
 
@@ -576,7 +608,7 @@ export default function AddListingPage() {
               <input
                 ref={searchInputRef}
                 type="text"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                 placeholder="Start typing your address..."
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -585,16 +617,16 @@ export default function AddListingPage() {
             </div>
 
             {/* Interactive Map */}
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <div 
                 ref={mapRef}
-                className="w-full h-96 rounded-lg border-2 border-gray-200 bg-gray-100"
+                className="w-full h-64 md:h-96 rounded-lg border-2 border-gray-200 bg-gray-100"
               />
               {!mapLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
                   <div className="text-center">
-                    <div className="text-4xl mb-2">🗺️</div>
-                    <p className="text-gray-600">Loading map...</p>
+                    <div className="text-3xl md:text-4xl mb-2">🗺️</div>
+                    <p className="text-gray-600 text-sm md:text-base">Loading map...</p>
                   </div>
                 </div>
               )}
@@ -611,28 +643,28 @@ export default function AddListingPage() {
                 value={formData.address}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                 placeholder="Your business address"
               />
             </div>
 
             {/* Location Confirmation */}
             {formData.latitude && formData.longitude && (
-              <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+              <div className="bg-green-50 border-l-4 border-green-500 p-3 md:p-4 mb-4">
                 <div className="flex items-start">
                   <div className="text-green-400 mr-3">✓</div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-green-800 mb-1">
+                    <p className="text-xs md:text-sm font-semibold text-green-800 mb-1">
                       Location Set Successfully
                     </p>
-                    <p className="text-sm text-green-700 mb-2">
+                    <p className="text-xs md:text-sm text-green-700 mb-2">
                       {formData.address || 'Location marked on map'}
                     </p>
                     <a
                       href={`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-indigo-600 hover:text-indigo-700 font-semibold"
+                      className="text-xs md:text-sm text-indigo-600 hover:text-indigo-700 font-semibold"
                     >
                       Preview on Google Maps →
                     </a>
@@ -646,14 +678,14 @@ export default function AddListingPage() {
               <button
                 type="button"
                 onClick={() => setShowAdvancedLocation(!showAdvancedLocation)}
-                className="text-sm text-gray-600 hover:text-gray-900 font-semibold flex items-center gap-2"
+                className="text-xs md:text-sm text-gray-600 hover:text-gray-900 font-semibold flex items-center gap-2"
               >
                 {showAdvancedLocation ? '▼' : '▶'} Advanced: Manual Coordinates
               </button>
               
               {showAdvancedLocation && (
                 <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-xs md:text-sm text-gray-600 mb-3">
                     For advanced users: manually enter coordinates
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -667,7 +699,7 @@ export default function AddListingPage() {
                         name="latitude"
                         value={formData.latitude}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                         placeholder="17.0608"
                       />
                     </div>
@@ -681,7 +713,7 @@ export default function AddListingPage() {
                         name="longitude"
                         value={formData.longitude}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                         placeholder="-61.7964"
                       />
                     </div>
@@ -693,8 +725,8 @@ export default function AddListingPage() {
 
           {/* Social Media & Business Profiles */}
           <div className="border-t-2 border-gray-200 pt-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Social Media & Business Profiles</h3>
-            <p className="text-sm text-gray-600 mb-4">Add your social media and business profile links (optional)</p>
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">Social Media & Business Profiles</h3>
+            <p className="text-xs md:text-sm text-gray-600 mb-4">Add your social media and business profile links (optional)</p>
             
             <div className="space-y-4">
               <div>
@@ -706,7 +738,7 @@ export default function AddListingPage() {
                   name="facebook_url"
                   value={formData.facebook_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://facebook.com/yourbusiness"
                 />
               </div>
@@ -720,7 +752,7 @@ export default function AddListingPage() {
                   name="instagram_url"
                   value={formData.instagram_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://instagram.com/yourbusiness"
                 />
               </div>
@@ -734,7 +766,7 @@ export default function AddListingPage() {
                   name="google_business_url"
                   value={formData.google_business_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://maps.google.com/..."
                 />
               </div>
@@ -748,7 +780,7 @@ export default function AddListingPage() {
                   name="tripadvisor_url"
                   value={formData.tripadvisor_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://tripadvisor.com/..."
                 />
               </div>
@@ -762,7 +794,7 @@ export default function AddListingPage() {
                   name="twitter_url"
                   value={formData.twitter_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://twitter.com/yourbusiness"
                 />
               </div>
@@ -771,10 +803,10 @@ export default function AddListingPage() {
           
           {/* Owner Contact */}
           <div className="border-t-2 border-gray-200 pt-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Your Contact Information</h3>
-            <p className="text-sm text-gray-600 mb-4">We'll use this to contact you about your listing (not shown publicly)</p>
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">Your Contact Information</h3>
+            <p className="text-xs md:text-sm text-gray-600 mb-4">We'll use this to contact you about your listing (not shown publicly)</p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-2">
                   Your Name *
@@ -785,7 +817,7 @@ export default function AddListingPage() {
                   value={formData.contact_name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                 />
               </div>
 
@@ -799,7 +831,7 @@ export default function AddListingPage() {
                   value={formData.contact_email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                 />
               </div>
             </div>
@@ -809,7 +841,7 @@ export default function AddListingPage() {
           <button
             type="submit"
             disabled={loading || uploadingImage}
-            className="w-full bg-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-indigo-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploadingImage ? 'Uploading Image...' : loading ? 'Submitting...' : 'Submit Listing'}
           </button>
