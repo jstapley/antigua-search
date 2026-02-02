@@ -359,7 +359,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
             Browse businesses by category. From dining to adventure, find exactly what you're looking for.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((category) => (
+            {categories.slice(0, 8).map((category) => (
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
