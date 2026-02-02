@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function HomeClient({ stats, parishes, categories, featuredListings, monthlyVisitors }) {
+export default function HomeClient({ stats, parishes, categories, monthlyVisitors }) {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -244,150 +244,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
         </div>
       </section>
 
-      {/* Featured Listings Section - NEW! */}
-      {featuredListings && featuredListings.length > 0 && (
-        <section className="bg-gradient-to-b from-yellow-50 to-white py-12 md:py-16 border-t-4 border-yellow-400">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 md:mb-12">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-4 py-2 rounded-full font-bold text-sm md:text-base mb-4">
-                <span className="text-xl">⭐</span>
-                <span>FEATURED BUSINESSES</span>
-              </div>
-              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Premium Listings</h3>
-              <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-                Discover top-rated businesses offering exceptional service across Antigua & Barbuda
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {featuredListings.map((listing) => (
-                <Link
-                  key={listing.id}
-                  href={`/listing/${listing.slug}`}
-                  className="relative bg-white rounded-2xl overflow-hidden border-4 border-yellow-400 shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 group"
-                >
-                  {/* Featured Badge */}
-                  <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
-                    <span className="text-lg">⭐</span>
-                    <span>Featured</span>
-                  </div>
-
-                  {/* Image */}
-                  <div className="relative h-56 md:h-64 bg-gray-200 overflow-hidden">
-                    {listing.image_url ? (
-                      <Image
-                        src={listing.image_url}
-                        alt={listing.business_name}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-6xl md:text-7xl">
-                        {listing.category?.icon_emoji || '🏢'}
-                      </div>
-                    )}
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition">
-                      {listing.business_name}
-                    </h4>
-                    
-                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                      <span className="flex items-center gap-1">
-                        {listing.category?.icon_emoji} {listing.category?.name}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        📍 {listing.parish?.name}
-                      </span>
-                    </div>
-
-                    <p className="text-gray-700 mb-4 line-clamp-2 text-sm md:text-base">
-                      {listing.short_description || listing.description}
-                    </p>
-
-                    {/* Rating if available */}
-                    {listing.average_rating && (
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="flex items-center bg-yellow-100 px-3 py-1 rounded-full">
-                          <span className="text-yellow-600 mr-1">⭐</span>
-                          <span className="font-bold text-gray-900">{listing.average_rating.toFixed(1)}</span>
-                        </div>
-                        {listing.review_count > 0 && (
-                          <span className="text-sm text-gray-600">
-                            ({listing.review_count} reviews)
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="text-indigo-600 font-bold flex items-center gap-2 text-base md:text-lg">
-                      View Details
-                      <span className="group-hover:translate-x-2 transition-transform">→</span>
-                    </div>
-                  </div>
-
-                  {/* Shimmer Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                </Link>
-              ))}
-            </div>
-
-            {/* View All Featured Button */}
-            <div className="text-center mt-8 md:mt-10">
-              <Link 
-                href="/featured" 
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-8 py-4 rounded-xl font-bold text-base md:text-lg hover:from-yellow-500 hover:to-yellow-700 transition shadow-lg"
-              >
-                <span>⭐</span>
-                <span>View All Featured Businesses</span>
-                <span className="text-xl">→</span>
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Categories - Mobile Responsive (MOVED ABOVE PARISHES) */}
-      <section className="bg-gray-50 py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8">Popular Categories</h3>
-          <p className="text-gray-600 text-base md:text-lg mb-6 md:mb-8">
-            Browse businesses by category. From dining to adventure, find exactly what you're looking for.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/category/${category.slug}`}
-                className="bg-white border-2 border-gray-200 rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group"
-              >
-                <div className="text-4xl md:text-5xl mb-3 md:mb-4">{category.icon_emoji}</div>
-                <h4 className="font-bold text-base md:text-lg text-gray-900 mb-2 group-hover:text-indigo-600 transition">
-                  {category.name}
-                </h4>
-                <div className="text-gray-600 font-semibold text-sm md:text-base">
-                  {category.listing_count} listings
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="text-center mt-8 md:mt-10">
-            <Link 
-              href="/categories" 
-              className="text-indigo-600 font-bold text-base md:text-lg hover:text-indigo-700 inline-flex items-center gap-2"
-            >
-              View All Categories
-              <span className="text-xl md:text-2xl">→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Parishes Grid - Mobile Responsive (MOVED BELOW CATEGORIES) */}
+      {/* Parishes Grid - Mobile Responsive */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8">Browse by Parish</h3>
         <p className="text-gray-600 text-base md:text-lg mb-6 md:mb-8">
@@ -414,6 +271,39 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Categories - Mobile Responsive */}
+      <section className="bg-gray-50 py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8">Popular Categories</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {categories.map((category) => (
+              <Link
+                key={category.id}
+                href={`/category/${category.slug}`}
+                className="bg-white border-2 border-gray-200 rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group"
+              >
+                <div className="text-4xl md:text-5xl mb-3 md:mb-4">{category.icon_emoji}</div>
+                <h4 className="font-bold text-base md:text-lg text-gray-900 mb-2 group-hover:text-indigo-600 transition">
+                  {category.name}
+                </h4>
+                <div className="text-gray-600 font-semibold text-sm md:text-base">
+                  {category.listing_count} listings
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-8 md:mt-10">
+            <Link 
+              href="/categories" 
+              className="text-indigo-600 font-bold text-base md:text-lg hover:text-indigo-700 inline-flex items-center gap-2"
+            >
+              View All Categories
+              <span className="text-xl md:text-2xl">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 
