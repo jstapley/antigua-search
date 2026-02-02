@@ -47,6 +47,7 @@ export default function EditListingPage({ params }) {
   const markerRef = useRef(null)
   const autocompleteRef = useRef(null)
   const searchInputRef = useRef(null)
+  const hasLoadedData = useRef(false)
 
   // Image upload state
   const [imageFile, setImageFile] = useState(null)
@@ -68,10 +69,11 @@ export default function EditListingPage({ params }) {
   }, [user, loading, router])
 
   useEffect(() => {
-    if (user) {
-      loadData()
-    }
-  }, [user])
+  if (user && !hasLoadedData.current) {
+    loadData()
+    hasLoadedData.current = true
+  }
+}, [user])
 
   const loadData = async () => {
     const resolvedParams = await params
