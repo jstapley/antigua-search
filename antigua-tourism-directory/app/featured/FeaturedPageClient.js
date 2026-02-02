@@ -77,21 +77,22 @@ export default function FeaturedPageClient({ featuredListings }) {
       </header>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 py-12 md:py-16">
+      <div className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <div className="mb-4 md:mb-6">
-            <Link href="/" className="text-yellow-900 hover:text-yellow-800 text-sm md:text-base">
-              Home
+            <Link href="/" className="text-white/80 hover:text-white text-sm md:text-base">
+                Home
             </Link>
-            <span className="text-yellow-900 mx-2">→</span>
-            <span className="text-yellow-900 font-semibold text-sm md:text-base">Featured Businesses</span>
+            <span className="text-white/60 mx-2">→</span>
+            <span className="text-white font-semibold text-sm md:text-base">Featured Businesses</span>
+            
           </div>
 
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
-              <span className="text-2xl">⭐</span>
-              <span className="font-bold text-yellow-900 text-sm md:text-base">PREMIUM LISTINGS</span>
+            <div className="inline-flex items-center gap-2 bg-yellow-400 px-4 py-2 rounded-full mb-4">
+                <span className="text-2xl">⭐</span>
+                <span className="font-bold text-indigo-900 text-sm md:text-base">PREMIUM LISTINGS</span>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4">
               Featured Businesses

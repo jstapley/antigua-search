@@ -32,15 +32,14 @@ export default async function HomePage() {
       `)
       .eq('listings.status', 'active'),
     
-    // Categories with listing counts
-    supabase
-      .from('categories')
-      .select(`
-        *,
-        listings!inner(id)
-      `)
-      .eq('listings.status', 'active')
-      .order('name'),
+    // Categories with listing counts (include empty categories)
+      supabase
+        .from('categories')
+        .select(`
+          *,
+          listings(id)
+        `)
+        .order('name'),
     
     // Featured listings (limit to 3 for homepage)
     supabase
@@ -71,13 +70,13 @@ export default async function HomePage() {
   })) || []
 
   // Process categories with counts
-  const categoriesWithCounts = categories?.map(category => ({
-    id: category.id,
-    name: category.name,
-    slug: category.slug,
-    icon_emoji: category.icon_emoji,
-    listing_count: category.listings?.length || 0
-  })) || []
+const categoriesWithCounts = categories?.map(category => ({
+  id: category.id,
+  name: category.name,
+  slug: category.slug,
+  icon_emoji: category.icon_emoji,
+  listing_count: category.listings?.length || 0
+})) || []
 
   const stats = {
     total_listings: totalListings || 0,
