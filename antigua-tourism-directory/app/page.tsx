@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import HomeClient from '@/components/HomeClient'
+import HomeClient from '../components/HomeClient'
 
 export const metadata = {
   title: 'AntiguaSearch.com - Discover Antigua & Barbuda | Business Directory',
@@ -53,7 +53,7 @@ export default async function HomePage() {
       .eq('status', 'active')
       .eq('is_featured', true)
       .gt('featured_until', new Date().toISOString())
-      .order('featured_position', { ascending: true, nullsLast: true })
+      .order('featured_position', { ascending: true })
       .order('created_at', { ascending: false })
       .limit(3),
     
