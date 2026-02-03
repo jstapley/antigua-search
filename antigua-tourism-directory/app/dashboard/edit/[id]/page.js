@@ -135,6 +135,11 @@ export default function EditListingPage({ params }) {
       image_url: listingData.image_url || ''
     })
 
+    // Set image preview if image exists
+    if (listingData.image_url) {
+     setImagePreview(listingData.image_url)
+    }
+
     // Load categories and parishes
     const { data: cats } = await supabase.from('categories').select('*').order('name')
     const { data: pars } = await supabase.from('parishes').select('*').order('name')
@@ -143,14 +148,14 @@ export default function EditListingPage({ params }) {
     setParishes(pars || [])
     setLoadingData(false)
 
-    // Initialize map after data is loaded
+// Initialize map AFTER state updates - increased delay
+  setTimeout(() => {
     if (listingData.latitude && listingData.longitude) {
-      setTimeout(() => {
-        initMap(parseFloat(listingData.latitude), parseFloat(listingData.longitude))
-      }, 100)
+      initMap(parseFloat(listingData.latitude), parseFloat(listingData.longitude))
     } else {
       initMap()
     }
+    }, 500) // Increased from 100 to 500ms
   }
 
   // Initialize Google Maps (same as add-listing)
@@ -501,18 +506,31 @@ export default function EditListingPage({ params }) {
           <div className="border-t-2 border-gray-200 pt-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Business Image</h3>
             
-            {/* Current Image */}
-            {formData.image_url && !imagePreview && (
+          {/* Current Image or Preview */}
+            {imagePreview && (
               <div className="mb-4">
-                <p className="text-sm font-bold text-gray-900 mb-2">Current Image:</p>
+                <p className="text-sm font-bold text-gray-900 mb-2">
+                  {imageFile ? 'New Image Preview:' : 'Current Image:'}
+                </p>
                 <div className="relative w-full h-64 rounded-lg overflow-hidden border-2 border-gray-200">
-                  <Image
-                    src={formData.image_url}
-                    alt={formData.business_name}
-                    fill
-                    className="object-cover"
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
                   />
                 </div>
+                {imageFile && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImagePreview(formData.image_url || null)
+                      setImageFile(null)
+                    }}
+                    className="mt-2 text-sm text-red-600 hover:text-red-700 font-semibold"
+                  >
+                    ← Revert to Original Image
+                  </button>
+                )}
               </div>
             )}
 
