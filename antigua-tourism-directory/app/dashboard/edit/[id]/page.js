@@ -543,37 +543,22 @@ export default function EditListingPage({ params }) {
                 Upload a high-quality image of your business (max 5MB, JPG/PNG)
               </p>
               
-              {imagePreview ? (
-                <div className="relative">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-64 object-cover rounded-lg border-2 border-indigo-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-semibold hover:bg-red-700 transition"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ) : (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <label htmlFor="image-upload" className="cursor-pointer">
-                    <div className="text-4xl mb-2">📸</div>
-                    <p className="text-gray-600 mb-1">Click to upload an image</p>
-                    <p className="text-sm text-gray-500">JPG, PNG up to 5MB</p>
-                  </label>
-                </div>
-              )}
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+              id="image-upload"
+            />
+            <label htmlFor="image-upload" className="cursor-pointer">
+              <div className="text-4xl mb-2">📸</div>
+              <p className="text-gray-600 mb-1">
+                {imagePreview ? 'Click to replace image' : 'Click to upload an image'}
+              </p>
+              <p className="text-sm text-gray-500">JPG, PNG up to 5MB</p>
+            </label>
+          </div>
             </div>
           </div>
 
