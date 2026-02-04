@@ -556,7 +556,6 @@ export default function AddListingPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  required
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="+1 (268) 462-0000"
                 />
@@ -571,7 +570,6 @@ export default function AddListingPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
                   placeholder="info@yourbusiness.com"
                 />
