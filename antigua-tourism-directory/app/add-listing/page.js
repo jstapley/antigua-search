@@ -549,7 +549,7 @@ export default function AddListingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Phone *
+                  Phone
                 </label>
                 <input
                   type="tel"
@@ -563,7 +563,7 @@ export default function AddListingPage() {
 
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Email *
+                  Email
                 </label>
                 <input
                   type="email"

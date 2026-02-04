@@ -660,7 +660,7 @@ export default function EditListingPage({ params }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Phone *
+                  Phone
                 </label>
                 <input
                   type="tel"
@@ -673,7 +673,7 @@ export default function EditListingPage({ params }) {
 
               <div>
                 <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Email *
+                  Email
                 </label>
                 <input
                   type="email"
