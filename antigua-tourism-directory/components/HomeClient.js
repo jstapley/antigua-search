@@ -214,8 +214,24 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
               Popular: beach resorts, fine dining, water sports, cultural tours
             </p>
           </div>
+          
+          {/* Stats Boxes - Mobile Responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12 px-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20">
+              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_listings}</div>
+              <div className="text-white font-semibold text-base md:text-lg">Business Listings</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20">
+              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_parishes}</div>
+              <div className="text-white font-semibold text-base md:text-lg">Parishes Covered</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20 sm:col-span-2 lg:col-span-1">
+              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_categories}</div>
+              <div className="text-white font-semibold text-base md:text-lg">Categories</div>
+            </div>
+          </div>
 
-          {/* Business Owner CTA - NEW! */}
+                    {/* Business Owner CTA - NEW! */}
           <div className="bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-2xl p-4 md:p-6 mb-8 max-w-3xl mx-auto">
             <p className="text-white font-semibold text-base md:text-lg mb-3">
               🏪 Business Owner?
@@ -239,22 +255,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
               Don't see your business? Add it for free or claim it to update details
             </p>
           </div>
-          
-          {/* Stats Boxes - Mobile Responsive */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12 px-4">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20">
-              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_listings}</div>
-              <div className="text-white font-semibold text-base md:text-lg">Business Listings</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20">
-              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_parishes}</div>
-              <div className="text-white font-semibold text-base md:text-lg">Parishes Covered</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-8 md:px-12 py-6 md:py-8 border border-white/20 sm:col-span-2 lg:col-span-1">
-              <div className="text-3xl md:text-5xl font-extrabold text-yellow-300 mb-2">{stats.total_categories}</div>
-              <div className="text-white font-semibold text-base md:text-lg">Categories</div>
-            </div>
-          </div>
+  
 
           {/* CTA Buttons - Mobile Responsive */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
