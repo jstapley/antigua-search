@@ -37,7 +37,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
               <span className="text-xl">🏪</span>
               <span className="text-sm md:text-base">Own a business?</span>
               <Link
-                href="/add-listing"
+                href="/pricing"
                 className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap"
               >
                 Get premium visibility
@@ -169,22 +169,27 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
         </div>
       </header>
 
-      {/* Hero Section - Mobile Responsive */}
+      {/* Hero Section - SEO OPTIMIZED WITH BUSINESS OWNER CTA */}
       <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Main Headline - SEO Optimized */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 tracking-tight leading-tight">
-            Discover Antigua & Barbuda
+            Antigua & Barbuda Business Directory
           </h1>
+          
+          {/* Subheadline - Target Keywords */}
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-300 mb-4 md:mb-6">
-            Your Complete Island Guide
+            Find Local Businesses, Hotels, Restaurants & Services
           </h2>
+          
+          {/* Description - Natural Keyword Integration */}
           <p className="text-base md:text-xl text-white/90 mb-6 md:mb-8 max-w-4xl mx-auto px-4">
-            Find the best restaurants, hotels, tours, and activities across the islands. 
-            Discover hidden gems and popular destinations all in one place.
+            The complete tourism and business directory for Antigua and Barbuda. 
+            Discover hotels, restaurants, tours, activities, and local services across the islands.
           </p>
 
           {/* Search Bar - Mobile Responsive */}
-          <div className="max-w-3xl mx-auto mb-8 md:mb-12 px-4">
+          <div className="max-w-3xl mx-auto mb-6 px-4">
             <form onSubmit={handleSearch}>
               <div className="flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-3 shadow-2xl">
                 <div className="relative flex-1">
@@ -193,7 +198,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for restaurants, hotels, activities..."
+                    placeholder="Search hotels, restaurants, tours, activities..."
                     className="w-full pl-14 pr-4 py-3 md:py-4 text-gray-900 placeholder-gray-400 bg-white rounded-xl focus:outline-none text-base md:text-lg"
                   />
                 </div>
@@ -206,7 +211,32 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
               </div>
             </form>
             <p className="text-white text-xs md:text-sm mt-3">
-              Try: "beach resorts", "fine dining", "water sports", or browse by location
+              Popular: beach resorts, fine dining, water sports, cultural tours
+            </p>
+          </div>
+
+          {/* Business Owner CTA - NEW! */}
+          <div className="bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-2xl p-4 md:p-6 mb-8 max-w-3xl mx-auto">
+            <p className="text-white font-semibold text-base md:text-lg mb-3">
+              🏪 Business Owner?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <Link
+                href="/add-listing"
+                className="bg-yellow-400 text-indigo-900 px-6 md:px-8 py-3 rounded-lg font-bold text-base hover:bg-yellow-300 transition shadow-lg"
+              >
+                ➕ Add Your Business
+              </Link>
+              <span className="text-white/80 text-sm md:text-base">or</span>
+              <Link
+                href="/login"
+                className="bg-white/20 text-white px-6 md:px-8 py-3 rounded-lg font-bold text-base hover:bg-white/30 transition border-2 border-white/50"
+              >
+                🔐 Claim Your Listing
+              </Link>
+            </div>
+            <p className="text-white/80 text-xs md:text-sm mt-3">
+              Don't see your business? Add it for free or claim it to update details
             </p>
           </div>
           
@@ -244,7 +274,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
         </div>
       </section>
 
-      {/* Featured Listings Section - NEW! */}
+      {/* Featured Listings Section */}
       {featuredListings && featuredListings.length > 0 && (
         <section className="bg-gradient-to-b from-yellow-50 to-white py-12 md:py-16 border-t-4 border-yellow-400">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
