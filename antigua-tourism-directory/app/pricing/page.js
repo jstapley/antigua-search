@@ -132,77 +132,77 @@ export default function PricingPage() {
           <div className="grid md:grid-cols-2 gap-6">
             
             {/* Free Tier Card */}
-            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition">
+            <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 border-4 border-green-400 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition">
               <div className="text-center mb-6">
                 <div className="inline-block bg-green-500 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">
                   100% FREE FOREVER
                 </div>
-                <h2 className="text-3xl font-black text-gray-900 mb-3">
+                <h2 className="text-3xl font-black text-white mb-3">
                   Complete Business Profile
                 </h2>
-                <p className="text-3xl text-indigo-600 font-bold mb-2">
+                <p className="text-3xl text-white font-bold mb-2">
                   $0<span className="text-lg">/month</span>
                 </p>
-                <p className="text-gray-600 text-sm">
+                <p className="text-white/90 text-sm">
                   Everything you need to showcase your business
                 </p>
               </div>
 
               <div className="space-y-3 mb-8">
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Complete Business Profile</h3>
-                    <p className="text-gray-600 text-sm">Business name, category, location, and description</p>
+                    <h3 className="text-white font-bold">Complete Business Profile</h3>
+                    <p className="text-white/80 text-sm">Business name, category, location, and description</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Contact Information</h3>
-                    <p className="text-gray-600 text-sm">Phone, email, and physical address</p>
+                    <h3 className="text-white font-bold">Contact Information</h3>
+                    <p className="text-white/80 text-sm">Phone, email, and physical address</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Website & Social Links</h3>
-                    <p className="text-gray-600 text-sm">Link to your website, Facebook, Instagram, and more</p>
+                    <h3 className="text-white font-bold">Website & Social Links</h3>
+                    <p className="text-white/80 text-sm">Link to your website, Facebook, Instagram, and more</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Photo Gallery</h3>
-                    <p className="text-gray-600 text-sm">Showcase your business with multiple photos</p>
+                    <h3 className="text-white font-bold">Photo Gallery</h3>
+                    <p className="text-white/80 text-sm">Showcase your business with multiple photos</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Google Maps Integration</h3>
-                    <p className="text-gray-600 text-sm">Help customers find you easily</p>
+                    <h3 className="text-white font-bold">Google Maps Integration</h3>
+                    <p className="text-white/80 text-sm">Help customers find you easily</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Customer Reviews & Ratings</h3>
-                    <p className="text-gray-600 text-sm">Build trust with verified reviews</p>
+                    <h3 className="text-white font-bold">Customer Reviews & Ratings</h3>
+                    <p className="text-white/80 text-sm">Build trust with verified reviews</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Category & Parish Listings</h3>
-                    <p className="text-gray-600 text-sm">Appear in relevant search results</p>
+                    <h3 className="text-white font-bold">Category & Parish Listings</h3>
+                    <p className="text-white/80 text-sm">Appear in relevant search results</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="text-green-500 text-xl flex-shrink-0">✓</div>
+                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-gray-900 font-bold">Mobile-Friendly Design</h3>
-                    <p className="text-gray-600 text-sm">Looks great on all devices</p>
+                    <h3 className="text-white font-bold">Mobile-Friendly Design</h3>
+                    <p className="text-white/80 text-sm">Looks great on all devices</p>
                   </div>
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function PricingPage() {
                 >
                   Add Your Business Now →
                 </Link>
-                <p className="text-gray-500 mt-3 text-xs">
+                <p className="text-white/70 mt-3 text-xs">
                   No credit card required • Takes less than 5 minutes
                 </p>
               </div>
