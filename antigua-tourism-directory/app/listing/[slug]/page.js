@@ -42,7 +42,10 @@ export async function generateMetadata({ params }) {
   }
 
   const title = listing.meta_title || `${listing.business_name} | ${listing.category?.name} in ${listing.parish?.name}, Antigua`
-  const description = listing.meta_description || listing.short_description || `Discover ${listing.business_name} in Antigua & Barbuda`
+  const description = listing.meta_description || 
+  listing.description?.substring(0, 155) || 
+  listing.short_description || 
+  `Discover ${listing.business_name}, a ${listing.category?.name} in ${listing.parish?.name}, Antigua & Barbuda. Contact us for more information.`
 
   return {
     title,
