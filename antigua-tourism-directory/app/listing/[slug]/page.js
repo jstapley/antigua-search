@@ -59,7 +59,7 @@ export async function generateMetadata({ params }) {
     
     // Open Graph for social sharing
     openGraph: {
-      type: 'business.business',
+      type: 'website', 
       url: `https://antiguasearch.com/listing/${listing.slug}`,
       title: listing.business_name,
       description: description,
