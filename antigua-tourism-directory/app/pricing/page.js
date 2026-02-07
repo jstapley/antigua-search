@@ -180,22 +180,8 @@ export default function PricingPage() {
                 <div className="flex items-start gap-3">
                   <div className="text-green-400 text-xl flex-shrink-0">✓</div>
                   <div>
-                    <h3 className="text-white font-bold">Google Maps Integration</h3>
-                    <p className="text-white/80 text-sm">Help customers find you easily</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
-                  <div>
                     <h3 className="text-white font-bold">Customer Reviews & Ratings</h3>
                     <p className="text-white/80 text-sm">Build trust with verified reviews</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="text-green-400 text-xl flex-shrink-0">✓</div>
-                  <div>
-                    <h3 className="text-white font-bold">Category & Parish Listings</h3>
-                    <p className="text-white/80 text-sm">Appear in relevant search results</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -230,41 +216,53 @@ export default function PricingPage() {
                 <h2 className="text-3xl font-black text-white mb-3">
                   Featured Listings
                 </h2>
-                
-                <p className="text-white/90 mb-4 text-sm">
-                  Want your business to stand out with premium placement, gold borders, and top-of-page visibility?
+
+                <p className="text-3xl text-white font-bold mb-2">
+                  $25<span className="text-lg">/month</span>
                 </p>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur rounded-xl p-6 mb-6">
-                <h3 className="text-lg font-bold text-white mb-4 text-center">Featured Benefits Include:</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-yellow-400 text-xl">⭐</span>
-                    <span className="text-white font-semibold text-sm">Gold border & star badge</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-yellow-400 text-xl">📍</span>
-                    <span className="text-white font-semibold text-sm">Top of category results</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-yellow-400 text-xl">🏠</span>
-                    <span className="text-white font-semibold text-sm">Homepage featured section</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-yellow-400 text-xl">🚀</span>
-                    <span className="text-white font-semibold text-sm">Priority placement</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-center mb-6">
-                <p className="text-white font-bold mb-1 text-sm">
+                <p className="text-white/90 text-sm mb-4">
                   Expected Launch: Q2 2026
                 </p>
-                <p className="text-yellow-300 text-2xl font-black">
-                  ~$25<span className="text-base">/month</span>
+                
+                <p className="text-white/90">
+                  Want your business to stand out with premium placement and top-of-page visibility?
                 </p>
+              </div>
+
+              <div className="space-y-3 mb-8">
+                <h3 className="text-lg font-bold text-white mb-4 text-center">Featured Benefits Include:</h3>
+                
+                <div className="flex items-start gap-3">
+                  <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
+                  <div>
+                    <h3 className="text-white font-bold">Gold border & star badge</h3>
+                    <p className="text-white/80 text-sm">Stand out with premium styling</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
+                  <div>
+                    <h3 className="text-white font-bold">Top of category results</h3>
+                    <p className="text-white/80 text-sm">Appear first in search results</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
+                  <div>
+                    <h3 className="text-white font-bold">Homepage featured section</h3>
+                    <p className="text-white/80 text-sm">Maximum visibility on homepage</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
+                  <div>
+                    <h3 className="text-white font-bold">Priority placement</h3>
+                    <p className="text-white/80 text-sm">Always listed first in your category</p>
+                  </div>
+                </div>
               </div>
 
               <div className="text-center">
