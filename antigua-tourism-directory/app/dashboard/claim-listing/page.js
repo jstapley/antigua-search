@@ -239,8 +239,19 @@ export default function ClaimListingPage() {
                   key={listing.id}
                   className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center">
-                    <span className="text-6xl">{listing.category?.icon_emoji || '🏢'}</span>
+                  <div className="relative aspect-video bg-gradient-to-br from-indigo-100 to-blue-100">
+                    {listing.image_url ? (
+                      <Image
+                        src={listing.image_url}
+                        alt={listing.business_name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-6xl">{listing.category?.icon_emoji || '🏢'}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
