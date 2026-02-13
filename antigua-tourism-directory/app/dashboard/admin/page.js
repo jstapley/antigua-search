@@ -114,7 +114,6 @@ export default function AdminDashboard() {
         parish:parishes(name)
       `)
       .order('created_at', { ascending: false })
-      .limit(50)
     setListings(listingsData || [])
 
     const { data: claimsData } = await supabase
