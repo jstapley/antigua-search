@@ -13,7 +13,7 @@ const supabase = createClient(
 export const revalidate = 3600
 
 export async function GET() {
-  const baseUrl = 'https://antiguasearch.com'
+  const baseUrl = 'https://www.antiguasearch.com'
 
   try {
     // Fetch all active listings
