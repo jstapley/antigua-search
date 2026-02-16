@@ -63,7 +63,7 @@ export async function generateMetadata({ params }) {
     // Open Graph for social sharing
     openGraph: {
       type: 'website', 
-      url: `https://antiguasearch.com/listing/${listing.slug}`,
+      url: `https://www.antiguasearch.com/listing/${listing.slug}`,
       title: listing.business_name,
       description: description,
       siteName: 'AntiguaSearch.com',
@@ -88,7 +88,7 @@ export async function generateMetadata({ params }) {
 
     // Canonical URL
     alternates: {
-      canonical: `https://antiguasearch.com/listing/${listing.slug}`
+      canonical: `https://www.antiguasearch.com/listing/${listing.slug}`
     }
   }
 }
@@ -156,10 +156,10 @@ export default async function ListingPage({ params }) {
     "@type": "LocalBusiness",
     "name": listing.business_name,
     "description": listing.description || listing.short_description || "",
-    "image": listing.image_url || "https://antiguasearch.com/antigua-flag.png",
+    "image": listing.image_url || "https://www.antiguasearch.com/antigua-flag.png",
     "telephone": listing.phone || undefined,
     "email": listing.email || undefined,
-    "url": listing.website || `https://antiguasearch.com/listing/${listing.slug}`,
+    "url": listing.website || `https://www.antiguasearch.com/listing/${listing.slug}`,
     "address": {
       "@type": "PostalAddress",
       "streetAddress": listing.address || "",
@@ -196,19 +196,19 @@ export default async function ListingPage({ params }) {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://antiguasearch.com"
+        "item": "https://www.antiguasearch.com"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": listing.category?.name || "Category",
-        "item": `https://antiguasearch.com/category/${listing.category?.slug}`
+        "item": `https://www.antiguasearch.com/category/${listing.category?.slug}`
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": listing.business_name,
-        "item": `https://antiguasearch.com/listing/${listing.slug}`
+        "item": `https://www.antiguasearch.com/listing/${listing.slug}`
       }
     ]
   }

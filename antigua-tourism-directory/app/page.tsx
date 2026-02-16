@@ -23,7 +23,7 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://antiguasearch.com',
+    url: 'https://www.antiguasearch.com',
     siteName: 'AntiguaSearch.com',
     title: 'Antigua & Barbuda Business Directory',
     description: 'Find local businesses, hotels, restaurants, tours and services in Antigua & Barbuda. The complete tourism directory with 100+ verified listings.',
@@ -143,8 +143,8 @@ export default async function HomePage() {
     "@type": "Organization",
     "name": "AntiguaSearch.com",
     "alternateName": "Antigua Search",
-    "url": "https://antiguasearch.com",
-    "logo": "https://antiguasearch.com/antigua-flag.png",
+    "url": "https://www.antiguasearch.com",
+    "logo": "https://www.antiguasearch.com/antigua-flag.png",
     "description": "The complete business and tourism directory for Antigua and Barbuda with over 100 verified business listings",
     "address": {
       "@type": "PostalAddress",
@@ -164,13 +164,13 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "AntiguaSearch.com",
-    "url": "https://antiguasearch.com",
+    "url": "https://www.antiguasearch.com",
     "description": "Antigua & Barbuda Business Directory",
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://antiguasearch.com/search?q={search_term_string}"
+        "urlTemplate": "https://www.antiguasearch.com/search?q={search_term_string}"
       },
       "query-input": "required name=search_term_string"
     }

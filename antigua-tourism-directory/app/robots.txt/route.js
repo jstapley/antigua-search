@@ -22,7 +22,7 @@ Allow: /*.css
 Allow: /*.js
 
 # Sitemap location
-Sitemap: https://antiguasearch.com/sitemap.xml
+Sitemap: https://www.antiguasearch.com/sitemap.xml
 
 # Crawl-delay for politeness (optional)
 Crawl-delay: 1
