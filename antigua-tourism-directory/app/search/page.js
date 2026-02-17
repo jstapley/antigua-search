@@ -274,7 +274,7 @@ function SearchContent() {
       <div className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 md:mb-6 text-center">
-            Search Results
+            Search Antigua & Barbuda Businesses
           </h1>
           
           {/* Search Bar - Mobile Responsive */}
