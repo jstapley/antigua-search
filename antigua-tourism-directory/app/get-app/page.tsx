@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export const metadata = {
   title: 'Get the AntiguaSearch App | Antigua & Barbuda Business Directory',
-  description: 'Download the FIRST business directory app for Antigua & Barbuda. Find 170+ local businesses, hotels, restaurants, and services - even offline!',
+  description: 'Download the FIRST business directory app for Antigua & Barbuda. Find 200+ local businesses, hotels, restaurants, and services - even offline!',
   keywords: 'antiguasearch app, antigua app, download antigua business directory, antigua mobile app, barbuda app',
   alternates: {
     canonical: 'https://antiguasearch.com/get-app'
@@ -110,7 +110,7 @@ export default function GetAppPage() {
             </h1>
             
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-              Find 170+ local businesses, hotels, restaurants, and services - right from your home screen
+              Find 200+ local businesses, hotels, restaurants, and services - right from your home screen
             </p>
 
             <div className="flex justify-center mb-8">
@@ -424,7 +424,7 @@ export default function GetAppPage() {
               © 2026 Antigua Search. All rights reserved.
             </p>
             <p className="text-gray-500 text-xs mt-2">
-              170+ Business Listings • 12 Categories • Antigua's First App
+              200+ Business Listings • 12 Categories • Antigua's First App
             </p>
           </div>
         </div>
