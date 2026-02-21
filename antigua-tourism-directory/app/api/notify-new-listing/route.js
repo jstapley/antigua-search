@@ -4,6 +4,16 @@
 import { sendNewListingNotification } from '@/lib/resend'
 import { NextResponse } from 'next/server'
 
+// Add GET handler for testing
+export async function GET(request) {
+  return NextResponse.json({
+    status: 'ok',
+    message: 'Email notification API is running',
+    info: 'Use POST method to send notifications',
+    timestamp: new Date().toISOString()
+  })
+}
+
 export async function POST(request) {
   try {
     const listingData = await request.json()

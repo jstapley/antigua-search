@@ -18,7 +18,7 @@ export async function sendNewListingNotification(listingData) {
       },
       body: JSON.stringify({
         from: 'registrations@antiguasearch.com',
-        to: 'jeff@antiguasearch.com', // or your actual email
+        to: 'jeff@stapleyinc.com', // Change this to your email
         subject: `🎉 New Business Added: ${listingData.business_name}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
