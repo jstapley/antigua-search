@@ -373,7 +373,47 @@ function SearchContent() {
               </div>
             )}
 
-            {/* No Results */}
+            {/* NEW: No Query - Show Browse Options */}
+            {!query && !loading && (
+              <div className="bg-white rounded-xl border-2 border-gray-200 p-8 md:p-12 text-center">
+                <div className="text-5xl md:text-6xl mb-4">🔍</div>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Start Your Search</h3>
+                <p className="text-gray-600 mb-8 text-sm md:text-base">
+                  Search 200+ businesses across Antigua & Barbuda
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                  <Link
+                    href="/categories"
+                    className="bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 rounded-lg p-6 transition group"
+                  >
+                    <div className="text-3xl mb-2">📋</div>
+                    <h4 className="font-bold text-gray-900 mb-1 group-hover:text-indigo-600">Browse Categories</h4>
+                    <p className="text-sm text-gray-600">Hotels, Restaurants, Tours & more</p>
+                  </Link>
+
+                  <Link
+                    href="/parishes"
+                    className="bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 rounded-lg p-6 transition group"
+                  >
+                    <div className="text-3xl mb-2">📍</div>
+                    <h4 className="font-bold text-gray-900 mb-1 group-hover:text-blue-600">Browse Parishes</h4>
+                    <p className="text-sm text-gray-600">Find businesses by location</p>
+                  </Link>
+
+                  <Link
+                    href="/"
+                    className="bg-yellow-50 hover:bg-yellow-100 border-2 border-yellow-200 rounded-lg p-6 transition group"
+                  >
+                    <div className="text-3xl mb-2">🏠</div>
+                    <h4 className="font-bold text-gray-900 mb-1 group-hover:text-yellow-600">Homepage</h4>
+                    <p className="text-sm text-gray-600">See featured businesses</p>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* UPDATED: No Results - Added Popular Searches */}
             {!loading && results.length === 0 && query && (
               <div className="bg-white rounded-xl border-2 border-gray-200 p-8 md:p-12 text-center">
                 <div className="text-5xl md:text-6xl mb-4">🔍</div>
@@ -381,7 +421,7 @@ function SearchContent() {
                 <p className="text-gray-600 mb-6 text-sm md:text-base px-4">
                   Try adjusting your search or filters to find what you're looking for
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
                   <button
                     onClick={clearFilters}
                     className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
@@ -394,6 +434,28 @@ function SearchContent() {
                   >
                     Back to Home
                   </Link>
+                </div>
+
+                {/* NEW: Popular Searches */}
+                <div className="border-t border-gray-200 pt-8 mt-8">
+                  <h4 className="font-bold text-gray-900 mb-4">Popular Searches:</h4>
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    <Link href="/search?q=hotels" className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700 transition">
+                      Hotels
+                    </Link>
+                    <Link href="/search?q=restaurants" className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700 transition">
+                      Restaurants
+                    </Link>
+                    <Link href="/search?q=tours" className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700 transition">
+                      Tours
+                    </Link>
+                    <Link href="/search?q=beaches" className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700 transition">
+                      Beaches
+                    </Link>
+                    <Link href="/categories" className="bg-indigo-100 hover:bg-indigo-200 px-4 py-2 rounded-full text-sm font-semibold text-indigo-700 transition">
+                      All Categories →
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}
