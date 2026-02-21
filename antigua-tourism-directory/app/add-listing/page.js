@@ -276,41 +276,60 @@ export default function AddListingPage() {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null
       }
 
-      const { data: newListing, error: submitError } = await supabase
+      // Insert listing
+      const { data: insertedData, error: submitError } = await supabase
         .from('listings')
         .insert([listingData])
         .select()
         .single()
 
-      if (submitError) throw submitError
+      if (submitError) {
+        console.error('Supabase insert error:', submitError)
+        throw submitError
+      }
 
-      // ✨ NEW: Send email notification
-      try {
-        // Get category and parish names
-        const selectedCategory = categories.find(cat => cat.id === formData.category_id)
-        const selectedParish = parishes.find(par => par.id === formData.parish_id)
+      console.log('✅ Listing created:', insertedData)
 
-        await fetch('/api/notify-new-listing', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            business_name: newListing.business_name,
-            category_name: selectedCategory?.name,
-            parish_name: selectedParish?.name,
-            contact_name: newListing.contact_name,
-            email: newListing.email,
-            phone: newListing.phone,
-            website: newListing.website,
-            address: newListing.address,
-            description: newListing.description,
-            status: newListing.status,
-            slug: newListing.slug
+      // Send email notification
+      if (insertedData) {
+        try {
+          // Get category and parish names
+          const selectedCategory = categories.find(cat => cat.id === formData.category_id)
+          const selectedParish = parishes.find(par => par.id === formData.parish_id)
+
+          console.log('📧 Sending email notification...')
+          
+          const emailResponse = await fetch('/api/notify-new-listing', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              business_name: insertedData.business_name,
+              category_name: selectedCategory?.name,
+              parish_name: selectedParish?.name,
+              contact_name: insertedData.contact_name,
+              email: insertedData.email,
+              phone: insertedData.phone,
+              website: insertedData.website,
+              address: insertedData.address,
+              description: insertedData.description,
+              status: insertedData.status,
+              slug: insertedData.slug
+            })
           })
-        })
-        console.log('✅ Email notification sent')
-      } catch (emailError) {
-        // Don't fail the listing creation if email fails
-        console.error('Email notification failed:', emailError)
+
+          const emailResult = await emailResponse.json()
+          
+          if (emailResponse.ok) {
+            console.log('✅ Email notification sent successfully:', emailResult)
+          } else {
+            console.error('❌ Email notification failed:', emailResult)
+          }
+        } catch (emailError) {
+          // Don't fail the listing creation if email fails
+          console.error('❌ Email notification error:', emailError)
+        }
+      } else {
+        console.warn('⚠️ No listing data returned, skipping email')
       }
 
       setSuccess(true)
