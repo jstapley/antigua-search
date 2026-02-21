@@ -276,60 +276,53 @@ export default function AddListingPage() {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null
       }
 
-      // Insert listing
-      const { data: insertedData, error: submitError } = await supabase
+      // Insert listing (without .select() to avoid RLS permission issue)
+      const { error: submitError } = await supabase
         .from('listings')
         .insert([listingData])
-        .select()
-        .single()
 
       if (submitError) {
         console.error('Supabase insert error:', submitError)
         throw submitError
       }
 
-      console.log('✅ Listing created:', insertedData)
+      console.log('✅ Listing created successfully')
 
-      // Send email notification
-      if (insertedData) {
-        try {
-          // Get category and parish names
-          const selectedCategory = categories.find(cat => cat.id === formData.category_id)
-          const selectedParish = parishes.find(par => par.id === formData.parish_id)
+      // Send email notification using the data we already have
+      try {
+        // Get category and parish names
+        const selectedCategory = categories.find(cat => cat.id === formData.category_id)
+        const selectedParish = parishes.find(par => par.id === formData.parish_id)
 
-          console.log('📧 Sending email notification...')
-          
-          const emailResponse = await fetch('/api/notify-new-listing', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              business_name: insertedData.business_name,
-              category_name: selectedCategory?.name,
-              parish_name: selectedParish?.name,
-              contact_name: insertedData.contact_name,
-              email: insertedData.email,
-              phone: insertedData.phone,
-              website: insertedData.website,
-              address: insertedData.address,
-              description: insertedData.description,
-              status: insertedData.status,
-              slug: insertedData.slug
-            })
+        console.log('📧 Sending email notification...')
+        
+        const emailResponse = await fetch('/api/notify-new-listing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            business_name: listingData.business_name,
+            category_name: selectedCategory?.name || 'Not specified',
+            parish_name: selectedParish?.name || 'Not specified',
+            contact_name: listingData.contact_name,
+            email: listingData.email,
+            phone: listingData.phone,
+            website: listingData.website,
+            address: listingData.address,
+            description: listingData.description,
+            status: listingData.status,
+            slug: listingData.slug
           })
+        })
 
-          const emailResult = await emailResponse.json()
-          
-          if (emailResponse.ok) {
-            console.log('✅ Email notification sent successfully:', emailResult)
-          } else {
-            console.error('❌ Email notification failed:', emailResult)
-          }
-        } catch (emailError) {
-          // Don't fail the listing creation if email fails
-          console.error('❌ Email notification error:', emailError)
+        const emailResult = await emailResponse.json()
+        
+        if (emailResponse.ok) {
+          console.log('✅ Email notification sent successfully!', emailResult)
+        } else {
+          console.error('❌ Email notification failed:', emailResult)
         }
-      } else {
-        console.warn('⚠️ No listing data returned, skipping email')
+      } catch (emailError) {
+        console.error('❌ Email notification error:', emailError)
       }
 
       setSuccess(true)
@@ -365,6 +358,7 @@ export default function AddListingPage() {
       
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
+      console.error('❌ Form submission error:', err)
       setError(err.message || 'Something went wrong. Please try again.')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
