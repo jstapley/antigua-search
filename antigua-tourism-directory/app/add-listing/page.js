@@ -276,11 +276,42 @@ export default function AddListingPage() {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null
       }
 
-      const { error: submitError } = await supabase
+      const { data: newListing, error: submitError } = await supabase
         .from('listings')
         .insert([listingData])
+        .select()
+        .single()
 
       if (submitError) throw submitError
+
+      // ✨ NEW: Send email notification
+      try {
+        // Get category and parish names
+        const selectedCategory = categories.find(cat => cat.id === formData.category_id)
+        const selectedParish = parishes.find(par => par.id === formData.parish_id)
+
+        await fetch('/api/notify-new-listing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            business_name: newListing.business_name,
+            category_name: selectedCategory?.name,
+            parish_name: selectedParish?.name,
+            contact_name: newListing.contact_name,
+            email: newListing.email,
+            phone: newListing.phone,
+            website: newListing.website,
+            address: newListing.address,
+            description: newListing.description,
+            status: newListing.status,
+            slug: newListing.slug
+          })
+        })
+        console.log('✅ Email notification sent')
+      } catch (emailError) {
+        // Don't fail the listing creation if email fails
+        console.error('Email notification failed:', emailError)
+      }
 
       setSuccess(true)
       
