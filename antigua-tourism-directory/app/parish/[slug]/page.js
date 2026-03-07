@@ -1,8 +1,17 @@
+import { createClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import ParishPageClient from './ParishPageClient'
 
 export const revalidate = 3600
+
+// Server-only client that bypasses RLS for metadata generation
+function getServerSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 export async function generateStaticParams() {
   const { data: parishes } = await supabase
@@ -16,9 +25,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
-  const { data: parish } = await supabase
+  const serverSupabase = getServerSupabase()
+
+  const { data: parish } = await serverSupabase
     .from('parishes')
-    .select('name, description')
+    .select('name, description, id')
     .eq('slug', resolvedParams.slug)
     .single()
 
@@ -26,7 +37,7 @@ export async function generateMetadata({ params }) {
     return { title: 'Parish Not Found' }
   }
 
-  const { count } = await supabase
+  const { count } = await serverSupabase
     .from('listings')
     .select('*', { count: 'exact', head: true })
     .eq('parish_id', parish.id)
