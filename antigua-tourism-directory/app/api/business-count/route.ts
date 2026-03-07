@@ -6,7 +6,7 @@ export const revalidate = 300 // Cache for 5 minutes
 export async function GET() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 
   const { count, error } = await supabase
@@ -15,12 +15,11 @@ export async function GET() {
     .eq('status', 'active')
 
   if (error) {
-    return NextResponse.json({ count: 0, display: '200+' }, { status: 500 })
+    console.error('Supabase error:', error)
+    return NextResponse.json({ count: 0, display: '236' }, { status: 500 })
   }
 
   const num = count ?? 0
-  const rounded = Math.floor(num / 10) * 10
-  const display = `${rounded}+`
 
-  return NextResponse.json({ count: num, display })
+  return NextResponse.json({ count: num, display: String(num) })
 }
