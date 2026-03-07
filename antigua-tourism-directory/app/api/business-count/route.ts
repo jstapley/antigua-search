@@ -1,13 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-export const revalidate = 300 // Cache for 5 minutes
-
 export async function GET() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!url || !key) {
+    return NextResponse.json({ 
+      error: 'Missing env vars', 
+      hasUrl: !!url, 
+      hasKey: !!key 
+    }, { status: 500 })
+  }
+
+  const supabase = createClient(url, key)
 
   const { count, error } = await supabase
     .from('listings')
@@ -15,11 +21,12 @@ export async function GET() {
     .eq('status', 'active')
 
   if (error) {
-    console.error('Supabase error:', error)
-    return NextResponse.json({ count: 0, display: '236' }, { status: 500 })
+    return NextResponse.json({ 
+      error: error.message, 
+      code: error.code 
+    }, { status: 500 })
   }
 
   const num = count ?? 0
-
   return NextResponse.json({ count: num, display: String(num) })
 }
