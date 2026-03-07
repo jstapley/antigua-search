@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export default function ContactForm({ defaultSubject = '' }: { defaultSubject?: string }) {
+export default function ContactForm({ defaultSubject = '' }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -40,14 +40,7 @@ export default function ContactForm({ defaultSubject = '' }: { defaultSubject?: 
       if (!response.ok) throw new Error('Failed to submit form')
 
       setStatus({ submitting: false, submitted: true, error: null })
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: defaultSubject,
-        message: '',
-        businessInquiry: false
-      })
+      setFormData({ name: '', email: '', phone: '', subject: defaultSubject, message: '', businessInquiry: false })
 
       setTimeout(() => {
         setStatus({ submitting: false, submitted: false, error: null })
@@ -55,11 +48,7 @@ export default function ContactForm({ defaultSubject = '' }: { defaultSubject?: 
 
     } catch (error) {
       console.error('Contact form error:', error)
-      setStatus({ 
-        submitting: false, 
-        submitted: false, 
-        error: 'Failed to send message. Please try again or email us directly.' 
-      })
+      setStatus({ submitting: false, submitted: false, error: 'Failed to send message. Please try again or email us directly.' })
     }
   }
 
@@ -69,7 +58,7 @@ export default function ContactForm({ defaultSubject = '' }: { defaultSubject?: 
         <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center">
           <div className="text-4xl mb-2">✅</div>
           <h3 className="text-xl font-bold text-green-900 mb-2">Message Sent!</h3>
-          <p className="text-green-700">Thank you for contacting us. We'll get back to you within 24 hours.</p>
+          <p className="text-green-700">Thank you for contacting us. We&apos;ll get back to you within 24 hours.</p>
         </div>
       )}
 
@@ -84,77 +73,42 @@ export default function ContactForm({ defaultSubject = '' }: { defaultSubject?: 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border-2 border-gray-200 p-8">
         <div className="mb-6">
           <label htmlFor="name" className="block text-sm font-bold text-gray-900 mb-2">Your Name *</label>
-          <input
-            type="text" id="name" name="name" required
-            value={formData.name} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-            placeholder="John Doe"
-          />
+          <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="John Doe" />
         </div>
-
         <div className="mb-6">
           <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-2">Email Address *</label>
-          <input
-            type="email" id="email" name="email" required
-            value={formData.email} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-            placeholder="john@example.com"
-          />
+          <input type="email" id="email" name="email" required value={formData.email} onChange={handleChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="john@example.com" />
         </div>
-
         <div className="mb-6">
           <label htmlFor="phone" className="block text-sm font-bold text-gray-900 mb-2">Phone Number</label>
-          <input
-            type="tel" id="phone" name="phone"
-            value={formData.phone} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-            placeholder="+1 268 XXX XXXX"
-          />
+          <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="+1 268 XXX XXXX" />
         </div>
-
         <div className="mb-6">
           <label htmlFor="subject" className="block text-sm font-bold text-gray-900 mb-2">Subject *</label>
-          <input
-            type="text" id="subject" name="subject" required
-            value={formData.subject} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
-            placeholder="How can we help you?"
-          />
+          <input type="text" id="subject" name="subject" required value={formData.subject} onChange={handleChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="How can we help you?" />
         </div>
-
         <div className="mb-6">
           <label htmlFor="message" className="block text-sm font-bold text-gray-900 mb-2">Message *</label>
-          <textarea
-            id="message" name="message" required rows={6}
-            value={formData.message} onChange={handleChange}
+          <textarea id="message" name="message" required rows={6} value={formData.message} onChange={handleChange}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none resize-none"
-            placeholder="Tell us more about your inquiry..."
-          />
+            placeholder="Tell us more about your inquiry..." />
         </div>
-
         <div className="mb-6">
           <label className="flex items-start gap-3 cursor-pointer">
-            <input
-              type="checkbox" name="businessInquiry"
-              checked={formData.businessInquiry} onChange={handleChange}
-              className="mt-1 w-5 h-5 text-indigo-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-indigo-600"
-            />
-            <span className="text-sm text-gray-700">
-              This is a business inquiry (listing your business, advertising, partnerships)
-            </span>
+            <input type="checkbox" name="businessInquiry" checked={formData.businessInquiry} onChange={handleChange}
+              className="mt-1 w-5 h-5 text-indigo-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-indigo-600" />
+            <span className="text-sm text-gray-700">This is a business inquiry (listing your business, advertising, partnerships)</span>
           </label>
         </div>
-
-        <button
-          type="submit" disabled={status.submitting}
-          className="w-full bg-indigo-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-        >
+        <button type="submit" disabled={status.submitting}
+          className="w-full bg-indigo-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
           {status.submitting ? '✉️ Sending...' : '📨 Send Message'}
         </button>
-
-        <p className="text-sm text-gray-500 text-center mt-4">
-          * Required fields. We typically respond within 24 hours.
-        </p>
+        <p className="text-sm text-gray-500 text-center mt-4">* Required fields. We typically respond within 24 hours.</p>
       </form>
     </div>
   )

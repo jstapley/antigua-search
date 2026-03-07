@@ -23,12 +23,9 @@ export async function generateMetadata({ params }) {
     .single()
 
   if (!parish) {
-    return {
-      title: 'Parish Not Found'
-    }
+    return { title: 'Parish Not Found' }
   }
 
-  // Get listing count for this parish
   const { count } = await supabase
     .from('listings')
     .select('*', { count: 'exact', head: true })
@@ -53,22 +50,17 @@ async function getParish(slug) {
     .select('*')
     .eq('slug', slug)
     .single()
-  
   return parish
 }
 
 async function getListings(parishId) {
   const { data: listings } = await supabase
     .from('listings')
-    .select(`
-      *,
-      category:categories(name, icon_emoji)
-    `)
+    .select(`*, category:categories(name, icon_emoji)`)
     .eq('parish_id', parishId)
     .eq('status', 'active')
     .order('featured', { ascending: false })
     .order('created_at', { ascending: false })
-  
   return listings || []
 }
 
@@ -79,33 +71,20 @@ async function getCategories(parishId) {
     .eq('parish_id', parishId)
     .eq('status', 'active')
   
-  // Get unique categories
   const uniqueCategories = {}
   categories?.forEach(item => {
-    if (item.category) {
-      uniqueCategories[item.category.id] = item.category
-    }
+    if (item.category) uniqueCategories[item.category.id] = item.category
   })
-  
   return Object.values(uniqueCategories)
 }
 
 export default async function ParishPage({ params }) {
   const resolvedParams = await params
   const parish = await getParish(resolvedParams.slug)
-  
-  if (!parish) {
-    notFound()
-  }
+  if (!parish) notFound()
   
   const listings = await getListings(parish.id)
   const categories = await getCategories(parish.id)
 
-  return (
-    <ParishPageClient 
-      parish={parish} 
-      listings={listings} 
-      categories={categories} 
-    />
-  )
+  return <ParishPageClient parish={parish} listings={listings} categories={categories} />
 }

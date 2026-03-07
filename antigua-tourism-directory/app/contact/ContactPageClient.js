@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import ContactForm from '@/components/ContactForm'
 
-export default function ContactPageClient({ defaultSubject = '' }: { defaultSubject?: string }) {
+export default function ContactPageClient({ defaultSubject = '' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -59,11 +59,7 @@ export default function ContactPageClient({ defaultSubject = '' }: { defaultSubj
               </Link>
             </nav>
 
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-gray-700 p-2"
-              aria-label="Toggle menu"
-            >
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-gray-700 p-2" aria-label="Toggle menu">
               {mobileMenuOpen ? (
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -95,7 +91,7 @@ export default function ContactPageClient({ defaultSubject = '' }: { defaultSubj
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4">Contact Us</h1>
           <p className="text-base md:text-xl text-white/90 max-w-2xl mx-auto px-4">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
           </p>
         </div>
       </div>
@@ -103,7 +99,6 @@ export default function ContactPageClient({ defaultSubject = '' }: { defaultSubj
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
-          {/* Contact Information */}
           <div className="lg:col-span-1">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
             <div className="space-y-6">
@@ -111,20 +106,16 @@ export default function ContactPageClient({ defaultSubject = '' }: { defaultSubj
                 <div className="bg-indigo-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">✉️</span></div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">Email Us</h3>
-                  <a href="mailto:contact@antiguasearch.com" className="text-indigo-600 hover:text-indigo-700 text-sm md:text-base break-all">
-                    contact@antiguasearch.com
-                  </a>
+                  <a href="mailto:contact@antiguasearch.com" className="text-indigo-600 hover:text-indigo-700 text-sm md:text-base break-all">contact@antiguasearch.com</a>
                 </div>
               </div>
-
               <div className="flex items-start gap-4">
                 <div className="bg-indigo-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">📍</span></div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">Location</h3>
-                  <p className="text-gray-600 text-sm md:text-base">St. John's<br />Antigua & Barbuda</p>
+                  <p className="text-gray-600 text-sm md:text-base">St. John&apos;s<br />Antigua & Barbuda</p>
                 </div>
               </div>
-
               <div className="flex items-start gap-4">
                 <div className="bg-indigo-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">🕐</span></div>
                 <div className="w-full">
@@ -154,40 +145,35 @@ export default function ContactPageClient({ defaultSubject = '' }: { defaultSubj
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className="lg:col-span-2">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
             <ContactForm defaultSubject={defaultSubject} />
           </div>
         </div>
 
-        {/* FAQ Section */}
         <div className="mt-12 md:mt-16 pt-12 md:pt-16 border-t border-gray-200">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 text-center">Frequently Asked Questions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
             <div className="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">How do I list my business?</h3>
-              <p className="text-gray-600 text-sm md:text-base">
-                Click the "Add Your Business" button in the header or visit our <Link href="/add-listing" className="text-indigo-600 hover:text-indigo-700 font-semibold">Add Listing</Link> page. Fill out the form and submit for review.
-              </p>
+              <p className="text-gray-600 text-sm md:text-base">Click the &quot;Add Your Business&quot; button in the header or visit our <Link href="/add-listing" className="text-indigo-600 hover:text-indigo-700 font-semibold">Add Listing</Link> page.</p>
             </div>
             <div className="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Is listing my business free?</h3>
-              <p className="text-gray-600 text-sm md:text-base">Yes! Basic listings are completely free. We also offer premium features for enhanced visibility. Contact us for details.</p>
+              <p className="text-gray-600 text-sm md:text-base">Yes! Basic listings are completely free. We also offer premium features for enhanced visibility.</p>
             </div>
             <div className="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">How long does approval take?</h3>
-              <p className="text-gray-600 text-sm md:text-base">Most listings are reviewed and approved within 24-48 hours. You'll receive an email notification once your listing is live.</p>
+              <p className="text-gray-600 text-sm md:text-base">Most listings are reviewed and approved within 24-48 hours. You&apos;ll receive an email notification once your listing is live.</p>
             </div>
             <div className="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Can I edit my listing?</h3>
-              <p className="text-gray-600 text-sm md:text-base">Yes! Log in to your account and visit your dashboard to edit your business information, photos, and details at any time.</p>
+              <p className="text-gray-600 text-sm md:text-base">Yes! Log in to your account and visit your dashboard to edit your business information at any time.</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 md:py-12 mt-12 md:mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
@@ -221,7 +207,7 @@ export default function ContactPageClient({ defaultSubject = '' }: { defaultSubj
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
               <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
-              <p className="text-gray-400 text-sm">St. John's, Antigua & Barbuda</p>
+              <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>
             </div>
           </div>
           <div className="border-t border-gray-800 pt-6 md:pt-8 text-center">

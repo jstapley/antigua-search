@@ -5,9 +5,9 @@ export const metadata = {
   description: 'Get in touch with AntiguaSearch.com. Questions about listings, advertising, or general inquiries.',
 }
 
-export default async function ContactPage({ searchParams }: { searchParams: Promise<{ subject?: string }> }) {
+export default async function ContactPage({ searchParams }) {
   const resolvedParams = await searchParams
-  const defaultSubject = resolvedParams.subject || ''
+  const defaultSubject = resolvedParams?.subject || ''
 
   return <ContactPageClient defaultSubject={defaultSubject} />
 }
