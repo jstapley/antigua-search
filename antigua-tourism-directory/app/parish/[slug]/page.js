@@ -1,15 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import ParishPageClient from './ParishPageClient'
 
 export const revalidate = 3600
-
-function getServerSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  return createClient(url, key)
-}
 
 export async function generateStaticParams() {
   const { data: parishes } = await supabase
@@ -20,28 +13,23 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
-  const serverSupabase = getServerSupabase()
+  const slug = resolvedParams?.slug
 
-  const { data: parish, error: parishError } = await serverSupabase
+  if (!slug) return { title: 'Parish Not Found' }
+
+  const { data: parish } = await supabase
     .from('parishes')
     .select('id, name, description')
-    .eq('slug', resolvedParams.slug)
+    .eq('slug', slug)
     .single()
 
-  if (parishError || !parish) {
-    console.error('generateMetadata parish error:', parishError)
-    return { title: 'Parish Not Found' }
-  }
+  if (!parish) return { title: 'Parish Not Found' }
 
-  const { count, error: countError } = await serverSupabase
+  const { count } = await supabase
     .from('listings')
     .select('*', { count: 'exact', head: true })
     .eq('parish_id', parish.id)
     .eq('status', 'active')
-
-  if (countError) {
-    console.error('generateMetadata count error:', countError)
-  }
 
   const listingCount = count || 0
   const description = `Browse ${listingCount} verified businesses in ${parish.name}, Antigua & Barbuda. Find hotels, restaurants, tours, and local services. Discover the best of ${parish.name} on AntiguaSearch.com.`
@@ -50,7 +38,7 @@ export async function generateMetadata({ params }) {
     title: `Businesses in ${parish.name}, Antigua (${listingCount} Listings) - AntiguaSearch.com`,
     description,
     alternates: {
-      canonical: `https://www.antiguasearch.com/parish/${resolvedParams.slug}`,
+      canonical: `https://www.antiguasearch.com/parish/${slug}`,
     },
   }
 }

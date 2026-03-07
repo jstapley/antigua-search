@@ -1,15 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import CategoryPageClient from './CategoryPageClient'
 
 export const revalidate = 3600
-
-function getServerSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  return createClient(url, key)
-}
 
 export async function generateStaticParams() {
   const { data: categories } = await supabase
@@ -20,28 +13,23 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
-  const serverSupabase = getServerSupabase()
+  const slug = resolvedParams?.slug
 
-  const { data: category, error: catError } = await serverSupabase
+  if (!slug) return { title: 'Category Not Found' }
+
+  const { data: category } = await supabase
     .from('categories')
     .select('id, name, description')
-    .eq('slug', resolvedParams.slug)
+    .eq('slug', slug)
     .single()
 
-  if (catError || !category) {
-    console.error('generateMetadata category error:', catError)
-    return { title: 'Category Not Found' }
-  }
+  if (!category) return { title: 'Category Not Found' }
 
-  const { count, error: countError } = await serverSupabase
+  const { count } = await supabase
     .from('listings')
     .select('*', { count: 'exact', head: true })
     .eq('category_id', category.id)
     .eq('status', 'active')
-
-  if (countError) {
-    console.error('generateMetadata count error:', countError)
-  }
 
   const listingCount = count || 0
   const description = `Browse ${listingCount} verified ${category.name.toLowerCase()} in Antigua & Barbuda. Find contact details, locations, and reviews across all parishes. List your business free on AntiguaSearch.com.`
@@ -50,7 +38,7 @@ export async function generateMetadata({ params }) {
     title: `${category.name} in Antigua & Barbuda (${listingCount} Listings) - AntiguaSearch.com`,
     description,
     alternates: {
-      canonical: `https://www.antiguasearch.com/category/${resolvedParams.slug}`,
+      canonical: `https://www.antiguasearch.com/category/${slug}`,
     },
   }
 }
