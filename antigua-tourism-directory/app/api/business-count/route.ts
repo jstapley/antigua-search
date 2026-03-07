@@ -30,3 +30,4 @@ export async function GET() {
   const num = count ?? 0
   return NextResponse.json({ count: num, display: String(num) })
 }
+// force rebuild 03/07/2026 11:41:21
