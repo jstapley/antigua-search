@@ -28,9 +28,19 @@ export async function generateMetadata({ params }) {
     }
   }
 
+  // Get listing count for this parish
+  const { count } = await supabase
+    .from('listings')
+    .select('*', { count: 'exact', head: true })
+    .eq('parish_id', parish.id)
+    .eq('status', 'active')
+
+  const listingCount = count || 0
+  const description = `Browse ${listingCount} verified businesses in ${parish.name}, Antigua & Barbuda. Find hotels, restaurants, tours, and local services. Discover the best of ${parish.name} on AntiguaSearch.com.`
+
   return {
-    title: `${parish.name} - Antigua Search`,
-    description: parish.description || `Discover businesses and attractions in ${parish.name}, Antigua & Barbuda`,
+    title: `Businesses in ${parish.name}, Antigua (${listingCount} Listings) - AntiguaSearch.com`,
+    description,
     alternates: {
       canonical: `https://www.antiguasearch.com/parish/${resolvedParams.slug}`,
     },

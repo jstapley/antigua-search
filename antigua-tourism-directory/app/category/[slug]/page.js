@@ -28,9 +28,19 @@ export async function generateMetadata({ params }) {
     }
   }
 
+  // Get listing count for this category
+  const { count } = await supabase
+    .from('listings')
+    .select('*', { count: 'exact', head: true })
+    .eq('category_id', category.id)
+    .eq('status', 'active')
+
+  const listingCount = count || 0
+  const description = `Browse ${listingCount} verified ${category.name.toLowerCase()} in Antigua & Barbuda. Find contact details, locations, and reviews across all parishes. List your business free on AntiguaSearch.com.`
+
   return {
-    title: `${category.name} in Antigua - ANTIGUA SEARCH`,
-    description: category.description || `Discover the best ${category.name.toLowerCase()} in Antigua & Barbuda`,
+    title: `${category.name} in Antigua & Barbuda (${listingCount} Listings) - AntiguaSearch.com`,
+    description,
     alternates: {
       canonical: `https://www.antiguasearch.com/category/${resolvedParams.slug}`,
     },
