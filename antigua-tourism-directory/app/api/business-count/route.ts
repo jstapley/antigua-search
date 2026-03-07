@@ -10,7 +10,7 @@ export async function GET() {
   )
 
   const { count, error } = await supabase
-    .from('businesses')
+    .from('listings')
     .select('*', { count: 'exact', head: true })
     .eq('status', 'active')
 
