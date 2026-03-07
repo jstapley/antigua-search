@@ -5,43 +5,43 @@ import ParishPageClient from './ParishPageClient'
 
 export const revalidate = 3600
 
-// Server-only client that bypasses RLS for metadata generation
 function getServerSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  )
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  return createClient(url, key)
 }
 
 export async function generateStaticParams() {
   const { data: parishes } = await supabase
     .from('parishes')
     .select('slug')
-  
-  return parishes?.map((parish) => ({
-    slug: parish.slug,
-  })) || []
+  return parishes?.map((parish) => ({ slug: parish.slug })) || []
 }
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
   const serverSupabase = getServerSupabase()
 
-  const { data: parish } = await serverSupabase
+  const { data: parish, error: parishError } = await serverSupabase
     .from('parishes')
-    .select('name, description, id')
+    .select('id, name, description')
     .eq('slug', resolvedParams.slug)
     .single()
 
-  if (!parish) {
+  if (parishError || !parish) {
+    console.error('generateMetadata parish error:', parishError)
     return { title: 'Parish Not Found' }
   }
 
-  const { count } = await serverSupabase
+  const { count, error: countError } = await serverSupabase
     .from('listings')
     .select('*', { count: 'exact', head: true })
     .eq('parish_id', parish.id)
     .eq('status', 'active')
+
+  if (countError) {
+    console.error('generateMetadata count error:', countError)
+  }
 
   const listingCount = count || 0
   const description = `Browse ${listingCount} verified businesses in ${parish.name}, Antigua & Barbuda. Find hotels, restaurants, tours, and local services. Discover the best of ${parish.name} on AntiguaSearch.com.`

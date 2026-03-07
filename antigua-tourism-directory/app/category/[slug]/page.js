@@ -5,43 +5,43 @@ import CategoryPageClient from './CategoryPageClient'
 
 export const revalidate = 3600
 
-// Server-only client that bypasses RLS for metadata generation
 function getServerSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  )
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  return createClient(url, key)
 }
 
 export async function generateStaticParams() {
   const { data: categories } = await supabase
     .from('categories')
     .select('slug')
-  
-  return categories?.map((category) => ({
-    slug: category.slug,
-  })) || []
+  return categories?.map((category) => ({ slug: category.slug })) || []
 }
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
   const serverSupabase = getServerSupabase()
 
-  const { data: category } = await serverSupabase
+  const { data: category, error: catError } = await serverSupabase
     .from('categories')
-    .select('name, description, id')
+    .select('id, name, description')
     .eq('slug', resolvedParams.slug)
     .single()
 
-  if (!category) {
+  if (catError || !category) {
+    console.error('generateMetadata category error:', catError)
     return { title: 'Category Not Found' }
   }
 
-  const { count } = await serverSupabase
+  const { count, error: countError } = await serverSupabase
     .from('listings')
     .select('*', { count: 'exact', head: true })
     .eq('category_id', category.id)
     .eq('status', 'active')
+
+  if (countError) {
+    console.error('generateMetadata count error:', countError)
+  }
 
   const listingCount = count || 0
   const description = `Browse ${listingCount} verified ${category.name.toLowerCase()} in Antigua & Barbuda. Find contact details, locations, and reviews across all parishes. List your business free on AntiguaSearch.com.`
