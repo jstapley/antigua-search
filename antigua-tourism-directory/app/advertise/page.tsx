@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { createClient } from '@supabase/supabase-js'
 
 export const revalidate = 300 // Refresh every 5 minutes
 
@@ -11,19 +10,15 @@ export const metadata = {
 }
 
 async function getBusinessCount(): Promise<string> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-
-  const { count } = await supabase
-    .from('businesses')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'active')
-
-  const num = count ?? 0
-  const rounded = Math.floor(num / 10) * 10
-  return `${rounded}+`
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/business-count`, {
+      next: { revalidate: 300 }
+    })
+    const data = await res.json()
+    return data.display ?? '236'
+  } catch {
+    return '236'
+  }
 }
 
 export default async function AdvertisePage() {
