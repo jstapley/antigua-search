@@ -4,8 +4,11 @@ import ParishesPageClient from './ParishesPageClient'
 export const revalidate = 3600
 
 export const metadata = {
-  title: 'Browse All Parishes - Antigua Search',
-  description: 'Explore businesses and attractions across all parishes in Antigua & Barbuda',
+  title: 'Parishes in Antigua & Barbuda — Find Local Businesses by Location',
+  description: 'Browse businesses across all parishes in Antigua & Barbuda — St. John\'s, English Harbour, Falmouth, and more. Find hotels, restaurants, tours and local services near you.',
+  alternates: {
+    canonical: 'https://www.antiguasearch.com/parishes',
+  },
 }
 
 async function getParishes() {

@@ -42,10 +42,10 @@ export default async function AdvertisePage() {
               <span className="text-xl">🏪</span>
               <span className="text-sm md:text-base">Own a business?</span>
               <Link
-                href="/pricing"
+                href="/advertise"
                 className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap"
               >
-                Get premium visibility
+                Advertise Your Business
               </Link>
             </div>
           </div>
@@ -188,10 +188,10 @@ export default async function AdvertisePage() {
               </ul>
 
               <Link
-                href="/pricing"
+                href="/contact?subject=Featured Listing Inquiry"
                 className="block w-full bg-yellow-400 hover:bg-yellow-300 text-indigo-900 text-center py-4 rounded-xl font-black text-lg transition"
               >
-                Learn More →
+                Get Early Access →
               </Link>
             </div>
 
@@ -298,10 +298,10 @@ export default async function AdvertisePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/pricing"
+              href="/contact?subject=Featured Listing Inquiry"
               className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl"
             >
-              View Pricing Plans
+              Get Early Access
             </Link>
             <Link
               href="/contact"
