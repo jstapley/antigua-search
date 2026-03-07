@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { createClient } from '@supabase/supabase-js'
+
+export const revalidate = 300 // Refresh every 5 minutes
 
 export const metadata = {
   title: 'Advertise With Us | AntiguaSearch.com',
@@ -7,7 +10,25 @@ export const metadata = {
   keywords: 'advertise antigua, business advertising antigua, tourism advertising, antigua marketing, business promotion'
 }
 
-export default function AdvertisePage() {
+async function getBusinessCount(): Promise<string> {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
+  const { count } = await supabase
+    .from('businesses')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'active')
+
+  const num = count ?? 0
+  const rounded = Math.floor(num / 10) * 10
+  return `${rounded}+`
+}
+
+export default async function AdvertisePage() {
+  const businessCount = await getBusinessCount()
+
   return (
     <div className="min-h-screen bg-white">
       {/* Top Banner */}
@@ -55,24 +76,12 @@ export default function AdvertisePage() {
             </Link>
 
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Home
-              </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Browse Parishes
-              </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Categories
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Contact
-              </Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Login
-              </Link>
+              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
+              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">Login</Link>
               <Link 
                 href="/add-listing" 
                 className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
@@ -123,7 +132,7 @@ export default function AdvertisePage() {
               <div className="text-gray-600">Actively searching for businesses</div>
             </div>
             <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-indigo-100">
-              <div className="text-5xl font-extrabold text-indigo-600 mb-2">170+</div>
+              <div className="text-5xl font-extrabold text-indigo-600 mb-2">{businessCount}</div>
               <div className="text-xl font-semibold text-gray-900 mb-2">Business Listings</div>
               <div className="text-gray-600">Across all categories & parishes</div>
             </div>
@@ -140,9 +149,7 @@ export default function AdvertisePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
-              Advertising Options
-            </h2>
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Advertising Options</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Choose the perfect package to showcase your business to potential customers
             </p>
@@ -200,9 +207,7 @@ export default function AdvertisePage() {
                   COMING SOON
                 </div>
                 <h3 className="text-3xl font-black text-gray-900 mb-3">Display Advertising</h3>
-                <div className="text-4xl font-black text-indigo-600 mb-2">
-                  Custom
-                </div>
+                <div className="text-4xl font-black text-indigo-600 mb-2">Custom</div>
                 <p className="text-gray-600">High-visibility banner ads</p>
               </div>
 
@@ -256,49 +261,32 @@ export default function AdvertisePage() {
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="text-5xl mb-4">🎯</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Targeted Audience</h3>
-              <p className="text-gray-600">
-                Reach customers actively searching for businesses in your category and location
-              </p>
+              <p className="text-gray-600">Reach customers actively searching for businesses in your category and location</p>
             </div>
-
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="text-5xl mb-4">📈</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Growing Traffic</h3>
-              <p className="text-gray-600">
-                Our visitor count is growing monthly as we become the go-to directory for Antigua
-              </p>
+              <p className="text-gray-600">Our visitor count is growing monthly as we become the go-to directory for Antigua</p>
             </div>
-
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="text-5xl mb-4">💰</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Affordable Pricing</h3>
-              <p className="text-gray-600">
-                Get premium visibility without breaking the bank - starting at just $25/month
-              </p>
+              <p className="text-gray-600">Get premium visibility without breaking the bank - starting at just $25/month</p>
             </div>
-
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="text-5xl mb-4">🌴</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Tourism Focused</h3>
-              <p className="text-gray-600">
-                Perfect for hotels, restaurants, tours, and any business targeting tourists
-              </p>
+              <p className="text-gray-600">Perfect for hotels, restaurants, tours, and any business targeting tourists</p>
             </div>
-
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="text-5xl mb-4">📱</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Mobile Optimized</h3>
-              <p className="text-gray-600">
-                Your ads look great on all devices - desktop, tablet, and mobile
-              </p>
+              <p className="text-gray-600">Your ads look great on all devices - desktop, tablet, and mobile</p>
             </div>
-
             <div className="bg-white rounded-2xl p-8 shadow-lg">
               <div className="text-5xl mb-4">⚡</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Quick Setup</h3>
-              <p className="text-gray-600">
-                Get your featured listing live in minutes - no complicated setup required
-              </p>
+              <p className="text-gray-600">Get your featured listing live in minutes - no complicated setup required</p>
             </div>
           </div>
         </div>
@@ -311,7 +299,7 @@ export default function AdvertisePage() {
             Ready to Grow Your Business?
           </h2>
           <p className="text-xl text-white/90 mb-8">
-            Join 170+ businesses already advertising on AntiguaSearch.com
+            Join {businessCount} businesses already advertising on AntiguaSearch.com
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -336,21 +324,13 @@ export default function AdvertisePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <Image 
-                  src="/antigua-flag.png" 
-                  alt="Antigua Flag" 
-                  width={40} 
-                  height={40}
-                  className="rounded-full"
-                />
+                <Image src="/antigua-flag.png" alt="Antigua Flag" width={40} height={40} className="rounded-full" />
                 <div>
                   <div className="font-bold text-base md:text-lg">Antigua Search</div>
                   <div className="text-xs md:text-sm text-gray-400">Directory</div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm">
-                Your complete guide to experiencing the best of Antigua & Barbuda
-              </p>
+              <p className="text-gray-400 text-sm">Your complete guide to experiencing the best of Antigua & Barbuda</p>
             </div>
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Quick Links</h6>
@@ -376,12 +356,8 @@ export default function AdvertisePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              © 2026 Antigua Search. All rights reserved.
-            </p>
-            <p className="text-gray-500 text-xs mt-2">
-              170+ Business Listings • 12 Categories • Discover Paradise
-            </p>
+            <p className="text-gray-400 text-sm">© 2026 Antigua Search. All rights reserved.</p>
+            <p className="text-gray-500 text-xs mt-2">{businessCount} Business Listings • 12 Categories • Discover Paradise</p>
           </div>
         </div>
       </footer>

@@ -1,11 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function PricingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [businessCount, setBusinessCount] = useState('200+')
+
+  useEffect(() => {
+    fetch('/api/business-count')
+      .then(res => res.json())
+      .then(data => {
+        if (data.display) setBusinessCount(data.display)
+      })
+      .catch(() => {}) // silently keep the fallback value
+  }, [])
 
   return (
     <div className="min-h-screen bg-white">
@@ -54,24 +64,12 @@ export default function PricingPage() {
             </Link>
 
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Home
-              </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Browse Parishes
-              </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Categories
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Contact
-              </Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">
-                Login
-              </Link>
+              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
+              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">Login</Link>
               <Link 
                 href="/add-listing" 
                 className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
@@ -121,12 +119,12 @@ export default function PricingPage() {
             No Hidden Fees. No Credit Card Required. Forever Free.
           </p>
           <p className="text-lg text-white/90 max-w-3xl mx-auto">
-            Join 118+ businesses already listed on Antigua & Barbuda's premier business directory
+            Join {businessCount} businesses already listed on Antigua & Barbuda&apos;s premier business directory
           </p>
         </div>
       </section>
 
-      {/* Pricing Cards - Yellow Background to Match Featured Section */}
+      {/* Pricing Cards */}
       <section className="bg-gradient-to-b from-yellow-50 to-white py-16">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-6">
@@ -137,15 +135,9 @@ export default function PricingPage() {
                 <div className="inline-block bg-green-500 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">
                   100% FREE FOREVER
                 </div>
-                <h2 className="text-3xl font-black text-white mb-3">
-                  Complete Business Profile
-                </h2>
-                <p className="text-3xl text-white font-bold mb-2">
-                  $0<span className="text-lg">/month</span>
-                </p>
-                <p className="text-white/90 text-sm">
-                  Everything you need to showcase your business
-                </p>
+                <h2 className="text-3xl font-black text-white mb-3">Complete Business Profile</h2>
+                <p className="text-3xl text-white font-bold mb-2">$0<span className="text-lg">/month</span></p>
+                <p className="text-white/90 text-sm">Everything you need to showcase your business</p>
               </div>
 
               <div className="space-y-3 mb-8">
@@ -200,9 +192,7 @@ export default function PricingPage() {
                 >
                   Add Your Business Now →
                 </Link>
-                <p className="text-white/70 mt-3 text-xs">
-                  No credit card required • Takes less than 5 minutes
-                </p>
+                <p className="text-white/70 mt-3 text-xs">No credit card required • Takes less than 5 minutes</p>
               </div>
             </div>
 
@@ -212,18 +202,9 @@ export default function PricingPage() {
                 <div className="inline-block bg-yellow-400 text-indigo-900 px-6 py-2 rounded-full font-bold text-sm mb-4">
                   COMING SOON
                 </div>
-                
-                <h2 className="text-3xl font-black text-white mb-3">
-                  Featured Listings
-                </h2>
-
-                <p className="text-3xl text-white font-bold mb-2">
-                  $25<span className="text-lg">/month</span>
-                </p>
-                <p className="text-white/90 text-sm mb-4">
-                  Expected Launch: Q2 2026
-                </p>
-                
+                <h2 className="text-3xl font-black text-white mb-3">Featured Listings</h2>
+                <p className="text-3xl text-white font-bold mb-2">$25<span className="text-lg">/month</span></p>
+                <p className="text-white/90 text-sm mb-4">Expected Launch: Q2 2026</p>
                 <p className="text-white/90">
                   Want your business to stand out with premium placement and top-of-page visibility?
                 </p>
@@ -231,7 +212,6 @@ export default function PricingPage() {
 
               <div className="space-y-3 mb-8">
                 <h3 className="text-lg font-bold text-white mb-4 text-center">Featured Benefits Include:</h3>
-                
                 <div className="flex items-start gap-3">
                   <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
                   <div>
@@ -239,7 +219,6 @@ export default function PricingPage() {
                     <p className="text-white/80 text-sm">Stand out with premium styling</p>
                   </div>
                 </div>
-                
                 <div className="flex items-start gap-3">
                   <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
                   <div>
@@ -247,7 +226,6 @@ export default function PricingPage() {
                     <p className="text-white/80 text-sm">Appear first in search results</p>
                   </div>
                 </div>
-                
                 <div className="flex items-start gap-3">
                   <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
                   <div>
@@ -255,7 +233,6 @@ export default function PricingPage() {
                     <p className="text-white/80 text-sm">Maximum visibility on homepage</p>
                   </div>
                 </div>
-                
                 <div className="flex items-start gap-3">
                   <div className="text-yellow-400 text-xl flex-shrink-0">✓</div>
                   <div>
@@ -272,10 +249,7 @@ export default function PricingPage() {
                 >
                   Join the Waitlist →
                 </Link>
-                
-                <p className="text-white/70 mt-3 text-xs">
-                  Be the first to know when Featured Listings launch
-                </p>
+                <p className="text-white/70 mt-3 text-xs">Be the first to know when Featured Listings launch</p>
               </div>
             </div>
 
@@ -286,63 +260,32 @@ export default function PricingPage() {
       {/* FAQ Section */}
       <section className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl font-black text-gray-900 text-center mb-8">
-            Frequently Asked Questions
-          </h2>
+          <h2 className="text-3xl font-black text-gray-900 text-center mb-8">Frequently Asked Questions</h2>
 
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Is it really free?
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Yes! Creating a complete business profile on AntiguaSearch.com is 100% free with no hidden costs.
-              </p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Is it really free?</h3>
+              <p className="text-gray-600 text-sm">Yes! Creating a complete business profile on AntiguaSearch.com is 100% free with no hidden costs.</p>
             </div>
-
             <div className="bg-white p-6 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Do I need a credit card?
-              </h3>
-              <p className="text-gray-600 text-sm">
-                No credit card required. Simply fill out the form and you're done!
-              </p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Do I need a credit card?</h3>
+              <p className="text-gray-600 text-sm">No credit card required. Simply fill out the form and you're done!</p>
             </div>
-
             <div className="bg-white p-6 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                How long to get listed?
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Most listings are reviewed and published within 24-48 hours.
-              </p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">How long to get listed?</h3>
+              <p className="text-gray-600 text-sm">Most listings are reviewed and published within 24-48 hours.</p>
             </div>
-
             <div className="bg-white p-6 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Can I update my listing?
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Absolutely! Claim your listing and update anytime.
-              </p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Can I update my listing?</h3>
+              <p className="text-gray-600 text-sm">Absolutely! Claim your listing and update anytime.</p>
             </div>
-
             <div className="bg-white p-6 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                What are Featured Listings?
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Premium placement with gold borders, star badges, and top visibility. Coming Q2 2026!
-              </p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">What are Featured Listings?</h3>
+              <p className="text-gray-600 text-sm">Premium placement with gold borders, star badges, and top visibility. Coming Q2 2026!</p>
             </div>
-
             <div className="bg-white p-6 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Will my listing stay free?
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Yes! Your basic listing will always remain free. Featured is optional.
-              </p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Will my listing stay free?</h3>
+              <p className="text-gray-600 text-sm">Yes! Your basic listing will always remain free. Featured is optional.</p>
             </div>
           </div>
         </div>
@@ -354,21 +297,13 @@ export default function PricingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <Image 
-                  src="/antigua-flag.png" 
-                  alt="Antigua Flag" 
-                  width={40} 
-                  height={40}
-                  className="rounded-full"
-                />
+                <Image src="/antigua-flag.png" alt="Antigua Flag" width={40} height={40} className="rounded-full" />
                 <div>
                   <div className="font-bold">Antigua Search</div>
                   <div className="text-sm text-gray-400">Directory</div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm">
-                Your complete guide to Antigua & Barbuda
-              </p>
+              <p className="text-gray-400 text-sm">Your complete guide to Antigua & Barbuda</p>
             </div>
             <div>
               <h6 className="font-bold mb-4">Quick Links</h6>
