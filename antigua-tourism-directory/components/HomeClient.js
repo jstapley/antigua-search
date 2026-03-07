@@ -174,12 +174,12 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Main Headline - SEO Optimized */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 tracking-tight leading-tight">
-            Antigua & Barbuda Business Directory
+            Find the Best of Antigua & Barbuda — Restaurants, Hotels, Tours & More
           </h1>
           
           {/* Subheadline - Target Keywords */}
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-300 mb-4 md:mb-6">
-            Find Local Businesses, Hotels, Restaurants & Services
+            Own a business? Get found for free.
           </h2>
           
           {/* Description - Natural Keyword Integration */}

@@ -31,6 +31,9 @@ export async function generateMetadata({ params }) {
   return {
     title: `${parish.name} - Antigua Search`,
     description: parish.description || `Discover businesses and attractions in ${parish.name}, Antigua & Barbuda`,
+    alternates: {
+      canonical: `https://www.antiguasearch.com/parish/${resolvedParams.slug}`,
+    },
   }
 }
 

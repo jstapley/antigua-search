@@ -31,6 +31,9 @@ export async function generateMetadata({ params }) {
   return {
     title: `${category.name} in Antigua - ANTIGUA SEARCH`,
     description: category.description || `Discover the best ${category.name.toLowerCase()} in Antigua & Barbuda`,
+    alternates: {
+      canonical: `https://www.antiguasearch.com/category/${resolvedParams.slug}`,
+    },
   }
 }
 
