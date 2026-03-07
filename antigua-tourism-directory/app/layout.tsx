@@ -19,9 +19,6 @@ export const metadata: Metadata = {
   description: "Discover the best of Antigua & Barbuda",
   metadataBase: new URL('https://www.antiguasearch.com'),
   manifest: '/manifest.json',
-  alternates: {
-    canonical: 'https://www.antiguasearch.com',
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
