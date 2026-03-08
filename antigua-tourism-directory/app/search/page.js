@@ -7,6 +7,19 @@ export const metadata = {
   alternates: {
     canonical: 'https://www.antiguasearch.com/search',
   },
+  openGraph: {
+    title: 'Search Businesses in Antigua & Barbuda | AntiguaSearch.com',
+    description: 'Search 200+ local businesses across Antigua & Barbuda. Find restaurants, hotels, tours, shops and services by name, category or parish.',
+    url: 'https://www.antiguasearch.com/search',
+    siteName: 'AntiguaSearch.com',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Search Businesses in Antigua & Barbuda | AntiguaSearch.com',
+    description: 'Search 200+ local businesses across Antigua & Barbuda.',
+  },
 }
 
 export default function SearchPage() {
