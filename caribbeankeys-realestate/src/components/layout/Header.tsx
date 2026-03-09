@@ -3,18 +3,36 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
-import { Menu, X, Phone, Mail } from "lucide-react"
+import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [locationsOpen, setLocationsOpen] = useState(false)
+  const [projectsOpen, setProjectsOpen] = useState(false)
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
+  const [projectsTimeoutId, setProjectsTimeoutId] = useState<NodeJS.Timeout | null>(null)
 
   const navigation = [
     { name: "HOME", href: "/" },
     { name: "PROPERTIES", href: "/properties" },
-    { name: "NEW LISTINGS", href: "/properties/new" },
+    { name: "PROJECTS", href: "#", hasDropdown: true },
+    { name: "LOCATIONS", href: "#", hasDropdown: true },
     { name: "ABOUT", href: "/about" },
     { name: "CONTACT", href: "/contact" },
+  ]
+
+  const projects = [
+    { name: "The Gardens", slug: "the-gardens", subtitle: "Jolly Harbour • CIP Approved" },
+  ]
+
+  const parishes = [
+    { name: "St. John", slug: "st-john", subtitle: "Central/North West" },
+    { name: "St. George", slug: "st-george", subtitle: "Central/North" },
+    { name: "St. Peter", slug: "st-peter", subtitle: "Central/North East" },
+    { name: "St. Mary", slug: "st-mary", subtitle: "South West" },
+    { name: "St. Philip", slug: "st-philip", subtitle: "East" },
+    { name: "St. Paul", slug: "st-paul", subtitle: "South" },
   ]
 
   return (
@@ -24,13 +42,13 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 text-sm">
             <div className="flex items-center gap-6">
-              <a href="tel:+12681234567" className="flex items-center gap-2 hover:text-caribbean-gold transition">
+              <a href="tel:+17057255824" className="flex items-center gap-2 hover:text-caribbean-gold transition">
                 <Phone className="h-4 w-4" />
-                <span className="hidden sm:inline">+1 (268) 123-4567</span>
+                <span className="hidden sm:inline">(705) 725-5824</span>
               </a>
-              <a href="mailto:info@caribbeankeysrealestate.com" className="flex items-center gap-2 hover:text-caribbean-gold transition">
+              <a href="mailto:ross.caribbeankeys@gmail.com" className="flex items-center gap-2 hover:text-caribbean-gold transition">
                 <Mail className="h-4 w-4" />
-                <span className="hidden md:inline">info@caribbeankeysrealestate.com</span>
+                <span className="hidden md:inline">ross.caribbeankeys@gmail.com</span>
               </a>
             </div>
             <div className="hidden md:block text-xs uppercase tracking-wider">
@@ -65,20 +83,90 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-caribbean-navy hover:text-caribbean-gold font-semibold transition tracking-wide text-sm"
-              >
-                {item.name}
-              </Link>
+              item.hasDropdown ? (
+                <div 
+                  key={item.name}
+                  className="relative"
+                  onMouseEnter={() => {
+                    if (item.name === "LOCATIONS") {
+                      if (timeoutId) clearTimeout(timeoutId)
+                      setLocationsOpen(true)
+                    } else if (item.name === "PROJECTS") {
+                      if (projectsTimeoutId) clearTimeout(projectsTimeoutId)
+                      setProjectsOpen(true)
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (item.name === "LOCATIONS") {
+                      const id = setTimeout(() => setLocationsOpen(false), 200)
+                      setTimeoutId(id)
+                    } else if (item.name === "PROJECTS") {
+                      const id = setTimeout(() => setProjectsOpen(false), 200)
+                      setProjectsTimeoutId(id)
+                    }
+                  }}
+                >
+                  <button
+                    className="flex items-center gap-1 text-caribbean-navy hover:text-caribbean-gold font-semibold transition tracking-wide text-sm"
+                  >
+                    {item.name}
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                  
+                  {/* Projects Dropdown */}
+                  {item.name === "PROJECTS" && projectsOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-72 bg-white shadow-lg rounded-lg py-2 border border-gray-100">
+                      {projects.map((project) => (
+                        <Link
+                          key={project.slug}
+                          href={`/projects/${project.slug}`}
+                          className="block px-4 py-3 hover:bg-caribbean-seafoam/20 transition"
+                        >
+                          <div className="font-semibold text-caribbean-navy">{project.name}</div>
+                          <div className="text-xs text-gray-600">{project.subtitle}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Locations Dropdown */}
+                  {item.name === "LOCATIONS" && locationsOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-64 bg-white shadow-lg rounded-lg py-2 border border-gray-100">
+                      {parishes.map((parish) => (
+                        <Link
+                          key={parish.slug}
+                          href={`/locations/${parish.slug}`}
+                          className="block px-4 py-3 hover:bg-caribbean-seafoam/20 transition"
+                        >
+                          <div className="font-semibold text-caribbean-navy">{parish.name}</div>
+                          <div className="text-xs text-gray-600">{parish.subtitle}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-caribbean-navy hover:text-caribbean-gold font-semibold transition tracking-wide text-sm"
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
           </nav>
 
           {/* CTA Button */}
           <div className="hidden lg:block">
             <Button asChild className="bg-caribbean-gold hover:bg-caribbean-gold/90 text-caribbean-navy uppercase tracking-wider font-semibold">
-              <Link href="/contact">Schedule Viewing</Link>
+              <a 
+                href="https://api.leadconnectorhq.com/widget/booking/SvIBBVEDScQOGhfhK5eS"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Schedule Viewing
+              </a>
             </Button>
           </div>
 
@@ -102,17 +190,77 @@ export function Header() {
         <div className="lg:hidden border-t">
           <div className="px-4 py-4 space-y-3">
             {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="block px-3 py-2 text-base font-semibold text-caribbean-navy hover:bg-caribbean-blue/10 rounded-md tracking-wide"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
+              item.hasDropdown ? (
+                <div key={item.name}>
+                  <button
+                    className="w-full flex items-center justify-between px-3 py-2 text-base font-semibold text-caribbean-navy hover:bg-caribbean-blue/10 rounded-md tracking-wide"
+                    onClick={() => {
+                      if (item.name === "LOCATIONS") {
+                        setLocationsOpen(!locationsOpen)
+                      } else if (item.name === "PROJECTS") {
+                        setProjectsOpen(!projectsOpen)
+                      }
+                    }}
+                  >
+                    {item.name}
+                    <ChevronDown className={`h-4 w-4 transition-transform ${
+                      (item.name === "LOCATIONS" && locationsOpen) || (item.name === "PROJECTS" && projectsOpen) ? 'rotate-180' : ''
+                    }`} />
+                  </button>
+                  
+                  {/* Projects Dropdown */}
+                  {item.name === "PROJECTS" && projectsOpen && (
+                    <div className="ml-4 mt-2 space-y-2">
+                      {projects.map((project) => (
+                        <Link
+                          key={project.slug}
+                          href={`/projects/${project.slug}`}
+                          className="block px-3 py-2 text-sm text-caribbean-navy hover:bg-caribbean-seafoam/20 rounded-md"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <div className="font-semibold">{project.name}</div>
+                          <div className="text-xs text-gray-600">{project.subtitle}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Locations Dropdown */}
+                  {item.name === "LOCATIONS" && locationsOpen && (
+                    <div className="ml-4 mt-2 space-y-2">
+                      {parishes.map((parish) => (
+                        <Link
+                          key={parish.slug}
+                          href={`/locations/${parish.slug}`}
+                          className="block px-3 py-2 text-sm text-caribbean-navy hover:bg-caribbean-seafoam/20 rounded-md"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <div className="font-semibold">{parish.name}</div>
+                          <div className="text-xs text-gray-600">{parish.subtitle}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block px-3 py-2 text-base font-semibold text-caribbean-navy hover:bg-caribbean-blue/10 rounded-md tracking-wide"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
             <Button asChild className="w-full bg-caribbean-gold hover:bg-caribbean-gold/90 text-caribbean-navy uppercase tracking-wider font-semibold">
-              <Link href="/contact">Schedule Viewing</Link>
+              <a 
+                href="https://api.leadconnectorhq.com/widget/booking/SvIBBVEDScQOGhfhK5eS"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Schedule Viewing
+              </a>
             </Button>
           </div>
         </div>

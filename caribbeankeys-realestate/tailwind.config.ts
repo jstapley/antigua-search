@@ -30,6 +30,7 @@ const config: Config = {
         'caribbean-navy': '#1A3B5C',      // Deep navy blue
         'caribbean-cream': '#F5F1E8',     // Cream/beige
         'caribbean-teal': '#6B9999',      // Darker teal accent
+        'caribbean-seafoam': '#B6D9D4',   // Soft turquoise/seafoam
         
         // shadcn/ui default colors
         border: "hsl(var(--border))",

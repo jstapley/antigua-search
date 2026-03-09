@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { GoogleMapsScript } from "@/components/GoogleMapsScript";
 import { ACTIVE_FONT, montserrat, poppins, workSans, inter, playfair } from "@/lib/fonts/font-config";
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default function RootLayout({
           ${ACTIVE_FONT.className}
         `}
       >
+        <GoogleMapsScript />
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-1">{children}</main>

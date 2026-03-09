@@ -485,6 +485,8 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
                 <Link href="/add-listing" className="block text-gray-400 hover:text-white transition">List Your Business</Link>
                 <Link href="/advertise" className="block text-gray-400 hover:text-white transition">Advertise With Us</Link>
                 <Link href="/pricing" className="block text-gray-400 hover:text-white transition">Pricing</Link>
+                <a href="https://www.StapleyInc.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">Stapley Inc.</a>
+                <a href="https://www.AntiguaMarineSolutions.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">Antigua Marine Solutions</a>
               </div>
             </div>
             <div>
