@@ -3,51 +3,39 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-// Initialize Supabase client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 )
 
-// Regenerate sitemap every hour
 export const revalidate = 3600
 
 export async function GET() {
   const baseUrl = 'https://www.antiguasearch.com'
 
   try {
-    // Fetch all active listings
     const { data: listings, error: listingsError } = await supabase
       .from('listings')
       .select('slug, updated_at')
       .eq('status', 'active')
       .order('updated_at', { ascending: false })
 
-    if (listingsError) {
-      console.error('Error fetching listings:', listingsError)
-    }
+    if (listingsError) console.error('Error fetching listings:', listingsError)
 
-    // Fetch all categories
     const { data: categories, error: categoriesError } = await supabase
       .from('categories')
       .select('slug, updated_at')
       .order('name')
 
-    if (categoriesError) {
-      console.error('Error fetching categories:', categoriesError)
-    }
+    if (categoriesError) console.error('Error fetching categories:', categoriesError)
 
-    // Fetch all parishes
     const { data: parishes, error: parishesError } = await supabase
       .from('parishes')
       .select('slug, updated_at')
       .order('name')
 
-    if (parishesError) {
-      console.error('Error fetching parishes:', parishesError)
-    }
+    if (parishesError) console.error('Error fetching parishes:', parishesError)
 
-    // Build sitemap XML
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
@@ -76,6 +64,20 @@ export async function GET() {
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/search</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>${baseUrl}/pricing</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <url>
@@ -124,7 +126,7 @@ export async function GET() {
     <priority>0.8</priority>
   </url>`).join('') || ''}
 
-  <!-- All Individual Listing Pages (DYNAMIC - CRITICAL!) -->
+  <!-- All Individual Listing Pages -->
   ${listings?.map(listing => `
   <url>
     <loc>${baseUrl}/listing/${listing.slug}</loc>
@@ -145,7 +147,6 @@ export async function GET() {
   } catch (error) {
     console.error('Sitemap generation error:', error)
     
-    // Return a basic sitemap if there's an error
     const fallbackSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -157,9 +158,7 @@ export async function GET() {
 </urlset>`
 
     return new Response(fallbackSitemap, {
-      headers: {
-        'Content-Type': 'application/xml'
-      }
+      headers: { 'Content-Type': 'application/xml' }
     })
   }
 }
