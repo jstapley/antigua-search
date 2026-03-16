@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import ListingDetailClient from './ListingDetailClient'
 
 export const revalidate = 3600
+export const dynamicParams = true
 
 export async function generateStaticParams() {
   const { data: listings } = await supabase
