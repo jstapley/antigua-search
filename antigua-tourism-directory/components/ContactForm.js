@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { Turnstile } from '@marsidev/react-turnstile'
 
 export default function ContactForm({ defaultSubject = '' }) {
   const [formData, setFormData] = useState({
@@ -18,6 +19,9 @@ export default function ContactForm({ defaultSubject = '' }) {
     error: null
   })
 
+  const [turnstileToken, setTurnstileToken] = useState(null)
+  const turnstileRef = useRef(null)
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormData(prev => ({
@@ -28,19 +32,27 @@ export default function ContactForm({ defaultSubject = '' }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (!turnstileToken) {
+      setStatus({ submitting: false, submitted: false, error: 'Please complete the security check.' })
+      return
+    }
+
     setStatus({ submitting: true, submitted: false, error: null })
 
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, turnstileToken })
       })
 
       if (!response.ok) throw new Error('Failed to submit form')
 
       setStatus({ submitting: false, submitted: true, error: null })
       setFormData({ name: '', email: '', phone: '', subject: defaultSubject, message: '', businessInquiry: false })
+      setTurnstileToken(null)
+      turnstileRef.current?.reset()
 
       setTimeout(() => {
         setStatus({ submitting: false, submitted: false, error: null })
@@ -49,6 +61,8 @@ export default function ContactForm({ defaultSubject = '' }) {
     } catch (error) {
       console.error('Contact form error:', error)
       setStatus({ submitting: false, submitted: false, error: 'Failed to send message. Please try again or email us directly.' })
+      turnstileRef.current?.reset()
+      setTurnstileToken(null)
     }
   }
 
@@ -104,7 +118,22 @@ export default function ContactForm({ defaultSubject = '' }) {
             <span className="text-sm text-gray-700">This is a business inquiry (listing your business, advertising, partnerships)</span>
           </label>
         </div>
-        <button type="submit" disabled={status.submitting}
+
+        {/* Cloudflare Turnstile */}
+        <div className="mb-6">
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+            onSuccess={(token) => setTurnstileToken(token)}
+            onExpire={() => setTurnstileToken(null)}
+            onError={() => {
+              setTurnstileToken(null)
+              setStatus(prev => ({ ...prev, error: 'Security check failed. Please refresh and try again.' }))
+            }}
+          />
+        </div>
+
+        <button type="submit" disabled={status.submitting || !turnstileToken}
           className="w-full bg-indigo-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
           {status.submitting ? '✉️ Sending...' : '📨 Send Message'}
         </button>

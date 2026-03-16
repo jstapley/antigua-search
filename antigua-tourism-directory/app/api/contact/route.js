@@ -1,15 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-// Create a Supabase client with service role (bypasses RLS)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-console.log('🔑 Supabase Config Check:')
-console.log('- URL:', supabaseUrl ? '✅' : '❌')
-console.log('- Service Role Key:', serviceRoleKey ? '✅ (length: ' + serviceRoleKey?.length + ')' : '❌ MISSING')
-console.log('- Anon Key:', anonKey ? '✅' : '❌')
 
 const supabaseAdmin = createClient(
   supabaseUrl,
@@ -22,13 +16,35 @@ const supabaseAdmin = createClient(
   }
 )
 
+async function verifyTurnstile(token) {
+  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      secret: process.env.TURNSTILE_SECRET_KEY,
+      response: token,
+    }),
+  })
+  const data = await response.json()
+  return data.success
+}
+
 export async function POST(request) {
   try {
     const formData = await request.json()
-    
+
+    // Verify Turnstile token
+    const turnstileValid = await verifyTurnstile(formData.turnstileToken)
+    if (!turnstileValid) {
+      return NextResponse.json(
+        { success: false, error: 'Security check failed. Please try again.' },
+        { status: 400 }
+      )
+    }
+
     console.log('📝 Contact Form Submission:', { name: formData.name, email: formData.email })
-    
-    // 1. Save to Supabase (backup/record keeping)
+
+    // 1. Save to Supabase
     const { data: contact, error: dbError } = await supabaseAdmin
       .from('contact_submissions')
       .insert([{
@@ -45,16 +61,14 @@ export async function POST(request) {
 
     if (dbError) {
       console.error('Database error:', dbError)
-      // Continue even if database fails - don't block submission
     }
 
-    // 2. Send to GHL using their API
+    // 2. Send to GHL
     const ghlApiKey = process.env.GHL_API_KEY
     const ghlLocationId = process.env.GHL_LOCATION_ID
 
     if (ghlApiKey && ghlLocationId) {
       try {
-        // Create contact in GHL
         const ghlContactResponse = await fetch(
           `https://services.leadconnectorhq.com/contacts/`,
           {
@@ -72,18 +86,9 @@ export async function POST(request) {
               source: 'Antigua Search - Contact Form',
               tags: formData.businessInquiry ? ['Business Inquiry', 'Contact Form'] : ['Contact Form'],
               customFields: [
-                {
-                  key: 'contact_subject',
-                  value: formData.subject
-                },
-                {
-                  key: 'contact_message',
-                  value: formData.message
-                },
-                {
-                  key: 'inquiry_type',
-                  value: formData.businessInquiry ? 'Business' : 'General'
-                }
+                { key: 'contact_subject', value: formData.subject },
+                { key: 'contact_message', value: formData.message },
+                { key: 'inquiry_type', value: formData.businessInquiry ? 'Business' : 'General' }
               ],
               locationId: ghlLocationId
             })
@@ -95,17 +100,13 @@ export async function POST(request) {
         }
       } catch (ghlError) {
         console.error('GHL integration error:', ghlError)
-        // Don't fail the whole request if GHL fails
       }
     }
 
-    // 3. Send email notification (optional)
-    // You can add email notification here using SendGrid, Resend, etc.
-
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: 'Contact form submitted successfully',
-      id: contact?.id 
+      id: contact?.id
     })
 
   } catch (error) {
