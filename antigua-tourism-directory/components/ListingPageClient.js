@@ -85,7 +85,7 @@ export default function ListingPageClient({ listing }) {
             <a 
               href={`tel:${listing.phone}`}
               onClick={handlePhoneClick}
-              className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold"
+              className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
             >
               <span className="text-xl">📞</span>
               <span>{listing.phone}</span>
@@ -99,7 +99,7 @@ export default function ListingPageClient({ listing }) {
             <a 
               href={`mailto:${listing.email}`}
               onClick={handleEmailClick}
-              className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold break-all"
+              className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold break-all"
             >
               <span className="text-xl">✉️</span>
               <span>{listing.email}</span>
@@ -118,7 +118,7 @@ export default function ListingPageClient({ listing }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleWebsiteClick}
-                  className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold"
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
                 >
                   <span className="text-xl">🌐</span>
                   <span>Website</span>
@@ -130,7 +130,7 @@ export default function ListingPageClient({ listing }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleSocialClick('facebook')}
-                  className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold"
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
                 >
                   <span className="text-xl">📘</span>
                   <span>Facebook</span>
@@ -142,7 +142,7 @@ export default function ListingPageClient({ listing }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleSocialClick('instagram')}
-                  className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold"
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
                 >
                   <span className="text-xl">📸</span>
                   <span>Instagram</span>
@@ -154,7 +154,7 @@ export default function ListingPageClient({ listing }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleSocialClick('google')}
-                  className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold"
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
                 >
                   <span className="text-xl">🔍</span>
                   <span>Google Business</span>
@@ -166,7 +166,7 @@ export default function ListingPageClient({ listing }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleSocialClick('tripadvisor')}
-                  className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold"
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
                 >
                   <span className="text-xl">🦉</span>
                   <span>TripAdvisor</span>
@@ -178,7 +178,7 @@ export default function ListingPageClient({ listing }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleSocialClick('twitter')}
-                  className="flex items-center gap-3 text-indigo-600 hover:text-indigo-700 font-semibold"
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
                 >
                   <span className="text-xl">🐦</span>
                   <span>Twitter</span>
@@ -205,7 +205,7 @@ export default function ListingPageClient({ listing }) {
           <a 
             href={`tel:${listing.phone}`}
             onClick={handlePhoneClick}
-            className="block w-full bg-indigo-600 text-white text-center px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
+            className="block w-full bg-brand-600 text-white text-center px-6 py-3 rounded-lg font-bold hover:bg-brand-700 transition"
           >
             Call Now
           </a>
@@ -216,7 +216,7 @@ export default function ListingPageClient({ listing }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleWebsiteClick}
-            className="block w-full bg-white border-2 border-indigo-600 text-indigo-600 text-center px-6 py-3 rounded-lg font-bold hover:bg-indigo-50 transition"
+            className="block w-full bg-white border-2 border-brand-600 text-brand-600 text-center px-6 py-3 rounded-lg font-bold hover:bg-brand-50 transition"
           >
             Visit Website →
           </a>

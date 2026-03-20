@@ -234,7 +234,7 @@ export default function ScraperPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+              className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
             >
               Back to Dashboard
             </Link>
@@ -261,7 +261,7 @@ export default function ScraperPage() {
               />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">AI BUSINESS SCRAPER</div>
+                <div className="text-sm text-brand-600 font-semibold">AI BUSINESS SCRAPER</div>
               </div>
             </Link>
             <div className="flex items-center gap-4">
@@ -270,7 +270,7 @@ export default function ScraperPage() {
               </span>
               <Link
                 href="/dashboard/admin"
-                className="text-gray-700 hover:text-indigo-600 font-medium"
+                className="text-gray-700 hover:text-brand-600 font-medium"
               >
                 ← Admin Dashboard
               </Link>
@@ -302,7 +302,7 @@ export default function ScraperPage() {
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 disabled={scraping}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               >
                 <option value="">Select a category</option>
                 {categories.map(cat => (

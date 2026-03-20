@@ -274,12 +274,12 @@ export default function ImportPage() {
                 />
                 <div>
                   <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                  <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                  <div className="text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
                 </div>
               </Link>
               <Link
                 href="/dashboard"
-                className="text-gray-700 hover:text-indigo-600 font-medium"
+                className="text-gray-700 hover:text-brand-600 font-medium"
               >
                 ← Back to Dashboard
               </Link>
@@ -296,7 +296,7 @@ export default function ImportPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+              className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
             >
               Back to Dashboard
             </Link>
@@ -324,16 +324,16 @@ export default function ImportPage() {
               />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
             <div className="flex items-center gap-4">
-              <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-semibold">
+              <span className="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-semibold">
                 Admin
               </span>
               <Link
                 href="/dashboard"
-                className="text-gray-700 hover:text-indigo-600 font-medium"
+                className="text-gray-700 hover:text-brand-600 font-medium"
               >
                 ← Back to Dashboard
               </Link>
@@ -354,7 +354,7 @@ export default function ImportPage() {
         </div>
 
         {/* Instructions */}
-        <div className="bg-blue-50 border-l-4 border-indigo-600 p-6 rounded-r-xl mb-8">
+        <div className="bg-blue-50 border-l-4 border-brand-600 p-6 rounded-r-xl mb-8">
           <h3 className="text-lg font-bold text-gray-900 mb-3">📋 CSV Format Instructions</h3>
           <p className="text-gray-700 mb-3">Your CSV file should include these columns:</p>
           <ul className="list-disc list-inside text-gray-700 space-y-1 mb-4">
@@ -377,7 +377,7 @@ export default function ImportPage() {
           </ul>
           <button
             onClick={downloadTemplate}
-            className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+            className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
           >
             Download Template CSV
           </button>
@@ -427,7 +427,7 @@ export default function ImportPage() {
             />
             <label
               htmlFor="csv-upload"
-              className={`inline-block bg-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg cursor-pointer hover:bg-indigo-700 transition ${
+              className={`inline-block bg-brand-600 text-white px-8 py-4 rounded-lg font-bold text-lg cursor-pointer hover:bg-brand-700 transition ${
                 importing ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -473,7 +473,7 @@ export default function ImportPage() {
               <div className="mt-6">
                 <Link
                   href="/"
-                  className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                  className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
                 >
                   View Directory →
                 </Link>

@@ -15,7 +15,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
   return (
     <div className="min-h-screen bg-white">
       {/* Top Stats Banner - Mobile Responsive */}
-      <div className="bg-indigo-600 text-white py-3 px-4">
+      <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-center md:text-left">
@@ -53,33 +53,33 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">
                 Home
               </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">
                 Browse Parishes
               </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">
                 Categories
               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">
                 About Us
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
                 Contact
               </Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">
                 Login
               </Link>
               <Link 
                 href="/add-listing" 
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
               >
                 + Add Your Business
               </Link>
@@ -108,49 +108,49 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
               <Link
                 href="/"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/parishes"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Browse Parishes
               </Link>
               <Link
                 href="/categories"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Categories
               </Link>
               <Link
                 href="/about"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
               </Link>
               <Link
                 href="/contact"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
               </Link>
               <Link
                 href="/login"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Login
               </Link>
               <Link
                 href="/add-listing"
-                className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center"
+                className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 + Add Your Business
@@ -164,11 +164,11 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-2 text-xs md:text-sm overflow-x-auto">
-            <Link href="/" className="text-indigo-600 hover:text-indigo-700 whitespace-nowrap">Home</Link>
+            <Link href="/" className="text-brand-600 hover:text-brand-700 whitespace-nowrap">Home</Link>
             <span className="text-gray-400">/</span>
             {listing.category && (
               <>
-                <Link href={`/category/${listing.category.slug}`} className="text-indigo-600 hover:text-indigo-700 whitespace-nowrap">
+                <Link href={`/category/${listing.category.slug}`} className="text-brand-600 hover:text-brand-700 whitespace-nowrap">
                   {listing.category.name}
                 </Link>
                 <span className="text-gray-400">/</span>
@@ -190,7 +190,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
               <div className="mt-6">
                 <Link
                   href="/login"
-                  className="block w-full bg-yellow-400 text-indigo-900 text-center px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition"
+                  className="block w-full bg-yellow-400 text-brand-900 text-center px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition"
                 >
                   🏢 Claim This Business
                 </Link>
@@ -212,16 +212,16 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
                   className="object-cover"
                 />
                 {listing.featured && (
-                  <div className="absolute top-2 md:top-4 right-2 md:right-4 bg-yellow-400 text-indigo-900 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-bold">
+                  <div className="absolute top-2 md:top-4 right-2 md:right-4 bg-yellow-400 text-brand-900 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-bold">
                     ⭐ Featured
                   </div>
                 )}
               </div>
             ) : (
-              <div className="aspect-video bg-gradient-to-br from-indigo-100 to-blue-100 rounded-2xl flex items-center justify-center mb-6 relative">
+              <div className="aspect-video bg-gradient-to-br from-brand-100 to-blue-100 rounded-2xl flex items-center justify-center mb-6 relative">
                 <span className="text-6xl md:text-9xl">{listing.category?.icon_emoji || '🏢'}</span>
                 {listing.featured && (
-                  <div className="absolute top-2 md:top-4 right-2 md:right-4 bg-yellow-400 text-indigo-900 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-bold">
+                  <div className="absolute top-2 md:top-4 right-2 md:right-4 bg-yellow-400 text-brand-900 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-bold">
                     ⭐ Featured
                   </div>
                 )}
@@ -237,7 +237,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
                 {listing.category && (
                   <Link
                     href={`/category/${listing.category.slug}`}
-                    className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold hover:bg-indigo-200 transition"
+                    className="inline-flex items-center gap-2 bg-brand-100 text-brand-700 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold hover:bg-brand-200 transition"
                   >
                     <span>{listing.category.icon_emoji}</span>
                     <span>{listing.category.name}</span>
@@ -267,7 +267,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
 
             {/* Short Description - Mobile Responsive */}
             {listing.short_description && (
-              <div className="bg-blue-50 border-l-4 border-indigo-600 p-4 md:p-6 rounded-r-xl mb-8">
+              <div className="bg-blue-50 border-l-4 border-brand-600 p-4 md:p-6 rounded-r-xl mb-8">
                 <p className="text-base md:text-lg text-gray-800 font-medium">
                   {listing.short_description}
                 </p>
@@ -311,7 +311,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {listing.amenities.map((amenity, index) => (
                     <div key={index} className="flex items-center gap-2 text-gray-700 text-sm md:text-base">
-                      <span className="text-indigo-600">✓</span>
+                      <span className="text-brand-600">✓</span>
                       <span>{amenity}</span>
                     </div>
                   ))}
@@ -329,7 +329,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
                 <div className="mt-6">
                   <Link
                     href="/login"
-                    className="block w-full bg-yellow-400 text-indigo-900 text-center px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition"
+                    className="block w-full bg-yellow-400 text-brand-900 text-center px-6 py-3 rounded-lg font-bold hover:bg-yellow-500 transition"
                   >
                     🏢 Claim This Business
                   </Link>
@@ -365,7 +365,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
                 <Link
                   key={related.id}
                   href={`/listing/${related.slug}`}
-                  className="border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group bg-white"
+                  className="border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-2xl hover:border-brand-400 transition-all duration-300 group bg-white"
                 >
                   {related.image_url ? (
                     <div className="aspect-video relative bg-gray-100">
@@ -377,12 +377,12 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
                       />
                     </div>
                   ) : (
-                    <div className="aspect-video bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center">
+                    <div className="aspect-video bg-gradient-to-br from-brand-100 to-blue-100 flex items-center justify-center">
                       <span className="text-5xl md:text-6xl">{related.category?.icon_emoji || '🏢'}</span>
                     </div>
                   )}
                   <div className="p-4 md:p-6">
-                    <h3 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition mb-2">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-brand-600 transition mb-2">
                       {related.business_name}
                     </h3>
                     {related.parish && (

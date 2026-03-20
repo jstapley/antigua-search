@@ -19,7 +19,7 @@ export default function PricingClient() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="bg-indigo-600 text-white py-3 px-4">
+      <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-center md:text-left">
@@ -47,17 +47,17 @@ export default function PricingClient() {
               <Image src="/antigua-flag.png" alt="Antigua Flag" width={50} height={50} className="rounded-full" />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">Login</Link>
-              <Link href="/add-listing" className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">+ Add Your Business</Link>
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
+              <Link href="/add-listing" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">+ Add Your Business</Link>
             </nav>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-gray-700 p-2" aria-label="Toggle menu">
               {mobileMenuOpen ? (
@@ -69,19 +69,19 @@ export default function PricingClient() {
           </div>
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
-              <Link href="/" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-              <Link href="/parishes" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
-              <Link href="/categories" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
-              <Link href="/about" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
-              <Link href="/contact" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
-              <Link href="/login" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-              <Link href="/add-listing" className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>+ Add Your Business</Link>
+              <Link href="/" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/parishes" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
+              <Link href="/categories" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
+              <Link href="/about" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+              <Link href="/contact" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+              <Link href="/login" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+              <Link href="/add-listing" className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>+ Add Your Business</Link>
             </nav>
           )}
         </div>
       </header>
 
-      <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12">
+      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4">List Your Business - FREE!</h1>
           <p className="text-xl md:text-2xl text-yellow-300 font-bold mb-3">No Hidden Fees. No Credit Card Required. Forever Free.</p>
@@ -94,7 +94,7 @@ export default function PricingClient() {
       <section className="bg-gradient-to-b from-yellow-50 to-white py-16">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 border-4 border-green-400 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition">
+            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-green-400 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition">
               <div className="text-center mb-6">
                 <div className="inline-block bg-green-500 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">100% FREE FOREVER</div>
                 <h2 className="text-3xl font-black text-white mb-3">Complete Business Profile</h2>
@@ -110,14 +110,14 @@ export default function PricingClient() {
                 ))}
               </div>
               <div className="text-center">
-                <Link href="/add-listing" className="block bg-yellow-400 hover:bg-yellow-300 text-indigo-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">Add Your Business Now →</Link>
+                <Link href="/add-listing" className="block bg-yellow-400 hover:bg-yellow-300 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">Add Your Business Now →</Link>
                 <p className="text-white/70 mt-3 text-xs">No credit card required • Takes less than 5 minutes</p>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 border-4 border-yellow-400 rounded-2xl p-8 shadow-lg">
+            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-yellow-400 rounded-2xl p-8 shadow-lg">
               <div className="text-center mb-6">
-                <div className="inline-block bg-yellow-400 text-indigo-900 px-6 py-2 rounded-full font-bold text-sm mb-4">COMING SOON</div>
+                <div className="inline-block bg-yellow-400 text-brand-900 px-6 py-2 rounded-full font-bold text-sm mb-4">COMING SOON</div>
                 <h2 className="text-3xl font-black text-white mb-3">Featured Listings</h2>
                 <p className="text-3xl text-white font-bold mb-2">$25<span className="text-lg">/month</span></p>
                 <p className="text-white/90 text-sm mb-4">Expected Launch: Q2 2026</p>
@@ -133,7 +133,7 @@ export default function PricingClient() {
                 ))}
               </div>
               <div className="text-center">
-                <Link href="/contact?subject=Featured Listing Inquiry" className="block bg-white hover:bg-gray-100 text-indigo-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">Get Early Access →</Link>
+                <Link href="/contact?subject=Featured Listing Inquiry" className="block bg-white hover:bg-gray-100 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">Get Early Access →</Link>
                 <p className="text-white/70 mt-3 text-xs">Be the first to know when Featured Listings launch</p>
               </div>
             </div>

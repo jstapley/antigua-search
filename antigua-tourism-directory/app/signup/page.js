@@ -37,7 +37,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 to-blue-50 flex items-center justify-center px-4 py-8">
       <div className="max-w-md w-full">
         {/* Logo/Brand - Mobile Responsive */}
         <div className="text-center mb-6 md:mb-8">
@@ -51,7 +51,7 @@ export default function SignupPage() {
             />
             <div className="text-left">
               <div className="text-xl md:text-2xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-              <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+              <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
             </div>
           </Link>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mt-4 md:mt-6">Create Account</h1>
@@ -76,7 +76,7 @@ export default function SignupPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 placeholder="John Doe"
               />
             </div>
@@ -90,7 +90,7 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 placeholder="you@example.com"
               />
             </div>
@@ -105,7 +105,7 @@ export default function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength="6"
-                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 placeholder="••••••••"
               />
               <p className="text-xs md:text-sm text-gray-500 mt-1">Must be at least 6 characters</p>
@@ -114,7 +114,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 text-white py-2.5 md:py-3 rounded-lg font-bold hover:bg-indigo-700 transition disabled:opacity-50 text-sm md:text-base"
+              className="w-full bg-brand-600 text-white py-2.5 md:py-3 rounded-lg font-bold hover:bg-brand-700 transition disabled:opacity-50 text-sm md:text-base"
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
@@ -123,7 +123,7 @@ export default function SignupPage() {
           <div className="mt-4 md:mt-6 text-center">
             <p className="text-gray-600 text-sm md:text-base">
               Already have an account?{' '}
-              <Link href="/login" className="text-indigo-600 font-semibold hover:text-indigo-700">
+              <Link href="/login" className="text-brand-600 font-semibold hover:text-brand-700">
                 Sign in
               </Link>
             </p>

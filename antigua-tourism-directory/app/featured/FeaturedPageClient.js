@@ -23,21 +23,21 @@ export default function FeaturedPageClient({ featuredListings }) {
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">Login</Link>
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
               <Link 
                 href="/add-listing" 
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
               >
                 + Add Your Business
               </Link>
@@ -64,20 +64,20 @@ export default function FeaturedPageClient({ featuredListings }) {
           {/* Mobile Menu Dropdown */}
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
-              <Link href="/" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-              <Link href="/parishes" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
-              <Link href="/categories" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
-              <Link href="/about" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
-              <Link href="/contact" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
-              <Link href="/login" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-              <Link href="/add-listing" className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>+ Add Your Business</Link>
+              <Link href="/" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/parishes" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
+              <Link href="/categories" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
+              <Link href="/about" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+              <Link href="/contact" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+              <Link href="/login" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+              <Link href="/add-listing" className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>+ Add Your Business</Link>
             </nav>
           )}
         </div>
       </header>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12 md:py-16">
+      <div className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <div className="mb-4 md:mb-6">
@@ -92,7 +92,7 @@ export default function FeaturedPageClient({ featuredListings }) {
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-yellow-400 px-4 py-2 rounded-full mb-4">
                 <span className="text-2xl">⭐</span>
-                <span className="font-bold text-indigo-900 text-sm md:text-base">PREMIUM LISTINGS</span>
+                <span className="font-bold text-brand-900 text-sm md:text-base">PREMIUM LISTINGS</span>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4">
               Featured Businesses
@@ -152,7 +152,7 @@ export default function FeaturedPageClient({ featuredListings }) {
 
                 {/* Content */}
                 <div className="p-6">
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition">
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-brand-600 transition">
                     {listing.business_name}
                   </h3>
                   
@@ -184,7 +184,7 @@ export default function FeaturedPageClient({ featuredListings }) {
                     </div>
                   )}
 
-                  <div className="text-indigo-600 font-bold flex items-center gap-2 text-base md:text-lg">
+                  <div className="text-brand-600 font-bold flex items-center gap-2 text-base md:text-lg">
                     View Details
                     <span className="group-hover:translate-x-2 transition-transform">→</span>
                   </div>
@@ -204,7 +204,7 @@ export default function FeaturedPageClient({ featuredListings }) {
             </p>
             <Link
               href="/"
-              className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+              className="inline-block bg-brand-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
             >
               Back to Home
             </Link>
@@ -213,15 +213,15 @@ export default function FeaturedPageClient({ featuredListings }) {
 
         {/* CTA Section */}
         {featuredListings.length > 0 && (
-          <div className="mt-16 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl p-8 md:p-12 text-center text-white">
+          <div className="mt-16 bg-gradient-to-br from-brand-600 to-brand-800 rounded-2xl p-8 md:p-12 text-center text-white">
             <h3 className="text-2xl md:text-3xl font-bold mb-4">Want Premium Visibility?</h3>
-            <p className="text-base md:text-lg text-indigo-100 mb-6 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-brand-100 mb-6 max-w-2xl mx-auto">
               Get your business featured with priority placement, enhanced visibility, and a gold border that stands out.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/add-listing"
-                className="bg-yellow-400 text-indigo-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition"
+                className="bg-yellow-400 text-brand-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition"
               >
                 List Your Business
               </Link>

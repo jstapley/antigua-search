@@ -88,33 +88,33 @@ export default function ContactForm({ defaultSubject = '' }) {
         <div className="mb-6">
           <label htmlFor="name" className="block text-sm font-bold text-gray-900 mb-2">Your Name *</label>
           <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="John Doe" />
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" placeholder="John Doe" />
         </div>
         <div className="mb-6">
           <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-2">Email Address *</label>
           <input type="email" id="email" name="email" required value={formData.email} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="john@example.com" />
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" placeholder="john@example.com" />
         </div>
         <div className="mb-6">
           <label htmlFor="phone" className="block text-sm font-bold text-gray-900 mb-2">Phone Number</label>
           <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="+1 268 XXX XXXX" />
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" placeholder="+1 268 XXX XXXX" />
         </div>
         <div className="mb-6">
           <label htmlFor="subject" className="block text-sm font-bold text-gray-900 mb-2">Subject *</label>
           <input type="text" id="subject" name="subject" required value={formData.subject} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="How can we help you?" />
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" placeholder="How can we help you?" />
         </div>
         <div className="mb-6">
           <label htmlFor="message" className="block text-sm font-bold text-gray-900 mb-2">Message *</label>
           <textarea id="message" name="message" required rows={6} value={formData.message} onChange={handleChange}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none resize-none"
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none resize-none"
             placeholder="Tell us more about your inquiry..." />
         </div>
         <div className="mb-6">
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" name="businessInquiry" checked={formData.businessInquiry} onChange={handleChange}
-              className="mt-1 w-5 h-5 text-indigo-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-indigo-600" />
+              className="mt-1 w-5 h-5 text-brand-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-brand-600" />
             <span className="text-sm text-gray-700">This is a business inquiry (listing your business, advertising, partnerships)</span>
           </label>
         </div>
@@ -134,7 +134,7 @@ export default function ContactForm({ defaultSubject = '' }) {
         </div>
 
         <button type="submit" disabled={status.submitting || !turnstileToken}
-          className="w-full bg-indigo-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
+          className="w-full bg-brand-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-brand-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
           {status.submitting ? '✉️ Sending...' : '📨 Send Message'}
         </button>
         <p className="text-sm text-gray-500 text-center mt-4">* Required fields. We typically respond within 24 hours.</p>

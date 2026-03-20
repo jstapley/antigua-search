@@ -148,12 +148,12 @@ export default function ClaimListingPage() {
               />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
             <Link
               href="/dashboard"
-              className="text-gray-700 hover:text-indigo-600 font-medium"
+              className="text-gray-700 hover:text-brand-600 font-medium"
             >
               ← Back to Dashboard
             </Link>
@@ -184,7 +184,7 @@ export default function ClaimListingPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="e.g., Paradise Resort, Dickenson Bay..."
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               />
             </div>
             <div>
@@ -194,7 +194,7 @@ export default function ClaimListingPage() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               >
                 <option value="">All Categories</option>
                 {categories.map(cat => (
@@ -223,7 +223,7 @@ export default function ClaimListingPage() {
             </p>
             <Link
               href="/add-listing"
-              className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+              className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
             >
               Add Your Business Instead
             </Link>
@@ -239,7 +239,7 @@ export default function ClaimListingPage() {
                   key={listing.id}
                   className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition"
                 >
-                  <div className="relative aspect-video bg-gradient-to-br from-indigo-100 to-blue-100">
+                  <div className="relative aspect-video bg-gradient-to-br from-brand-100 to-blue-100">
                     {listing.image_url ? (
                       <Image
                         src={listing.image_url}
@@ -258,7 +258,7 @@ export default function ClaimListingPage() {
                       {listing.business_name}
                     </h3>
                     {listing.category && (
-                      <div className="text-sm text-indigo-600 font-semibold mb-2">
+                      <div className="text-sm text-brand-600 font-semibold mb-2">
                         {listing.category.icon_emoji} {listing.category.name}
                       </div>
                     )}
@@ -283,7 +283,7 @@ export default function ClaimListingPage() {
                       <button
                         onClick={() => handleClaim(listing.id)}
                         disabled={claiming === listing.id}
-                        className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
+                        className="flex-1 bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-700 transition disabled:opacity-50"
                       >
                         {claiming === listing.id ? 'Claiming...' : 'Claim This'}
                       </button>
@@ -296,7 +296,7 @@ export default function ClaimListingPage() {
         )}
 
         {/* Can't Find Business */}
-        <div className="mt-12 bg-blue-50 border-l-4 border-indigo-600 p-6 rounded-r-xl">
+        <div className="mt-12 bg-blue-50 border-l-4 border-brand-600 p-6 rounded-r-xl">
           <h3 className="text-lg font-bold text-gray-900 mb-2">
             Can't find your business?
           </h3>
@@ -305,7 +305,7 @@ export default function ClaimListingPage() {
           </p>
           <Link
             href="/add-listing"
-            className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+            className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
           >
             Add Your Business →
           </Link>

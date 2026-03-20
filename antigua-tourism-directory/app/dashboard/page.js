@@ -91,16 +91,16 @@ export default function DashboardPage() {
               />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
             <div className="flex items-center gap-4">
               {isAdmin && (
-                <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-semibold">
+                <span className="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-semibold">
                   Admin
                 </span>
               )}
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">
                 View Directory
               </Link>
               <button
@@ -130,10 +130,10 @@ export default function DashboardPage() {
         <div className={`grid grid-cols-1 md:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6 mb-12`}>
           <Link
             href="/dashboard/claim-listing"
-            className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-indigo-600 hover:shadow-lg transition group"
+            className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-brand-600 hover:shadow-lg transition group"
           >
             <div className="text-4xl mb-3">🏢</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600">
+            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-brand-600">
               Claim a Listing
             </h3>
             <p className="text-gray-600">
@@ -143,10 +143,10 @@ export default function DashboardPage() {
 
           <Link
             href="/add-listing"
-            className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-indigo-600 hover:shadow-lg transition group"
+            className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-brand-600 hover:shadow-lg transition group"
           >
             <div className="text-4xl mb-3">➕</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600">
+            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-brand-600">
               Add New Listing
             </h3>
             <p className="text-gray-600">
@@ -158,10 +158,10 @@ export default function DashboardPage() {
             <>
               <Link
                 href="/dashboard/import"
-                className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-indigo-600 hover:shadow-lg transition group"
+                className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-brand-600 hover:shadow-lg transition group"
               >
                 <div className="text-4xl mb-3">📤</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600">
+                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-brand-600">
                   Import from CSV
                 </h3>
                 <p className="text-gray-600">
@@ -184,7 +184,7 @@ export default function DashboardPage() {
             </>
           )}
 
-          <div className="bg-gradient-to-br from-indigo-600 to-blue-600 rounded-xl p-6 text-white">
+          <div className="bg-gradient-to-br from-brand-600 to-blue-600 rounded-xl p-6 text-white">
             <div className="text-4xl mb-3">⭐</div>
             <h3 className="text-xl font-bold mb-2">
               Go Featured
@@ -213,13 +213,13 @@ export default function DashboardPage() {
               <div className="flex gap-4 justify-center">
                 <Link
                   href="/dashboard/claim-listing"
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                  className="bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
                 >
                   Claim a Listing
                 </Link>
                 <Link
                   href="/add-listing"
-                  className="bg-white border-2 border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition"
+                  className="bg-white border-2 border-brand-600 text-brand-600 px-6 py-3 rounded-lg font-semibold hover:bg-brand-50 transition"
                 >
                   Add New Listing
                 </Link>
@@ -236,7 +236,7 @@ export default function DashboardPage() {
                     key={claim.id}
                     className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition"
                   >
-                    <div className="aspect-video bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center">
+                    <div className="aspect-video bg-gradient-to-br from-brand-100 to-blue-100 flex items-center justify-center">
                       <span className="text-6xl">{claim.listing.category?.icon_emoji || '🏢'}</span>
                     </div>
                     <div className="p-6">
@@ -266,7 +266,7 @@ export default function DashboardPage() {
                         </Link>
                         <Link
                           href={`/dashboard/edit/${claim.listing.id}`}
-                          className="flex-1 text-center bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
+                          className="flex-1 text-center bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-700 transition"
                         >
                           Edit
                         </Link>

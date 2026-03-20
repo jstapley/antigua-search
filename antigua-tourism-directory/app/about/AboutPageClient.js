@@ -23,33 +23,33 @@ export default function AboutPageClient() {
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-6">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">
                 Home
               </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">
                 Browse Parishes
               </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">
                 Categories
               </Link>
-              <Link href="/about" className="text-indigo-600 font-bold">
+              <Link href="/about" className="text-brand-600 font-bold">
                 About Us
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
                 Contact
               </Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">
                 Login
               </Link>
               <Link 
                 href="/add-listing" 
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
               >
                 + Add Your Business
               </Link>
@@ -78,49 +78,49 @@ export default function AboutPageClient() {
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
               <Link
                 href="/"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/parishes"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Browse Parishes
               </Link>
               <Link
                 href="/categories"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Categories
               </Link>
               <Link
                 href="/about"
-                className="block text-indigo-600 font-bold py-2"
+                className="block text-brand-600 font-bold py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
               </Link>
               <Link
                 href="/contact"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
               </Link>
               <Link
                 href="/login"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Login
               </Link>
               <Link
                 href="/add-listing"
-                className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center"
+                className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 + Add Your Business
@@ -131,10 +131,10 @@ export default function AboutPageClient() {
       </header>
 
       {/* Hero Section - Mobile Responsive */}
-      <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-12 md:py-20">
+      <div className="bg-gradient-to-br from-brand-600 to-brand-800 text-white py-12 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 md:mb-6">About AntiguaSearch.com</h1>
-          <p className="text-base md:text-xl text-indigo-100 px-4">
+          <p className="text-base md:text-xl text-brand-100 px-4">
             Making it easier for businesses to be found and for visitors to discover Antigua & Barbuda
           </p>
         </div>
@@ -206,7 +206,7 @@ export default function AboutPageClient() {
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div className="bg-indigo-50 rounded-xl p-4 md:p-6 border-2 border-indigo-200">
+              <div className="bg-brand-50 rounded-xl p-4 md:p-6 border-2 border-brand-200">
                 <div className="text-2xl md:text-3xl mb-2 md:mb-3">🎯</div>
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">One Central Location</h3>
                 <p className="text-gray-700 text-sm md:text-base">
@@ -214,7 +214,7 @@ export default function AboutPageClient() {
                 </p>
               </div>
 
-              <div className="bg-indigo-50 rounded-xl p-4 md:p-6 border-2 border-indigo-200">
+              <div className="bg-brand-50 rounded-xl p-4 md:p-6 border-2 border-brand-200">
                 <div className="text-2xl md:text-3xl mb-2 md:mb-3">📊</div>
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Real Analytics</h3>
                 <p className="text-gray-700 text-sm md:text-base">
@@ -222,7 +222,7 @@ export default function AboutPageClient() {
                 </p>
               </div>
 
-              <div className="bg-indigo-50 rounded-xl p-4 md:p-6 border-2 border-indigo-200">
+              <div className="bg-brand-50 rounded-xl p-4 md:p-6 border-2 border-brand-200">
                 <div className="text-2xl md:text-3xl mb-2 md:mb-3">✨</div>
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Easy to Manage</h3>
                 <p className="text-gray-700 text-sm md:text-base">
@@ -230,7 +230,7 @@ export default function AboutPageClient() {
                 </p>
               </div>
 
-              <div className="bg-indigo-50 rounded-xl p-4 md:p-6 border-2 border-indigo-200">
+              <div className="bg-brand-50 rounded-xl p-4 md:p-6 border-2 border-brand-200">
                 <div className="text-2xl md:text-3xl mb-2 md:mb-3">🌴</div>
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Reach More Visitors</h3>
                 <p className="text-gray-700 text-sm md:text-base">
@@ -324,21 +324,21 @@ export default function AboutPageClient() {
         </section>
 
         {/* Call to Action - Mobile Responsive */}
-        <section className="bg-indigo-600 text-white rounded-2xl p-8 md:p-12 text-center">
+        <section className="bg-brand-600 text-white rounded-2xl p-8 md:p-12 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Get Your Business Discovered?</h2>
-          <p className="text-base md:text-xl text-indigo-100 mb-6 md:mb-8 px-4">
+          <p className="text-base md:text-xl text-brand-100 mb-6 md:mb-8 px-4">
             Join hundreds of businesses already using AntiguaSearch.com
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/add-listing"
-              className="bg-white text-indigo-600 px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-indigo-50 transition inline-block"
+              className="bg-white text-brand-600 px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-brand-50 transition inline-block"
             >
               List Your Business Free
             </Link>
             <Link
               href="/contact"
-              className="bg-indigo-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-indigo-800 transition inline-block border-2 border-white"
+              className="bg-brand-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-brand-800 transition inline-block border-2 border-white"
             >
               Contact Us
             </Link>
@@ -361,7 +361,7 @@ export default function AboutPageClient() {
                 />
                 <div>
                   <div className="font-bold text-base md:text-lg">ANTIGUA & BARBUDA</div>
-                  <div className="text-xs md:text-sm text-indigo-400">ANTIGUA SEARCH</div>
+                  <div className="text-xs md:text-sm text-brand-400">ANTIGUA SEARCH</div>
                 </div>
               </div>
               <p className="text-gray-400 text-sm">

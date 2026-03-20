@@ -135,7 +135,7 @@ export default function AdminReviewsClient({ initialReviews }: AdminReviewsClien
                 onClick={() => setFilter(tab as any)}
                 className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
                   filter === tab
-                    ? 'border-indigo-600 text-indigo-600'
+                    ? 'border-brand-600 text-brand-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -180,7 +180,7 @@ export default function AdminReviewsClient({ initialReviews }: AdminReviewsClien
                         <a href={`/listing/${review.listing.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-indigo-600 hover:text-indigo-700"
+                        className="text-brand-600 hover:text-brand-700"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>

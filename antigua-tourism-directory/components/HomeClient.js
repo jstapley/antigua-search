@@ -20,7 +20,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
   return (
     <div className="min-h-screen bg-white">
       {/* Top Stats Banner - Mobile Responsive */}
-      <div className="bg-indigo-600 text-white py-3 px-4">
+      <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             {/* Visitor Count */}
@@ -62,33 +62,33 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">
                 Home
               </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">
                 Browse Parishes
               </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">
                 Categories
               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">
                 About Us
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
                 Contact
               </Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">
                 Login
               </Link>
               <Link 
                 href="/add-listing" 
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
               >
                 + Add Your Business
               </Link>
@@ -117,49 +117,49 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
               <Link
                 href="/"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/parishes"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Browse Parishes
               </Link>
               <Link
                 href="/categories"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Categories
               </Link>
               <Link
                 href="/about"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
               </Link>
               <Link
                 href="/contact"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
               </Link>
               <Link
                 href="/login"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Login
               </Link>
               <Link
                 href="/add-listing"
-                className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center"
+                className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 + Add Your Business
@@ -170,7 +170,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
       </header>
 
       {/* Hero Section - SEO OPTIMIZED WITH BUSINESS OWNER CTA */}
-      <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12 md:py-20">
+      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Main Headline - SEO Optimized */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 tracking-tight leading-tight">
@@ -204,7 +204,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
                 </div>
                 <button
                   type="submit"
-                  className="bg-yellow-400 text-indigo-900 px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-yellow-300 transition shadow-lg whitespace-nowrap"
+                  className="bg-yellow-400 text-brand-900 px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-yellow-300 transition shadow-lg whitespace-nowrap"
                 >
                   Search
                 </button>
@@ -239,7 +239,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <Link
                 href="/add-listing"
-                className="bg-yellow-400 text-indigo-900 px-6 md:px-8 py-3 rounded-lg font-bold text-base hover:bg-yellow-300 transition shadow-lg"
+                className="bg-yellow-400 text-brand-900 px-6 md:px-8 py-3 rounded-lg font-bold text-base hover:bg-yellow-300 transition shadow-lg"
               >
                 ➕ Add Your Business
               </Link>
@@ -261,7 +261,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
           <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
             <Link 
               href="/parishes" 
-              className="bg-yellow-400 text-indigo-900 px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-yellow-300 transition shadow-lg text-center"
+              className="bg-yellow-400 text-brand-900 px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-yellow-300 transition shadow-lg text-center"
             >
               Browse All Parishes →
             </Link>
@@ -323,7 +323,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
 
                   {/* Content */}
                   <div className="p-6">
-                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition">
+                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-brand-600 transition">
                       {listing.business_name}
                     </h4>
                     
@@ -355,7 +355,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
                       </div>
                     )}
 
-                    <div className="text-indigo-600 font-bold flex items-center gap-2 text-base md:text-lg">
+                    <div className="text-brand-600 font-bold flex items-center gap-2 text-base md:text-lg">
                       View Details
                       <span className="group-hover:translate-x-2 transition-transform">→</span>
                     </div>
@@ -394,10 +394,10 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
-                className="bg-white border-2 border-gray-200 rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group"
+                className="bg-white border-2 border-gray-200 rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:border-brand-400 transition-all duration-300 group"
               >
                 <div className="text-4xl md:text-5xl mb-3 md:mb-4">{category.icon_emoji}</div>
-                <h4 className="font-bold text-base md:text-lg text-gray-900 mb-2 group-hover:text-indigo-600 transition">
+                <h4 className="font-bold text-base md:text-lg text-gray-900 mb-2 group-hover:text-brand-600 transition">
                   {category.name}
                 </h4>
                 <div className="text-gray-600 font-semibold text-sm md:text-base">
@@ -409,7 +409,7 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
           <div className="text-center mt-8 md:mt-10">
             <Link 
               href="/categories" 
-              className="text-indigo-600 font-bold text-base md:text-lg hover:text-indigo-700 inline-flex items-center gap-2"
+              className="text-brand-600 font-bold text-base md:text-lg hover:text-brand-700 inline-flex items-center gap-2"
             >
               View All Categories
               <span className="text-xl md:text-2xl">→</span>
@@ -430,16 +430,16 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
             <Link 
               key={parish.id} 
               href={`/parish/${parish.slug}`}
-              className="border-2 border-gray-200 rounded-xl p-6 md:p-8 hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group bg-white"
+              className="border-2 border-gray-200 rounded-xl p-6 md:p-8 hover:shadow-2xl hover:border-brand-400 transition-all duration-300 group bg-white"
             >
               <div className="flex items-start justify-between mb-4">
-                <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-indigo-600 transition">
+                <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-brand-600 transition">
                   {parish.name}
                 </h4>
                 <span className="text-2xl md:text-3xl">📍</span>
               </div>
               <p className="text-gray-600 mb-4 leading-relaxed text-sm md:text-base">{parish.description}</p>
-              <div className="text-indigo-600 font-bold text-base md:text-lg flex items-center gap-2">
+              <div className="text-brand-600 font-bold text-base md:text-lg flex items-center gap-2">
                 {parish.listing_count} listings
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>

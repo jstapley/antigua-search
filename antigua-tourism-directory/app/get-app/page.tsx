@@ -27,7 +27,7 @@ export default function GetAppPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Top Banner */}
-      <div className="bg-indigo-600 text-white py-3 px-4">
+      <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-center md:text-left">
@@ -66,29 +66,29 @@ export default function GetAppPage() {
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">
                 Home
               </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">
                 Browse Parishes
               </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">
                 Categories
               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">
                 About Us
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
                 Contact
               </Link>
               <Link 
                 href="/add-listing" 
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
               >
                 + Add Your Business
               </Link>
@@ -98,10 +98,10 @@ export default function GetAppPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-20">
+      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <div className="inline-block bg-yellow-400 text-indigo-900 px-6 py-2 rounded-full font-bold text-sm mb-6 animate-pulse">
+            <div className="inline-block bg-yellow-400 text-brand-900 px-6 py-2 rounded-full font-bold text-sm mb-6 animate-pulse">
               🎉 ANTIGUA'S FIRST BUSINESS DIRECTORY APP
             </div>
             
@@ -178,25 +178,25 @@ export default function GetAppPage() {
 
               <ol className="space-y-4 text-gray-700">
                 <li className="flex gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">1</span>
+                  <span className="flex-shrink-0 w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center font-bold">1</span>
                   <div>
                     <strong>Open Safari</strong> and visit <span className="font-mono bg-yellow-100 px-2 py-1 rounded">antiguasearch.com</span>
                   </div>
                 </li>
                 <li className="flex gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">2</span>
+                  <span className="flex-shrink-0 w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center font-bold">2</span>
                   <div>
                     Tap the <strong>Share button</strong> (square with arrow pointing up) at the bottom of the screen
                   </div>
                 </li>
                 <li className="flex gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">3</span>
+                  <span className="flex-shrink-0 w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center font-bold">3</span>
                   <div>
                     Scroll down and tap <strong>"Add to Home Screen"</strong>
                   </div>
                 </li>
                 <li className="flex gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">4</span>
+                  <span className="flex-shrink-0 w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center font-bold">4</span>
                   <div>
                     Tap <strong>"Add"</strong> in the top-right corner
                   </div>
@@ -290,7 +290,7 @@ export default function GetAppPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-indigo-700 to-blue-600 py-20">
+      <section className="bg-gradient-to-r from-brand-700 to-blue-600 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
             Ready to Install?
@@ -301,7 +301,7 @@ export default function GetAppPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/"
-              className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl inline-block"
+              className="bg-yellow-400 hover:bg-yellow-300 text-brand-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl inline-block"
             >
               Install Now →
             </a>

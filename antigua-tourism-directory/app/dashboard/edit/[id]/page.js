@@ -482,12 +482,12 @@ export default function EditListingPage({ params }) {
               />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
             <Link
               href="/dashboard"
-              className="text-gray-700 hover:text-indigo-600 font-medium"
+              className="text-gray-700 hover:text-brand-600 font-medium"
             >
               ← Back to Dashboard
             </Link>
@@ -543,7 +543,7 @@ export default function EditListingPage({ params }) {
                 Upload a high-quality image of your business (max 5MB, JPG/PNG)
               </p>
               
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition">
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brand-400 transition">
             <input
               type="file"
               accept="image/*"
@@ -573,7 +573,7 @@ export default function EditListingPage({ params }) {
               value={formData.business_name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
             />
           </div>
 
@@ -588,7 +588,7 @@ export default function EditListingPage({ params }) {
                 value={formData.category_id}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               >
                 <option value="">Select a category</option>
                 {categories.map(cat => (
@@ -609,7 +609,7 @@ export default function EditListingPage({ params }) {
                 value={formData.parish_id}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               >
                 <option value="">Select a parish</option>
                 {parishes.map(par => (
@@ -633,7 +633,7 @@ export default function EditListingPage({ params }) {
               onChange={handleChange}
               required
               maxLength="150"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
             />
             <p className="text-sm text-gray-500 mt-1">{formData.short_description.length}/150</p>
           </div>
@@ -649,7 +649,7 @@ export default function EditListingPage({ params }) {
               onChange={handleChange}
               required
               rows="6"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none resize-none"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none resize-none"
             />
           </div>
 
@@ -667,7 +667,7 @@ export default function EditListingPage({ params }) {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                 />
               </div>
 
@@ -680,7 +680,7 @@ export default function EditListingPage({ params }) {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                 />
               </div>
             </div>
@@ -694,7 +694,7 @@ export default function EditListingPage({ params }) {
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               />
             </div>
           </div>
@@ -714,7 +714,7 @@ export default function EditListingPage({ params }) {
               <input
                 ref={searchInputRef}
                 type="text"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                 placeholder="Start typing your address..."
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -749,7 +749,7 @@ export default function EditListingPage({ params }) {
                 value={formData.address}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               />
             </div>
 
@@ -769,7 +769,7 @@ export default function EditListingPage({ params }) {
                       href={`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-indigo-600 hover:text-indigo-700 font-semibold"
+                      className="text-sm text-brand-600 hover:text-brand-700 font-semibold"
                     >
                       Preview on Google Maps →
                     </a>
@@ -804,7 +804,7 @@ export default function EditListingPage({ params }) {
                         name="latitude"
                         value={formData.latitude}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                         placeholder="17.0608"
                       />
                     </div>
@@ -818,7 +818,7 @@ export default function EditListingPage({ params }) {
                         name="longitude"
                         value={formData.longitude}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                         placeholder="-61.7964"
                       />
                     </div>
@@ -843,7 +843,7 @@ export default function EditListingPage({ params }) {
                   name="facebook_url"
                   value={formData.facebook_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                   placeholder="https://facebook.com/yourbusiness"
                 />
               </div>
@@ -857,7 +857,7 @@ export default function EditListingPage({ params }) {
                   name="instagram_url"
                   value={formData.instagram_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                   placeholder="https://instagram.com/yourbusiness"
                 />
               </div>
@@ -871,7 +871,7 @@ export default function EditListingPage({ params }) {
                   name="google_business_url"
                   value={formData.google_business_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                   placeholder="https://maps.google.com/..."
                 />
               </div>
@@ -885,7 +885,7 @@ export default function EditListingPage({ params }) {
                   name="tripadvisor_url"
                   value={formData.tripadvisor_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                   placeholder="https://tripadvisor.com/..."
                 />
               </div>
@@ -899,7 +899,7 @@ export default function EditListingPage({ params }) {
                   name="twitter_url"
                   value={formData.twitter_url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                   placeholder="https://twitter.com/yourbusiness"
                 />
               </div>
@@ -918,7 +918,7 @@ export default function EditListingPage({ params }) {
               <button
                 type="submit"
                 disabled={saving || uploadingImage}
-                className="flex-1 bg-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-brand-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-brand-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? 'Saving...' : uploadingImage ? 'Uploading Image...' : 'Save Changes'}
               </button>

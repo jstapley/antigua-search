@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function OfflinePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <Image 
           src="/antigua-flag.png" 
@@ -37,7 +37,7 @@ export default function OfflinePage() {
 
         <Link
           href="/"
-          className="inline-block bg-yellow-400 text-indigo-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-2xl"
+          className="inline-block bg-yellow-400 text-brand-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-2xl"
         >
           Go to Homepage
         </Link>

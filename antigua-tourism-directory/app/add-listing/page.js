@@ -382,17 +382,17 @@ export default function AddListingPage() {
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
             </nav>
 
             {/* Mobile Hamburger Button */}
@@ -416,11 +416,11 @@ export default function AddListingPage() {
           {/* Mobile Menu Dropdown */}
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
-              <Link href="/" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-              <Link href="/parishes" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
-              <Link href="/categories" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
-              <Link href="/about" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
-              <Link href="/contact" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+              <Link href="/" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/parishes" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
+              <Link href="/categories" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
+              <Link href="/about" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+              <Link href="/contact" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
             </nav>
           )}
         </div>
@@ -460,7 +460,7 @@ export default function AddListingPage() {
               value={formData.business_name}
               onChange={handleChange}
               required
-              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
               placeholder="e.g., Paradise Beach Resort"
             />
           </div>
@@ -475,7 +475,7 @@ export default function AddListingPage() {
               value={formData.category_id}
               onChange={handleChange}
               required
-              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
             >
               <option value="">Select a category</option>
               {categories.map(cat => (
@@ -496,7 +496,7 @@ export default function AddListingPage() {
               value={formData.parish_id}
               onChange={handleChange}
               required
-              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
             >
               <option value="">Select a parish</option>
               {parishes.map(par => (
@@ -534,7 +534,7 @@ export default function AddListingPage() {
                   </button>
                 </div>
               ) : (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 md:p-8 text-center hover:border-indigo-400 transition">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 md:p-8 text-center hover:border-brand-400 transition">
                   <input
                     type="file"
                     accept="image/*"
@@ -564,7 +564,7 @@ export default function AddListingPage() {
               onChange={handleChange}
               required
               maxLength="150"
-              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
               placeholder="Brief one-line description (max 150 characters)"
             />
             <p className="text-xs md:text-sm text-gray-500 mt-1">{formData.short_description.length}/150</p>
@@ -581,7 +581,7 @@ export default function AddListingPage() {
               onChange={handleChange}
               required
               rows="6"
-              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
               placeholder="Detailed description of your business, services, and what makes you unique"
             />
           </div>
@@ -600,7 +600,7 @@ export default function AddListingPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="+1 (268) 462-0000"
                 />
               </div>
@@ -614,7 +614,7 @@ export default function AddListingPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="info@yourbusiness.com"
                 />
               </div>
@@ -629,7 +629,7 @@ export default function AddListingPage() {
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
-                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 placeholder="https://yourbusiness.com"
               />
             </div>
@@ -650,7 +650,7 @@ export default function AddListingPage() {
               <input
                 ref={searchInputRef}
                 type="text"
-                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 placeholder="Start typing your address..."
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -685,7 +685,7 @@ export default function AddListingPage() {
                 value={formData.address}
                 onChange={handleChange}
                 required
-                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 placeholder="Your business address"
               />
             </div>
@@ -706,7 +706,7 @@ export default function AddListingPage() {
                       href={`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs md:text-sm text-indigo-600 hover:text-indigo-700 font-semibold"
+                      className="text-xs md:text-sm text-brand-600 hover:text-brand-700 font-semibold"
                     >
                       Preview on Google Maps →
                     </a>
@@ -741,7 +741,7 @@ export default function AddListingPage() {
                         name="latitude"
                         value={formData.latitude}
                         onChange={handleChange}
-                        className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                         placeholder="17.0608"
                       />
                     </div>
@@ -755,7 +755,7 @@ export default function AddListingPage() {
                         name="longitude"
                         value={formData.longitude}
                         onChange={handleChange}
-                        className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                         placeholder="-61.7964"
                       />
                     </div>
@@ -780,7 +780,7 @@ export default function AddListingPage() {
                   name="facebook_url"
                   value={formData.facebook_url}
                   onChange={handleChange}
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://facebook.com/yourbusiness"
                 />
               </div>
@@ -794,7 +794,7 @@ export default function AddListingPage() {
                   name="instagram_url"
                   value={formData.instagram_url}
                   onChange={handleChange}
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://instagram.com/yourbusiness"
                 />
               </div>
@@ -808,7 +808,7 @@ export default function AddListingPage() {
                   name="google_business_url"
                   value={formData.google_business_url}
                   onChange={handleChange}
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://maps.google.com/..."
                 />
               </div>
@@ -822,7 +822,7 @@ export default function AddListingPage() {
                   name="tripadvisor_url"
                   value={formData.tripadvisor_url}
                   onChange={handleChange}
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://tripadvisor.com/..."
                 />
               </div>
@@ -836,7 +836,7 @@ export default function AddListingPage() {
                   name="twitter_url"
                   value={formData.twitter_url}
                   onChange={handleChange}
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://twitter.com/yourbusiness"
                 />
               </div>
@@ -859,7 +859,7 @@ export default function AddListingPage() {
                   value={formData.contact_name}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 />
               </div>
 
@@ -873,7 +873,7 @@ export default function AddListingPage() {
                   value={formData.contact_email}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm md:text-base"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                 />
               </div>
             </div>
@@ -883,7 +883,7 @@ export default function AddListingPage() {
           <button
             type="submit"
             disabled={loading || uploadingImage}
-            className="w-full bg-indigo-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-brand-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-brand-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploadingImage ? 'Uploading Image...' : loading ? 'Submitting...' : 'Submit Listing'}
           </button>

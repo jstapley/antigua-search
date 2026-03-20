@@ -10,7 +10,7 @@ export default function CategoriesPageClient({ categories }) {
   return (
     <div className="min-h-screen bg-white">
       {/* Top Stats Banner - Mobile Responsive */}
-      <div className="bg-indigo-600 text-white py-3 px-4">
+      <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-center md:text-left">
@@ -48,30 +48,30 @@ export default function CategoriesPageClient({ categories }) {
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">
                 Home
               </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">
                 Browse Parishes
               </Link>
-              <Link href="/categories" className="text-indigo-600 font-semibold">
+              <Link href="/categories" className="text-brand-600 font-semibold">
                 Categories
               </Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">
                 About Us
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
                 Contact
               </Link>
               <Link 
                 href="/add-listing" 
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
               >
                 + Add Your Business
               </Link>
@@ -100,42 +100,42 @@ export default function CategoriesPageClient({ categories }) {
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
               <Link
                 href="/"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/parishes"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Browse Parishes
               </Link>
               <Link
                 href="/categories"
-                className="block text-indigo-600 font-semibold py-2"
+                className="block text-brand-600 font-semibold py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Categories
               </Link>
               <Link
                 href="/about"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
               </Link>
               <Link
                 href="/contact"
-                className="block text-gray-700 hover:text-indigo-600 font-medium py-2"
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
               </Link>
               <Link
                 href="/add-listing"
-                className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center"
+                className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 + Add Your Business
@@ -149,7 +149,7 @@ export default function CategoriesPageClient({ categories }) {
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-2 text-xs md:text-sm">
-            <Link href="/" className="text-indigo-600 hover:text-indigo-700">Home</Link>
+            <Link href="/" className="text-brand-600 hover:text-brand-700">Home</Link>
             <span className="text-gray-400">/</span>
             <span className="text-gray-700 font-semibold">All Categories</span>
           </div>
@@ -157,7 +157,7 @@ export default function CategoriesPageClient({ categories }) {
       </div>
 
       {/* Page Header - Mobile Responsive */}
-      <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12 md:py-16">
+      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
             Browse All Categories
@@ -176,16 +176,16 @@ export default function CategoriesPageClient({ categories }) {
             <Link
               key={category.id}
               href={`/category/${category.slug}`}
-              className="bg-white border-2 border-gray-200 rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:border-indigo-400 transition-all duration-300 group"
+              className="bg-white border-2 border-gray-200 rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:border-brand-400 transition-all duration-300 group"
             >
               <div className="text-4xl md:text-6xl mb-3 md:mb-4">{category.icon_emoji}</div>
-              <h2 className="font-bold text-base md:text-xl text-gray-900 mb-2 group-hover:text-indigo-600 transition">
+              <h2 className="font-bold text-base md:text-xl text-gray-900 mb-2 group-hover:text-brand-600 transition">
                 {category.name}
               </h2>
               <div className="text-gray-600 font-semibold mb-3 md:mb-4 text-sm md:text-base">
                 {category.listing_count} listings
               </div>
-              <div className="text-indigo-600 font-bold text-xs md:text-sm group-hover:translate-y-1 transition-transform">
+              <div className="text-brand-600 font-bold text-xs md:text-sm group-hover:translate-y-1 transition-transform">
                 Explore ↓
               </div>
             </Link>
@@ -224,7 +224,7 @@ export default function CategoriesPageClient({ categories }) {
           </p>
           <Link
             href="/add-listing"
-            className="inline-block bg-indigo-600 text-white px-8 md:px-12 py-4 md:py-5 rounded-xl font-bold text-lg md:text-xl hover:bg-indigo-700 transition shadow-lg"
+            className="inline-block bg-brand-600 text-white px-8 md:px-12 py-4 md:py-5 rounded-xl font-bold text-lg md:text-xl hover:bg-brand-700 transition shadow-lg"
           >
             Get Listed Today - It's Free! →
           </Link>

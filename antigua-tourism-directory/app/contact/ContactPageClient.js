@@ -11,7 +11,7 @@ export default function ContactPageClient({ defaultSubject = '' }) {
   return (
     <div className="min-h-screen bg-white">
       {/* Top Stats Banner */}
-      <div className="bg-indigo-600 text-white py-3 px-4">
+      <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-center md:text-left">
@@ -43,18 +43,18 @@ export default function ContactPageClient({ defaultSubject = '' }) {
               <Image src="/antigua-flag.png" alt="Antigua Flag" width={50} height={50} className="rounded-full" />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
-              <Link href="/contact" className="text-indigo-600 font-bold">Contact</Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">Login</Link>
-              <Link href="/add-listing" className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-brand-600 font-bold">Contact</Link>
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
+              <Link href="/add-listing" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">
                 + Add Your Business
               </Link>
             </nav>
@@ -74,20 +74,20 @@ export default function ContactPageClient({ defaultSubject = '' }) {
 
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
-              <Link href="/" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-              <Link href="/parishes" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
-              <Link href="/categories" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
-              <Link href="/about" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
-              <Link href="/contact" className="block text-indigo-600 font-bold py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
-              <Link href="/login" className="block text-gray-700 hover:text-indigo-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-              <Link href="/add-listing" className="block bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>+ Add Your Business</Link>
+              <Link href="/" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/parishes" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
+              <Link href="/categories" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
+              <Link href="/about" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+              <Link href="/contact" className="block text-brand-600 font-bold py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+              <Link href="/login" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+              <Link href="/add-listing" className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>+ Add Your Business</Link>
             </nav>
           )}
         </div>
       </header>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-12 md:py-16">
+      <div className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4">Contact Us</h1>
           <p className="text-base md:text-xl text-white/90 max-w-2xl mx-auto px-4">
@@ -103,21 +103,21 @@ export default function ContactPageClient({ defaultSubject = '' }) {
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="bg-indigo-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">✉️</span></div>
+                <div className="bg-brand-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">✉️</span></div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">Email Us</h3>
-                  <a href="mailto:contact@antiguasearch.com" className="text-indigo-600 hover:text-indigo-700 text-sm md:text-base break-all">contact@antiguasearch.com</a>
+                  <a href="mailto:contact@antiguasearch.com" className="text-brand-600 hover:text-brand-700 text-sm md:text-base break-all">contact@antiguasearch.com</a>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="bg-indigo-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">📍</span></div>
+                <div className="bg-brand-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">📍</span></div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">Location</h3>
                   <p className="text-gray-600 text-sm md:text-base">St. John&apos;s<br />Antigua & Barbuda</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="bg-indigo-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">🕐</span></div>
+                <div className="bg-brand-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">🕐</span></div>
                 <div className="w-full">
                   <h3 className="font-bold text-gray-900 mb-3 text-sm md:text-base">Business Hours</h3>
                   <div className="space-y-2 text-xs md:text-sm">
@@ -136,11 +136,11 @@ export default function ContactPageClient({ defaultSubject = '' }) {
             <div className="mt-8 p-4 md:p-6 bg-gray-50 rounded-xl border-2 border-gray-200">
               <h3 className="font-bold text-gray-900 mb-4 text-sm md:text-base">Quick Links</h3>
               <div className="space-y-2 text-sm md:text-base">
-                <Link href="/add-listing" className="block text-indigo-600 hover:text-indigo-700">→ List Your Business</Link>
-                <Link href="/advertise" className="block text-indigo-600 hover:text-indigo-700">→ Advertise With Us</Link>
-                <Link href="/about" className="block text-indigo-600 hover:text-indigo-700">→ About Us</Link>
-                <Link href="/parishes" className="block text-indigo-600 hover:text-indigo-700">→ Browse Parishes</Link>
-                <Link href="/categories" className="block text-indigo-600 hover:text-indigo-700">→ All Categories</Link>
+                <Link href="/add-listing" className="block text-brand-600 hover:text-brand-700">→ List Your Business</Link>
+                <Link href="/advertise" className="block text-brand-600 hover:text-brand-700">→ Advertise With Us</Link>
+                <Link href="/about" className="block text-brand-600 hover:text-brand-700">→ About Us</Link>
+                <Link href="/parishes" className="block text-brand-600 hover:text-brand-700">→ Browse Parishes</Link>
+                <Link href="/categories" className="block text-brand-600 hover:text-brand-700">→ All Categories</Link>
               </div>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function ContactPageClient({ defaultSubject = '' }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
             <div className="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">How do I list my business?</h3>
-              <p className="text-gray-600 text-sm md:text-base">Click the &quot;Add Your Business&quot; button in the header or visit our <Link href="/add-listing" className="text-indigo-600 hover:text-indigo-700 font-semibold">Add Listing</Link> page.</p>
+              <p className="text-gray-600 text-sm md:text-base">Click the &quot;Add Your Business&quot; button in the header or visit our <Link href="/add-listing" className="text-brand-600 hover:text-brand-700 font-semibold">Add Listing</Link> page.</p>
             </div>
             <div className="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Is listing my business free?</h3>

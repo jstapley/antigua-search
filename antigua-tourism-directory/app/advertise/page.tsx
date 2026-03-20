@@ -27,7 +27,7 @@ export default async function AdvertisePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Top Banner */}
-      <div className="bg-indigo-600 text-white py-3 px-4">
+      <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-center md:text-left">
@@ -66,20 +66,20 @@ export default async function AdvertisePage() {
               />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-indigo-600 font-semibold">ANTIGUA SEARCH</div>
+                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium">Home</Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-indigo-600 font-medium">Browse Parishes</Link>
-              <Link href="/categories" className="text-gray-700 hover:text-indigo-600 font-medium">Categories</Link>
-              <Link href="/about" className="text-gray-700 hover:text-indigo-600 font-medium">About Us</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-indigo-600 font-medium">Contact</Link>
-              <Link href="/login" className="text-gray-700 hover:text-indigo-600 font-medium">Login</Link>
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
               <Link 
                 href="/add-listing" 
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
               >
                 + Add Your Business
               </Link>
@@ -89,7 +89,7 @@ export default async function AdvertisePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-600 py-20">
+      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">
             Advertise Your Business
@@ -103,7 +103,7 @@ export default async function AdvertisePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/pricing"
-              className="bg-yellow-400 text-indigo-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-lg"
+              className="bg-yellow-400 text-brand-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-lg"
             >
               View Pricing Plans →
             </Link>
@@ -121,18 +121,18 @@ export default async function AdvertisePage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-indigo-100">
-              <div className="text-5xl font-extrabold text-indigo-600 mb-2">1,200+</div>
+            <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-brand-100">
+              <div className="text-5xl font-extrabold text-brand-600 mb-2">1,200+</div>
               <div className="text-xl font-semibold text-gray-900 mb-2">Monthly Visitors</div>
               <div className="text-gray-600">Actively searching for businesses</div>
             </div>
-            <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-indigo-100">
-              <div className="text-5xl font-extrabold text-indigo-600 mb-2">{businessCount}</div>
+            <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-brand-100">
+              <div className="text-5xl font-extrabold text-brand-600 mb-2">{businessCount}</div>
               <div className="text-xl font-semibold text-gray-900 mb-2">Business Listings</div>
               <div className="text-gray-600">Across all categories & parishes</div>
             </div>
-            <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-indigo-100">
-              <div className="text-5xl font-extrabold text-indigo-600 mb-2">12</div>
+            <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-brand-100">
+              <div className="text-5xl font-extrabold text-brand-600 mb-2">12</div>
               <div className="text-xl font-semibold text-gray-900 mb-2">Categories</div>
               <div className="text-gray-600">From hotels to restaurants to tours</div>
             </div>
@@ -152,9 +152,9 @@ export default async function AdvertisePage() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Featured Listings */}
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-3xl p-8 text-white border-4 border-yellow-400 shadow-2xl">
+            <div className="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl p-8 text-white border-4 border-yellow-400 shadow-2xl">
               <div className="text-center mb-6">
-                <div className="inline-block bg-yellow-400 text-indigo-900 px-6 py-2 rounded-full font-bold text-sm mb-4">
+                <div className="inline-block bg-yellow-400 text-brand-900 px-6 py-2 rounded-full font-bold text-sm mb-4">
                   MOST POPULAR
                 </div>
                 <h3 className="text-3xl font-black mb-3">Featured Business Listing</h3>
@@ -189,7 +189,7 @@ export default async function AdvertisePage() {
 
               <Link
                 href="/contact?subject=Featured Listing Inquiry"
-                className="block w-full bg-yellow-400 hover:bg-yellow-300 text-indigo-900 text-center py-4 rounded-xl font-black text-lg transition"
+                className="block w-full bg-yellow-400 hover:bg-yellow-300 text-brand-900 text-center py-4 rounded-xl font-black text-lg transition"
               >
                 Get Early Access →
               </Link>
@@ -202,36 +202,36 @@ export default async function AdvertisePage() {
                   COMING SOON
                 </div>
                 <h3 className="text-3xl font-black text-gray-900 mb-3">Display Advertising</h3>
-                <div className="text-4xl font-black text-indigo-600 mb-2">Custom</div>
+                <div className="text-4xl font-black text-brand-600 mb-2">Custom</div>
                 <p className="text-gray-600">High-visibility banner ads</p>
               </div>
 
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start gap-3">
-                  <span className="text-indigo-600 text-xl flex-shrink-0">✓</span>
+                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
                   <span className="text-gray-700">Homepage banner placement</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-indigo-600 text-xl flex-shrink-0">✓</span>
+                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
                   <span className="text-gray-700">Category page sidebar ads</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-indigo-600 text-xl flex-shrink-0">✓</span>
+                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
                   <span className="text-gray-700">Custom ad design & placement</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-indigo-600 text-xl flex-shrink-0">✓</span>
+                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
                   <span className="text-gray-700">Detailed performance analytics</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-indigo-600 text-xl flex-shrink-0">✓</span>
+                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
                   <span className="text-gray-700">Flexible campaign durations</span>
                 </li>
               </ul>
 
               <Link
                 href="/contact"
-                className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center py-4 rounded-xl font-black text-lg transition"
+                className="block w-full bg-brand-600 hover:bg-brand-700 text-white text-center py-4 rounded-xl font-black text-lg transition"
               >
                 Contact for Pricing →
               </Link>
@@ -288,7 +288,7 @@ export default async function AdvertisePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-indigo-700 to-blue-600 py-20">
+      <section className="bg-gradient-to-r from-brand-700 to-blue-600 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
             Ready to Grow Your Business?
@@ -299,7 +299,7 @@ export default async function AdvertisePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/contact?subject=Featured Listing Inquiry"
-              className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl"
+              className="bg-yellow-400 hover:bg-yellow-300 text-brand-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl"
             >
               Get Early Access
             </Link>

@@ -47,7 +47,7 @@ export default function Modal({ isOpen, onClose, title, message, type = 'success
                 className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
                   confirmButton.danger 
                     ? 'bg-red-600 text-white hover:bg-red-700' 
-                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    : 'bg-brand-600 text-white hover:bg-brand-700'
                 }`}
               >
                 {confirmButton.label}
@@ -56,7 +56,7 @@ export default function Modal({ isOpen, onClose, title, message, type = 'success
           ) : (
             <button
               onClick={onClose}
-              className="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-indigo-700 transition"
+              className="w-full bg-brand-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-brand-700 transition"
             >
               OK
             </button>

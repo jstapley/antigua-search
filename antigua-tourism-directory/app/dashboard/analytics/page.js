@@ -335,7 +335,7 @@ export default function AnalyticsDashboard() {
                   setTimeRange(Number(e.target.value))
                   loadAnalyticsData()
                 }}
-                className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none"
+                className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               >
                 <option value={7}>Last 7 days</option>
                 <option value={30}>Last 30 days</option>
@@ -344,7 +344,7 @@ export default function AnalyticsDashboard() {
               </select>
               <Link
                 href="/dashboard/admin"
-                className="text-indigo-600 hover:text-indigo-700 font-semibold"
+                className="text-brand-600 hover:text-brand-700 font-semibold"
               >
                 ← Back to Admin
               </Link>
@@ -432,14 +432,14 @@ export default function AnalyticsDashboard() {
                           <div>
                             <Link
                               href={`/listing/${listing.slug}`}
-                              className="font-semibold text-gray-900 hover:text-indigo-600"
+                              className="font-semibold text-gray-900 hover:text-brand-600"
                             >
                               {listing.name}
                             </Link>
                             <p className="text-sm text-gray-500">{listing.views} views</p>
                           </div>
                         </div>
-                        <div className="text-indigo-600 font-bold text-lg">{listing.views}</div>
+                        <div className="text-brand-600 font-bold text-lg">{listing.views}</div>
                       </div>
                     ))}
                   </div>
@@ -462,7 +462,7 @@ export default function AnalyticsDashboard() {
                             <p className="text-sm text-gray-500">{search.count} searches</p>
                           </div>
                         </div>
-                        <div className="text-indigo-600 font-bold text-lg">{search.count}</div>
+                        <div className="text-brand-600 font-bold text-lg">{search.count}</div>
                       </div>
                     ))}
                   </div>
@@ -528,7 +528,7 @@ export default function AnalyticsDashboard() {
                   {parishData.map((parish, index) => (
                     <div key={index} className="border-2 border-gray-200 rounded-lg p-4">
                       <p className="text-sm text-gray-600 mb-1">{parish.name}</p>
-                      <p className="text-2xl font-bold text-indigo-600">{parish.views}</p>
+                      <p className="text-2xl font-bold text-brand-600">{parish.views}</p>
                       <p className="text-xs text-gray-500">views</p>
                     </div>
                   ))}
