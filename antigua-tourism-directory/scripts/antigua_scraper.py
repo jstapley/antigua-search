@@ -23,7 +23,7 @@ from slugify import slugify
 # ------------------------------------------------------------------ #
 
 API_KEY      = "AIzaSyAcfi9SAA0cKz30nkSLMSEcS6roWX2hB4E"
-TARGET_TOTAL = 200
+TARGET_TOTAL = 10000
 OUTPUT_FILE  = "antigua_listings_seed.csv"
 DELAY        = 0.5    # seconds between API calls
 
@@ -36,13 +36,12 @@ DETAILS_URL     = "https://places.googleapis.com/v1/places/{place_id}"
 # ------------------------------------------------------------------ #
 
 PARISHES = [
-    {"name": "Saint George's",               "slug": "saint-georges"},
-    {"name": "Saint Andrew",                 "slug": "saint-andrew"},
-    {"name": "Saint David",                  "slug": "saint-david"},
-    {"name": "Saint John",                   "slug": "saint-john"},
-    {"name": "Saint Mark",                   "slug": "saint-mark"},
-    {"name": "Saint Patrick",                "slug": "saint-patrick"},
-    {"name": "Carriacou & Petite Martinique", "slug": "carriacou-petite-martinique"},
+    {"name": "Saint John's",  "slug": "st-johns"},
+    {"name": "Saint Mary",    "slug": "st-mary"},
+    {"name": "Saint Paul",    "slug": "st-paul"},
+    {"name": "Saint George",  "slug": "st-george"},
+    {"name": "Saint Philip",  "slug": "st-philip"},
+    {"name": "Saint Peter",   "slug": "st-peter"},
 ]
 
 # ------------------------------------------------------------------ #
@@ -60,11 +59,11 @@ GOOGLE_TYPE_MAP = {
     "motel":                  "accommodation",
     "hostel":                 "accommodation",
     # Bars & Nightlife
-    "bar":                    "bars-nightlife",
-    "night_club":             "bars-nightlife",
-    "cocktail_bar":           "bars-nightlife",
-    "wine_bar":               "bars-nightlife",
-    "pub":                    "bars-nightlife",
+    "bar":                    "nightlife",
+    "night_club":             "nightlife",
+    "cocktail_bar":           "nightlife",
+    "wine_bar":               "nightlife",
+    "pub":                    "nightlife",
     # Beauty & Wellness
     "beauty_salon":           "beauty-wellness",
     "hair_salon":             "beauty-wellness",
@@ -159,12 +158,12 @@ GOOGLE_TYPE_MAP = {
     # Technology & IT
     "computer_store":         "technology-it",
     # Tours & Attractions
-    "tourist_attraction":     "tours-attractions",
-    "museum":                 "tours-attractions",
-    "art_gallery":            "tours-attractions",
-    "park":                   "tours-attractions",
-    "national_park":          "tours-attractions",
-    "historical_landmark":    "tours-attractions",
+    "tourist_attraction":     "tours",
+    "museum":                 "tours",
+    "art_gallery":            "tours",
+    "park":                   "beaches",
+    "national_park":          "beaches",
+    "historical_landmark":    "culture",
     # Transport & Logistics
     "taxi_stand":             "transportation",
     "bus_station":            "transportation",
@@ -174,19 +173,91 @@ GOOGLE_TYPE_MAP = {
     "ferry_terminal":         "transportation",
     "airport_taxi":           "transportation",
     "taxi_service":           "transportation",
-    "light_rail_station":     "transportation",
-    "subway_station":         "transportation",
-    "train_station":          "transportation",
-    "transit_station":        "transportation",
     # Water Sports
     "diving_center":          "water-sports",
     "water_park":             "water-sports",
 }
 
 CATEGORY_SEARCHES = [
-    "restaurants", "hotels", "bars", "supermarkets", "pharmacies",
-    "tours", "water sports", "taxis", "transportation", "banks", "schools",
-    "hospitals", "beauty salons", "marinas", "real estate",
+    # General
+    "restaurants antigua", "hotels antigua", "bars antigua",
+    "supermarkets antigua", "pharmacies antigua",
+    "tours antigua", "water sports antigua", "taxis antigua",
+    "transportation antigua", "banks antigua", "schools antigua",
+    "hospitals antigua", "beauty salons antigua", "marinas antigua",
+    "real estate antigua",
+    # Tourism & Experiences
+    "sailing charters antigua",
+    "catamaran antigua",
+    "snorkeling antigua",
+    "diving antigua",
+    "fishing charters antigua",
+    "boat tours antigua",
+    "kayaking antigua",
+    "kitesurfing antigua",
+    "paddleboarding antigua",
+    "yacht charters antigua",
+    "historic tours antigua",
+    "hiking antigua",
+    "eco tours antigua",
+    # Accommodation
+    "villas antigua",
+    "vacation rentals antigua",
+    "boutique hotels antigua",
+    "guesthouses antigua",
+    "resorts antigua",
+    "airbnb antigua",
+    # Food & Drink
+    "beach bars antigua",
+    "rum bars antigua",
+    "catering antigua",
+    "bakeries antigua",
+    "seafood restaurants antigua",
+    "caribbean restaurants antigua",
+    "fine dining antigua",
+    "food trucks antigua",
+    # Professional Services
+    "lawyers antigua",
+    "accountants antigua",
+    "dentists antigua",
+    "architects antigua",
+    "engineers antigua",
+    "insurance antigua",
+    "veterinarians antigua",
+    # Retail & Trade
+    "car dealerships antigua",
+    "hardware stores antigua",
+    "clothing stores antigua",
+    "electronics antigua",
+    "jewellery antigua",
+    "gift shops antigua",
+    "art galleries antigua",
+    "duty free antigua",
+    # Health & Wellness
+    "yoga antigua",
+    "massage antigua",
+    "physiotherapy antigua",
+    "clinics antigua",
+    "opticians antigua",
+    # Education
+    "schools antigua",
+    "tutoring antigua",
+    "driving schools antigua",
+    # Community & Services
+    "churches antigua",
+    "credit unions antigua",
+    "laundry antigua",
+    "car wash antigua",
+    # Parish specific
+    "businesses in English Harbour Antigua",
+    "businesses in Falmouth Antigua",
+    "businesses in Jolly Harbour Antigua",
+    "businesses in Dickenson Bay Antigua",
+    "restaurants English Harbour",
+    "hotels English Harbour",
+    "bars English Harbour",
+    "restaurants Jolly Harbour",
+    "hotels Jolly Harbour",
 ]
 
 SEARCH_FIELD_MASK  = "places.id,places.displayName,places.formattedAddress,places.primaryType,places.types,places.location"
@@ -215,12 +286,23 @@ def map_category(primary_type: str, types: list) -> str:
 
 def map_parish(address: str) -> dict:
     address_lower = address.lower()
+    # Check common area names first
+    area_map = {
+        "english harbour": PARISHES[2],  # st-paul
+        "falmouth":        PARISHES[2],  # st-paul
+        "jolly harbour":   PARISHES[1],  # st-mary
+        "five islands":    PARISHES[1],  # st-mary
+        "dickenson bay":   PARISHES[0],  # st-johns
+        "hodges bay":      PARISHES[5],  # st-peter
+        "willoughby bay":  PARISHES[3],  # st-george
+    }
+    for area, parish in area_map.items():
+        if area in address_lower:
+            return parish
     for parish in PARISHES:
         if parish["name"].lower() in address_lower:
             return parish
-    if "carriacou" in address_lower or "petite martinique" in address_lower:
-        return PARISHES[6]
-    return PARISHES[0]
+    return PARISHES[0]  # default to St. John's
 
 
 def build_photo_url(photo_name: str, max_width: int = 800) -> str:
@@ -319,24 +401,33 @@ def collect_place_ids(queries: list, target: int, collected: dict) -> dict:
 # ------------------------------------------------------------------ #
 
 def main():
-    if API_KEY == "YOUR_KEY_HERE":
-        print("❌  Paste your API key into the API_KEY variable at the top of the script.")
+    if not API_KEY:
+        print("❌  Paste your Google Places API key into the API_KEY variable at the top of the script.")
         return
 
-    print("\n🌴  GrenadaSearch — Google Places Scraper (New API)")
+    print("\n🌴  AntiguaSearch — Google Places Scraper (New API)")
     print(f"    Target: {TARGET_TOTAL} listings\n")
 
     collected = {}
 
     print("── Phase 1: Parish sweep ──────────────────────────")
-    parish_queries = [f"businesses in {p['name']} Grenada" for p in PARISHES]
+    parish_queries = []
+    for p in PARISHES:
+        parish_queries.extend([
+            f"businesses in {p['name']} Antigua",
+            f"restaurants in {p['name']} Antigua",
+            f"hotels in {p['name']} Antigua",
+            f"shops in {p['name']} Antigua",
+            f"services in {p['name']} Antigua",
+            f"attractions in {p['name']} Antigua",
+            f"tours in {p['name']} Antigua",
+        ])
     collected = collect_place_ids(parish_queries, TARGET_TOTAL, collected)
     print(f"  Phase 1 done: {len(collected)} unique place IDs\n")
 
     if len(collected) < TARGET_TOTAL:
         print("── Phase 2: Category fill ─────────────────────────")
-        cat_queries = [f"{cat} in Grenada" for cat in CATEGORY_SEARCHES]
-        collected = collect_place_ids(cat_queries, TARGET_TOTAL, collected)
+        collected = collect_place_ids(CATEGORY_SEARCHES, TARGET_TOTAL, collected)
         print(f"  Phase 2 done: {len(collected)} unique place IDs\n")
 
     if not collected:
@@ -419,11 +510,11 @@ def main():
 
     print(f"\n✅  Done! {len(rows)} listings written to {OUTPUT_FILE}")
     print("\nNext steps:")
-    print("  1. Open CSV — review listings, flip status to 'active' for ones you want live")
-    print("  2. Add short_description / description (manually or via AI pass)")
-    print("  3. Match category_slug → Supabase categories UUID")
-    print("  4. Match parish_slug   → Supabase parishes UUID")
-    print("  5. Import via Supabase Table Editor → Import CSV")
+    print("  1. Review CSV — check category/parish mappings look correct")
+    print("  2. Import CSV into listings_staging table in Supabase")
+    print("  3. Run enrich_descriptions.py to generate SEO descriptions")
+    print("  4. Review staging table, set approved = true on good rows")
+    print("  5. Run migrate_staging_to_listings.sql to go live")
 
 
 if __name__ == "__main__":

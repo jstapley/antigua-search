@@ -42,4 +42,14 @@ next-env.d.ts
 
 # scripts
 scripts/antigua_listings_seed.csv
+scripts/antigua_scraper.py
+scripts/enrich_destinations.py
+scripts/enrich_results.log
 .env.local
+
+# Ignore API keys and output files
+*.log
+*.csv
+__pycache__/
+*.pyc
+.env
