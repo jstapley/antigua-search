@@ -80,48 +80,37 @@ export default function AdminDashboard() {
 
   const loadAllData = async () => {
     setLoadingData(true)
-    
-    const { data: allListings } = await supabase.from('listings').select('status')
-    const { data: allUsers } = await supabase.from('user_profiles').select('id')
-    const { data: allCategories } = await supabase.from('categories').select('id')
-    const { data: pendingClaims } = await supabase
-      .from('claimed_listings')
-      .select('id')
-      .eq('verified', false)
-    
-    // Get review stats
-    const { data: allReviews } = await supabase.from('reviews').select('status')
-    const pendingReviewsCount = allReviews?.filter(r => r.status === 'pending').length || 0
-    const approvedReviewsCount = allReviews?.filter(r => r.status === 'approved').length || 0
+
+    // Fetch stats and all listings via server-side API (bypasses 1000 row limit)
+    const [statsRes, listingsRes] = await Promise.all([
+      fetch('/api/admin/listings?type=stats'),
+      fetch('/api/admin/listings?type=listings')
+    ])
+
+    const statsData = await statsRes.json()
+    const listingsData = await listingsRes.json()
 
     setStats({
-      totalListings: allListings?.length || 0,
-      activeListings: allListings?.filter(l => l.status === 'active').length || 0,
-      pendingListings: allListings?.filter(l => l.status === 'pending').length || 0,
-      totalUsers: allUsers?.length || 0,
-      totalCategories: allCategories?.length || 0,
-      pendingClaims: pendingClaims?.length || 0,
-      totalReviews: allReviews?.length || 0,
-      pendingReviews: pendingReviewsCount,
-      approvedReviews: approvedReviewsCount
+      totalListings: statsData.totalListings || 0,
+      activeListings: statsData.activeListings || 0,
+      pendingListings: statsData.pendingListings || 0,
+      totalUsers: statsData.totalUsers || 0,
+      totalCategories: statsData.totalCategories || 0,
+      pendingClaims: statsData.pendingClaims || 0,
+      totalReviews: statsData.totalReviews || 0,
+      pendingReviews: statsData.pendingReviews || 0,
+      approvedReviews: statsData.approvedReviews || 0,
     })
 
-    const { data: listingsData } = await supabase
-      .from('listings')
-      .select(`
-        *,
-        category:categories(name, icon_emoji),
-        parish:parishes(name)
-      `)
-      .order('created_at', { ascending: false })
-    setListings(listingsData || [])
+    setListings(Array.isArray(listingsData) ? listingsData : [])
 
+    // Claims, users, and reviews still use anon client (small datasets)
     const { data: claimsData } = await supabase
       .from('claimed_listings')
       .select('*')
       .eq('verified', false)
       .order('claimed_at', { ascending: false })
-    
+
     if (claimsData && claimsData.length > 0) {
       const enrichedClaims = await Promise.all(
         claimsData.map(async (claim) => {
@@ -130,18 +119,14 @@ export default function AdminDashboard() {
             .select('id, business_name, slug')
             .eq('id', claim.listing_id)
             .single()
-          
+
           const { data: userProfile } = await supabase
             .from('user_profiles')
             .select('id, email, full_name')
             .eq('id', claim.user_id)
             .single()
-          
-          return {
-            ...claim,
-            listing,
-            user: userProfile
-          }
+
+          return { ...claim, listing, user: userProfile }
         })
       )
       setClaims(enrichedClaims)
@@ -156,13 +141,9 @@ export default function AdminDashboard() {
       .limit(50)
     setUsers(usersData || [])
 
-    // Load reviews with listing info
     const { data: reviewsData } = await supabase
       .from('reviews')
-      .select(`
-        *,
-        listing:listings(id, business_name, slug)
-      `)
+      .select(`*, listing:listings(id, business_name, slug)`)
       .order('created_at', { ascending: false })
     setReviews(reviewsData || [])
 
