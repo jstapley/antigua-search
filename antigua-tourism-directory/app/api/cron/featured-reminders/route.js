@@ -1,41 +1,37 @@
 // app/api/cron/featured-reminders/route.js
 import { createClient } from '@supabase/supabase-js'
-import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-)
-
 export async function GET(request) {
-  // Verify this is called by Vercel Cron
   const authHeader = request.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const { Resend } = await import('resend')
+  const resend = new Resend(process.env.RESEND_API_KEY)
+
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  )
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.antiguasearch.com'
   const siteName = siteUrl.includes('grenada') ? 'GrenadaSearch.com' : 'AntiguaSearch.com'
 
   const now = new Date()
 
-  // Find listings expiring in 30 days
   const in30Days = new Date(now)
   in30Days.setDate(in30Days.getDate() + 30)
   const in29Days = new Date(now)
   in29Days.setDate(in29Days.getDate() + 29)
 
-  // Find listings expiring in 7 days
   const in7Days = new Date(now)
   in7Days.setDate(in7Days.getDate() + 7)
   const in6Days = new Date(now)
   in6Days.setDate(in6Days.getDate() + 6)
 
-  // Get 30-day expiring listings
   const { data: expiring30 } = await supabaseAdmin
     .from('listings')
     .select('id, business_name, slug, featured_until, email')
@@ -43,7 +39,6 @@ export async function GET(request) {
     .gte('featured_until', in29Days.toISOString())
     .lte('featured_until', in30Days.toISOString())
 
-  // Get 7-day expiring listings
   const { data: expiring7 } = await supabaseAdmin
     .from('listings')
     .select('id, business_name, slug, featured_until, email')
@@ -51,16 +46,11 @@ export async function GET(request) {
     .gte('featured_until', in6Days.toISOString())
     .lte('featured_until', in7Days.toISOString())
 
-  // Expire listings that have passed their featured_until date
-  const { error: expireError } = await supabaseAdmin
+  await supabaseAdmin
     .from('listings')
     .update({ featured: false })
     .eq('featured', true)
     .lt('featured_until', now.toISOString())
-
-  if (expireError) {
-    console.error('Error expiring listings:', expireError)
-  }
 
   let emailsSent = 0
 
@@ -98,9 +88,6 @@ export async function GET(request) {
                   Renew Featured Listing — EC$350/year
                 </a>
               </div>
-              <p style="color: #999; font-size: 12px; margin-top: 20px; text-align: center;">
-                Visit your listing page to renew.
-              </p>
             </div>
           </div>
         `
@@ -118,8 +105,6 @@ export async function GET(request) {
   for (const listing of (expiring7 || [])) {
     await sendReminderEmail(listing, 7)
   }
-
-  console.log(`✅ Cron: ${emailsSent} reminder emails sent, listings expired`)
 
   return NextResponse.json({
     success: true,

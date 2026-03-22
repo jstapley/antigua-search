@@ -2,18 +2,18 @@
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-const resend = new Resend(process.env.RESEND_API_KEY)
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-)
 
 export async function POST(request) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+  const { Resend } = await import('resend')
+  const resend = new Resend(process.env.RESEND_API_KEY)
+
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  )
+
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
@@ -36,7 +36,6 @@ export async function POST(request) {
     if (session.payment_status === 'paid') {
       const { listingId, listingName, userEmail } = session.metadata
 
-      // Set featured_until to 1 year from now
       const featuredUntil = new Date()
       featuredUntil.setFullYear(featuredUntil.getFullYear() + 1)
 
@@ -56,7 +55,6 @@ export async function POST(request) {
 
       console.log(`✅ Featured listing activated: ${listingName} until ${featuredUntil.toISOString()}`)
 
-      // Send confirmation email
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.antiguasearch.com'
       const siteName = siteUrl.includes('grenada') ? 'GrenadaSearch.com' : 'AntiguaSearch.com'
 
@@ -96,7 +94,6 @@ export async function POST(request) {
         })
       } catch (emailError) {
         console.error('Email send error:', emailError)
-        // Don't fail the webhook if email fails
       }
     }
   }
