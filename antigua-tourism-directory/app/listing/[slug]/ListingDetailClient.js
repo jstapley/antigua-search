@@ -8,6 +8,10 @@ import ReviewStats from '@/components/reviews/ReviewStats'
 import ReviewList from '@/components/reviews/ReviewList'
 import ReviewForm from '@/components/reviews/ReviewForm'
 import ListingPageClient from '@/components/ListingPageClient'
+import UpgradeToFeatured from '@/components/UpgradeToFeatured'
+
+// In the sidebar, after the Claim button:
+<UpgradeToFeatured listing={listing} />
 
 export default function ListingDetailClient({ listing, isClaimed, relatedListings }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
