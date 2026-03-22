@@ -55,7 +55,7 @@ export async function POST(request) {
           quantity: 1,
         },
       ],
-      mode: 'payment',
+      mode: 'subscription',
       success_url: `${siteUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}&listing_id=${listingId}`,
       cancel_url: `${siteUrl}/listing/${listing.slug}`,
       metadata: {
