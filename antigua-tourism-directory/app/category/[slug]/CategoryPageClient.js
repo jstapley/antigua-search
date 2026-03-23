@@ -1,15 +1,22 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function CategoryPageClient({ category, listings, parishes }) {
+export default function CategoryPageClient({ category, listings, parishes, totalCount, totalPages, currentPage }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const router = useRouter()
+
+  const handlePageChange = (page) => {
+    router.push(`/category/${category.slug}?page=${page}`)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Top Stats Banner - Mobile Responsive */}
+      {/* Top Stats Banner */}
       <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
@@ -23,10 +30,7 @@ export default function CategoryPageClient({ category, listings, parishes }) {
             <div className="flex items-center gap-2 text-center">
               <span className="text-xl">🏪</span>
               <span className="text-sm md:text-base">Own a business?</span>
-              <Link
-                href="/add-listing"
-                className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap"
-              >
+              <Link href="/add-listing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
                 Get premium visibility
               </Link>
             </div>
@@ -34,120 +38,48 @@ export default function CategoryPageClient({ category, listings, parishes }) {
         </div>
       </div>
 
-      {/* Header with Mobile Navigation */}
+      {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center gap-3">
-              <Image 
-                src="/antigua-flag.png" 
-                alt="Antigua Flag" 
-                width={50} 
-                height={50}
-                className="rounded-full"
-              />
+              <Image src="/antigua-flag.png" alt="Antigua Flag" width={50} height={50} className="rounded-full" />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
                 <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">
-                Home
-              </Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">
-                Browse Parishes
-              </Link>
-              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">
-                Categories
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
-                Contact
-              </Link>
-              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">
-                Login
-              </Link>
-              <Link 
-                href="/add-listing" 
-                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
-              >
+              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
+              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
+              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
+              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
+              <Link href="/add-listing" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">
                 + Add Your Business
               </Link>
             </nav>
 
-            {/* Mobile Hamburger Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-gray-700 p-2"
-              aria-label="Toggle menu"
-            >
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-gray-700 p-2" aria-label="Toggle menu">
               {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
               )}
             </button>
           </div>
 
-          {/* Mobile Menu Dropdown */}
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-3">
-              <Link
-                href="/"
-                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="/parishes"
-                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Browse Parishes
-              </Link>
-              <Link
-                href="/categories"
-                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Categories
-              </Link>
-              <Link
-                href="/about"
-                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link
-                href="/contact"
-                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Contact
-              </Link>
-              <Link
-                href="/login"
-                className="block text-gray-700 hover:text-brand-600 font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                href="/add-listing"
-                className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link href="/" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/parishes" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
+              <Link href="/categories" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
+              <Link href="/about" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+              <Link href="/contact" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+              <Link href="/login" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+              <Link href="/add-listing" className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>
                 + Add Your Business
               </Link>
             </nav>
@@ -155,7 +87,7 @@ export default function CategoryPageClient({ category, listings, parishes }) {
         </div>
       </header>
 
-      {/* Breadcrumbs - Mobile Responsive */}
+      {/* Breadcrumbs */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-2 text-xs md:text-sm overflow-x-auto">
@@ -168,7 +100,7 @@ export default function CategoryPageClient({ category, listings, parishes }) {
         </div>
       </div>
 
-      {/* Category Header - Mobile Responsive */}
+      {/* Category Header */}
       <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 mb-4">
@@ -176,13 +108,11 @@ export default function CategoryPageClient({ category, listings, parishes }) {
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">{category.name}</h1>
           </div>
           {category.description && (
-            <p className="text-base md:text-xl text-white/90 mb-6 max-w-3xl">
-              {category.description}
-            </p>
+            <p className="text-base md:text-xl text-white/90 mb-6 max-w-3xl">{category.description}</p>
           )}
           <div className="flex items-center gap-4 md:gap-6 flex-wrap">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 md:px-6 py-2 md:py-3 border border-white/20">
-              <span className="text-2xl md:text-3xl font-bold text-yellow-300">{listings.length}</span>
+              <span className="text-2xl md:text-3xl font-bold text-yellow-300">{totalCount}</span>
               <span className="text-white ml-2 text-sm md:text-base">Businesses</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 md:px-6 py-2 md:py-3 border border-white/20">
@@ -193,7 +123,7 @@ export default function CategoryPageClient({ category, listings, parishes }) {
         </div>
       </section>
 
-      {/* Parish Filter Pills - Mobile Responsive */}
+      {/* Parish Filter Pills */}
       {parishes.length > 0 && (
         <section className="bg-white border-b border-gray-200 py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -214,25 +144,28 @@ export default function CategoryPageClient({ category, listings, parishes }) {
         </section>
       )}
 
-      {/* Listings Grid - Mobile Responsive */}
+      {/* Listings Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {listings.length === 0 ? (
           <div className="text-center py-12 md:py-16">
             <div className="text-5xl md:text-6xl mb-4">{category.icon_emoji}</div>
             <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">No {category.name.toLowerCase()} yet</h3>
             <p className="text-gray-600 mb-6 text-sm md:text-base px-4">Be the first business in this category to get listed!</p>
-            <Link 
-              href="/add-listing"
-              className="inline-block bg-brand-600 text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-sm md:text-base"
-            >
+            <Link href="/add-listing" className="inline-block bg-brand-600 text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-sm md:text-base">
               Add Your Business
             </Link>
           </div>
         ) : (
           <>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8">
-              {category.name} in Antigua & Barbuda
-            </h2>
+            <div className="flex items-center justify-between mb-6 md:mb-8 flex-wrap gap-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                {category.name} in Antigua & Barbuda
+              </h2>
+              <p className="text-gray-500 text-sm">
+                Showing {((currentPage - 1) * 24) + 1}–{Math.min(currentPage * 24, totalCount)} of {totalCount}
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {listings.map((listing) => (
                 <Link
@@ -242,12 +175,7 @@ export default function CategoryPageClient({ category, listings, parishes }) {
                 >
                   {listing.image_url ? (
                     <div className="aspect-video relative bg-gray-100">
-                      <Image
-                        src={listing.image_url}
-                        alt={listing.business_name}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={listing.image_url} alt={listing.business_name} fill className="object-cover" />
                       {listing.featured && (
                         <div className="absolute top-2 md:top-3 right-2 md:right-3 bg-yellow-400 text-brand-900 px-2 md:px-3 py-1 rounded-full text-xs font-bold">
                           ⭐ Featured
@@ -277,9 +205,7 @@ export default function CategoryPageClient({ category, listings, parishes }) {
                       </div>
                     )}
                     {listing.short_description && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                        {listing.short_description}
-                      </p>
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{listing.short_description}</p>
                     )}
                     <div className="flex items-center justify-between gap-2">
                       {listing.address && (
@@ -295,11 +221,57 @@ export default function CategoryPageClient({ category, listings, parishes }) {
                 </Link>
               ))}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-10 md:mt-12 flex items-center justify-center gap-2 flex-wrap">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-brand-600 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                >
+                  ← Previous
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 2)
+                  .reduce((acc, page, idx, arr) => {
+                    if (idx > 0 && page - arr[idx - 1] > 1) acc.push('...')
+                    acc.push(page)
+                    return acc
+                  }, [])
+                  .map((item, idx) =>
+                    item === '...' ? (
+                      <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">...</span>
+                    ) : (
+                      <button
+                        key={item}
+                        onClick={() => handlePageChange(item)}
+                        className={`w-10 h-10 rounded-lg font-semibold transition ${
+                          currentPage === item
+                            ? 'bg-brand-600 text-white'
+                            : 'border-2 border-gray-200 text-gray-700 hover:border-brand-600 hover:text-brand-600'
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    )
+                  )}
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-brand-600 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                >
+                  Next →
+                </button>
+              </div>
+            )}
           </>
         )}
       </section>
 
-      {/* CTA Section - Mobile Responsive */}
+      {/* CTA Section */}
       <section className="bg-gray-50 py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 px-4">
@@ -308,36 +280,25 @@ export default function CategoryPageClient({ category, listings, parishes }) {
           <p className="text-gray-600 mb-6 text-base md:text-lg px-4">
             Join our directory and connect with thousands of visitors exploring Antigua & Barbuda
           </p>
-          <Link
-            href="/add-listing"
-            className="inline-block bg-brand-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-brand-700 transition shadow-lg"
-          >
-            List Your Business - It's Free! →
+          <Link href="/add-listing" className="inline-block bg-brand-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-brand-700 transition shadow-lg">
+            List Your Business - It&apos;s Free! →
           </Link>
         </div>
       </section>
 
-      {/* Footer - Mobile Responsive */}
+      {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <Image 
-                  src="/antigua-flag.png" 
-                  alt="Antigua Flag" 
-                  width={40} 
-                  height={40}
-                  className="rounded-full"
-                />
+                <Image src="/antigua-flag.png" alt="Antigua Flag" width={40} height={40} className="rounded-full" />
                 <div>
                   <div className="font-bold text-base md:text-lg">Antigua Search</div>
                   <div className="text-xs md:text-sm text-gray-400">Directory</div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm">
-                Your complete guide to experiencing the best of Antigua & Barbuda
-              </p>
+              <p className="text-gray-400 text-sm">Your complete guide to experiencing the best of Antigua & Barbuda</p>
             </div>
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Quick Links</h6>
@@ -359,13 +320,11 @@ export default function CategoryPageClient({ category, listings, parishes }) {
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
               <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
-              <p className="text-gray-400 text-sm">St. John's, Antigua & Barbuda</p>
+              <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>
             </div>
           </div>
           <div className="border-t border-gray-800 pt-6 md:pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              © 2026 Antigua Search. All rights reserved.
-            </p>
+            <p className="text-gray-400 text-sm">© 2026 Antigua Search. All rights reserved.</p>
           </div>
         </div>
       </footer>
