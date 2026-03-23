@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useAuth } from '@/lib/AuthContext'
 import { supabase } from '@/lib/supabase'
 import Modal from '@/components/Modal'
+import { sendClaimNotification } from '@/lib/resend'
 
 export default function ClaimListingPage() {
   const { user, loading } = useAuth()
@@ -102,12 +103,24 @@ export default function ClaimListingPage() {
         () => setClaiming(null)
       )
     } else {
+if (error) {
+  showModal(
+    'Error',
+    'Could not claim listing: ' + error.message,
+    'error',
+    () => setClaiming(null)
+  )
+} else {
+  // ← ADD THE sendClaimNotification CALL HERE, above showModal
+  
       showModal(
         'Success!',
         'Listing claimed successfully! It will now appear in your dashboard.',
         'success',
         () => router.push('/dashboard')
       )
+    }
+
     }
   }
 

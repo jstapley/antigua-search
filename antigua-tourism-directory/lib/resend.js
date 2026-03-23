@@ -147,3 +147,82 @@ Admin Dashboard: https://antiguasearch.com/dashboard/admin
     return { success: false, error: error.message }
   }
 }
+export async function sendClaimNotification(claimData) {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY
+
+  if (!RESEND_API_KEY) {
+    console.error('RESEND_API_KEY not found in environment variables')
+    return { success: false, error: 'API key not configured' }
+  }
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'registrations@antiguasearch.com',
+        to: 'jeff@stapleyinc.com',
+        subject: `🏢 Business Claimed: ${claimData.business_name}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background: #318DD0; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+              <h1 style="color: white; margin: 0;">🏢 Business Claimed</h1>
+            </div>
+            <div style="padding: 30px; background: #f9fafb;">
+              <h2 style="color: #1f2937; margin-top: 0;">A business has been claimed on AntiguaSearch.com</h2>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Business:</td>
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${claimData.business_name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Category:</td>
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${claimData.category || 'Not specified'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Parish:</td>
+                  <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${claimData.parish || 'Not specified'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; font-weight: bold; color: #4b5563;">Claimed by:</td>
+                  <td style="padding: 10px; color: #1f2937;">${claimData.user_email}</td>
+                </tr>
+              </table>
+              ${claimData.listing_slug ? `
+              <div style="margin-top: 30px; text-align: center;">
+                <a href="https://www.antiguasearch.com/listing/${claimData.listing_slug}"
+                   style="background: #318DD0; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-right: 12px;">
+                  View Listing →
+                </a>
+                <a href="https://www.antiguasearch.com/dashboard/admin"
+                   style="background: #10b981; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                  Review in Admin →
+                </a>
+              </div>
+              ` : ''}
+            </div>
+            <div style="background: #1f2937; padding: 20px; text-align: center; color: #9ca3af; font-size: 14px;">
+              <p style="margin: 0;">AntiguaSearch.com - Business Directory</p>
+            </div>
+          </div>
+        `
+      })
+    })
+
+    const data = await response.json()
+    if (!response.ok) {
+      console.error('Resend API error:', data)
+      return { success: false, error: data.message || 'Failed to send email' }
+    }
+
+    console.log('✅ Claim notification sent:', data.id)
+    return { success: true, emailId: data.id }
+
+  } catch (error) {
+    console.error('Error sending claim notification:', error)
+    return { success: false, error: error.message }
+  }
+}
