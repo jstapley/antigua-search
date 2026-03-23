@@ -723,7 +723,7 @@ export default function EditListingPage({ params }) {
             </div>
 
             {/* Interactive Map */}
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <div 
                 ref={mapRef}
                 className="w-full h-96 rounded-lg border-2 border-gray-200 bg-gray-100"
