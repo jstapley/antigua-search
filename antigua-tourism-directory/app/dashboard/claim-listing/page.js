@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { useAuth } from '@/lib/AuthContext'
 import { supabase } from '@/lib/supabase'
 import Modal from '@/components/Modal'
-import { sendClaimNotification } from '@/lib/resend'
 
 export default function ClaimListingPage() {
   const { user, loading } = useAuth()
@@ -19,7 +18,6 @@ export default function ClaimListingPage() {
   const [categories, setCategories] = useState([])
   const [claiming, setClaiming] = useState(null)
   
-  // Modal state
   const [modal, setModal] = useState({
     isOpen: false,
     title: '',
@@ -41,14 +39,12 @@ export default function ClaimListingPage() {
   }, [user])
 
   const loadData = async () => {
-    // Load categories
     const { data: cats } = await supabase
       .from('categories')
       .select('*')
       .order('name')
     setCategories(cats || [])
 
-    // Load unclaimed listings
     const { data: allListings } = await supabase
       .from('listings')
       .select(`
@@ -59,7 +55,6 @@ export default function ClaimListingPage() {
       .eq('status', 'active')
       .order('business_name')
 
-    // Filter out already claimed listings
     const { data: claimedIds } = await supabase
       .from('claimed_listings')
       .select('listing_id')
@@ -103,24 +98,25 @@ export default function ClaimListingPage() {
         () => setClaiming(null)
       )
     } else {
-if (error) {
-  showModal(
-    'Error',
-    'Could not claim listing: ' + error.message,
-    'error',
-    () => setClaiming(null)
-  )
-} else {
-  // ← ADD THE sendClaimNotification CALL HERE, above showModal
-  
+      const listing = listings.find(l => l.id === listingId)
+      fetch('/api/notify-claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          business_name: listing?.business_name || 'Unknown',
+          category: listing?.category?.name || 'Not specified',
+          parish: listing?.parish?.name || 'Not specified',
+          user_email: user.email,
+          listing_slug: listing?.slug || ''
+        })
+      })
+
       showModal(
         'Success!',
         'Listing claimed successfully! It will now appear in your dashboard.',
         'success',
         () => router.push('/dashboard')
       )
-    }
-
     }
   }
 
@@ -144,42 +140,28 @@ if (error) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Modal */}
       <Modal {...modal} />
 
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/dashboard" className="flex items-center gap-3">
-              <Image 
-                src="/antigua-flag.png" 
-                alt="Antigua Flag" 
-                width={50} 
-                height={50}
-                className="rounded-full"
-              />
+              <Image src="/antigua-flag.png" alt="Antigua Flag" width={50} height={50} className="rounded-full" />
               <div>
                 <div className="text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
                 <div className="text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
-            <Link
-              href="/dashboard"
-              className="text-gray-700 hover:text-brand-600 font-medium"
-            >
+            <Link href="/dashboard" className="text-gray-700 hover:text-brand-600 font-medium">
               ← Back to Dashboard
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-2">
-            Claim Your Business
-          </h1>
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Claim Your Business</h1>
           <p className="text-lg text-gray-600">
             Find your business in our directory and claim it to start managing your listing
           </p>
@@ -189,9 +171,7 @@ if (error) {
         <div className="bg-white rounded-xl p-6 mb-8 border-2 border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">
-                Search by name or location
-              </label>
+              <label className="block text-sm font-bold text-gray-900 mb-2">Search by name or location</label>
               <input
                 type="text"
                 value={searchTerm}
@@ -201,9 +181,7 @@ if (error) {
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">
-                Filter by category
-              </label>
+              <label className="block text-sm font-bold text-gray-900 mb-2">Filter by category</label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -230,14 +208,11 @@ if (error) {
             <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">No Listings Found</h3>
             <p className="text-gray-600 mb-6">
-              {searchTerm || selectedCategory 
-                ? 'Try adjusting your search filters' 
+              {searchTerm || selectedCategory
+                ? 'Try adjusting your search filters'
                 : 'All listings have been claimed'}
             </p>
-            <Link
-              href="/add-listing"
-              className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
-            >
+            <Link href="/add-listing" className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition">
               Add Your Business Instead
             </Link>
           </div>
@@ -248,18 +223,10 @@ if (error) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredListings.map((listing) => (
-                <div
-                  key={listing.id}
-                  className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition"
-                >
+                <div key={listing.id} className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition">
                   <div className="relative aspect-video bg-gradient-to-br from-brand-100 to-blue-100">
                     {listing.image_url ? (
-                      <Image
-                        src={listing.image_url}
-                        alt={listing.business_name}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={listing.image_url} alt={listing.business_name} fill className="object-cover" />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-6xl">{listing.category?.icon_emoji || '🏢'}</span>
@@ -267,23 +234,17 @@ if (error) {
                     )}
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {listing.business_name}
-                    </h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{listing.business_name}</h3>
                     {listing.category && (
                       <div className="text-sm text-brand-600 font-semibold mb-2">
                         {listing.category.icon_emoji} {listing.category.name}
                       </div>
                     )}
                     {listing.parish && (
-                      <p className="text-sm text-gray-600 mb-3">
-                        📍 {listing.parish.name}
-                      </p>
+                      <p className="text-sm text-gray-600 mb-3">📍 {listing.parish.name}</p>
                     )}
                     {listing.short_description && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                        {listing.short_description}
-                      </p>
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{listing.short_description}</p>
                     )}
                     <div className="flex gap-2">
                       <Link
@@ -310,16 +271,11 @@ if (error) {
 
         {/* Can't Find Business */}
         <div className="mt-12 bg-blue-50 border-l-4 border-brand-600 p-6 rounded-r-xl">
-          <h3 className="text-lg font-bold text-gray-900 mb-2">
-            Can't find your business?
-          </h3>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">Can&apos;t find your business?</h3>
           <p className="text-gray-700 mb-4">
-            If your business isn't listed yet, you can add it to the directory yourself.
+            If your business isn&apos;t listed yet, you can add it to the directory yourself.
           </p>
-          <Link
-            href="/add-listing"
-            className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition"
-          >
+          <Link href="/add-listing" className="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition">
             Add Your Business →
           </Link>
         </div>
