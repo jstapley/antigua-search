@@ -35,13 +35,13 @@ export async function generateMetadata({ params }) {
     .eq('status', 'active')
 
   const listingCount = count || 0
-  const description = `Browse ${listingCount} verified businesses in ${parish.name}, Grenada. Find hotels, restaurants, tours, and local services. Discover the best of ${parish.name} on GrenadaSearch.com.`
+  const description = `Browse ${listingCount} verified businesses in ${parish.name}, Antigua & Barbuda. Find hotels, restaurants, tours, and local services. Discover the best of ${parish.name} on AntiguaSearch.com.`
 
   return {
-    title: `Businesses in ${parish.name}, Grenada (${listingCount} Listings) - GrenadaSearch.com`,
+    title: `Businesses in ${parish.name}, Antigua (${listingCount} Listings) - AntiguaSearch.com`,
     description,
     alternates: {
-      canonical: `https://www.grenadasearch.com/parish/${slug}`,
+      canonical: `https://www.antiguasearch.com/parish/${slug}`,
     },
   }
 }
@@ -61,7 +61,7 @@ async function getListings(parishId, page = 1) {
 
   const { data: listings, count } = await supabase
     .from('listings')
-    .select(`*, category:categories(name, icon)`, { count: 'exact' })
+    .select(`*, category:categories(name, icon_emoji)`, { count: 'exact' })
     .eq('parish_id', parishId)
     .eq('status', 'active')
     .order('featured', { ascending: false })
@@ -79,7 +79,7 @@ async function getListings(parishId, page = 1) {
 async function getCategories(parishId) {
   const { data: categories } = await supabase
     .from('listings')
-    .select('category:categories(id, name, slug, icon)')
+    .select('category:categories(id, name, slug, icon_emoji)')
     .eq('parish_id', parishId)
     .eq('status', 'active')
 
