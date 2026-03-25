@@ -1,19 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
 const supabaseAdmin = createClient(
-  supabaseUrl,
-  serviceRoleKey || anonKey,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  { auth: { autoRefreshToken: false, persistSession: false } }
 )
 
 async function verifyTurnstile(token) {
@@ -33,7 +24,7 @@ export async function POST(request) {
   try {
     const formData = await request.json()
 
-    // Verify Turnstile token
+    // Verify Turnstile
     const turnstileValid = await verifyTurnstile(formData.turnstileToken)
     if (!turnstileValid) {
       return NextResponse.json(
@@ -60,12 +51,16 @@ export async function POST(request) {
       .single()
 
     if (dbError) {
-      console.error('Database error:', dbError)
+      console.error('❌ Database error:', dbError)
+    } else {
+      console.log('✅ Saved to Supabase')
     }
 
-    // 2. Send email notification via Resend
+    // 2. Send email via Resend
     const resendApiKey = process.env.RESEND_API_KEY
-    if (resendApiKey) {
+    if (!resendApiKey) {
+      console.warn('⚠️ RESEND_API_KEY not set — email not sent')
+    } else {
       try {
         const emailResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -116,7 +111,7 @@ export async function POST(request) {
                     <p style="color: #111827; margin: 0; white-space: pre-wrap;">${formData.message}</p>
                   </div>
                   <div style="margin-top: 16px; text-align: center;">
-                    <a href="mailto:${formData.email}?subject=Re: ${formData.subject}" 
+                    <a href="mailto:${formData.email}?subject=Re: ${formData.subject}"
                        style="background: #1d4ed8; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
                       Reply to ${formData.name}
                     </a>
@@ -127,56 +122,14 @@ export async function POST(request) {
           })
         })
 
+        const resendResult = await emailResponse.json()
         if (!emailResponse.ok) {
-          const errorText = await emailResponse.text()
-          console.error('Resend error:', errorText)
+          console.error('❌ Resend error:', JSON.stringify(resendResult))
         } else {
-          console.log('✅ Contact email sent via Resend')
+          console.log('✅ Email sent via Resend, id:', resendResult.id)
         }
       } catch (emailError) {
-        console.error('Email send error:', emailError)
-      }
-    } else {
-      console.warn('⚠️ RESEND_API_KEY not set — email not sent')
-    }
-
-    // 3. Send to GHL
-    const ghlApiKey = process.env.GHL_API_KEY
-    const ghlLocationId = process.env.GHL_LOCATION_ID
-
-    if (ghlApiKey && ghlLocationId) {
-      try {
-        const ghlContactResponse = await fetch(
-          `https://services.leadconnectorhq.com/contacts/`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${ghlApiKey}`,
-              'Content-Type': 'application/json',
-              'Version': '2021-07-28'
-            },
-            body: JSON.stringify({
-              firstName: formData.name.split(' ')[0],
-              lastName: formData.name.split(' ').slice(1).join(' '),
-              email: formData.email,
-              phone: formData.phone || '',
-              source: 'Antigua Search - Contact Form',
-              tags: formData.businessInquiry ? ['Business Inquiry', 'Contact Form'] : ['Contact Form'],
-              customFields: [
-                { key: 'contact_subject', value: formData.subject },
-                { key: 'contact_message', value: formData.message },
-                { key: 'inquiry_type', value: formData.businessInquiry ? 'Business' : 'General' }
-              ],
-              locationId: ghlLocationId
-            })
-          }
-        )
-
-        if (!ghlContactResponse.ok) {
-          console.error('GHL API error:', await ghlContactResponse.text())
-        }
-      } catch (ghlError) {
-        console.error('GHL integration error:', ghlError)
+        console.error('❌ Email send exception:', emailError)
       }
     }
 
@@ -187,7 +140,7 @@ export async function POST(request) {
     })
 
   } catch (error) {
-    console.error('Contact form API error:', error)
+    console.error('❌ Contact form API error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to process contact form' },
       { status: 500 }
