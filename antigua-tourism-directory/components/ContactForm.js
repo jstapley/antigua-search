@@ -68,22 +68,6 @@ export default function ContactForm({ defaultSubject = '' }) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {status.submitted && (
-        <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center">
-          <div className="text-4xl mb-2">✅</div>
-          <h3 className="text-xl font-bold text-green-900 mb-2">Message Sent!</h3>
-          <p className="text-green-700">Thank you for contacting us. We&apos;ll get back to you within 24 hours.</p>
-        </div>
-      )}
-
-      {status.error && (
-        <div className="mb-6 bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
-          <div className="text-4xl mb-2">❌</div>
-          <h3 className="text-xl font-bold text-red-900 mb-2">Error</h3>
-          <p className="text-red-700">{status.error}</p>
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border-2 border-gray-200 p-8">
         <div className="mb-6">
           <label htmlFor="name" className="block text-sm font-bold text-gray-900 mb-2">Your Name *</label>
@@ -132,6 +116,24 @@ export default function ContactForm({ defaultSubject = '' }) {
             }}
           />
         </div>
+
+        {/* Success message — between Turnstile and Send button */}
+        {status.submitted && (
+          <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center">
+            <div className="text-4xl mb-2">✅</div>
+            <h3 className="text-xl font-bold text-green-900 mb-2">Message Sent!</h3>
+            <p className="text-green-700">Thank you for contacting us. We&apos;ll get back to you within 24 hours.</p>
+          </div>
+        )}
+
+        {/* Error message */}
+        {status.error && (
+          <div className="mb-6 bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
+            <div className="text-4xl mb-2">❌</div>
+            <h3 className="text-xl font-bold text-red-900 mb-2">Error</h3>
+            <p className="text-red-700">{status.error}</p>
+          </div>
+        )}
 
         <button type="submit" disabled={status.submitting || !turnstileToken}
           className="w-full bg-brand-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-brand-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
