@@ -106,7 +106,7 @@ export default function ContactPageClient({ defaultSubject = '' }) {
                 <div className="bg-brand-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">✉️</span></div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">Email Us</h3>
-                  <a href="mailto:contact@antiguasearch.com" className="text-brand-600 hover:text-brand-700 text-sm md:text-base break-all">contact@antiguasearch.com</a>
+                  <a href="mailto:jeff@stapleyinc.com" className="text-brand-600 hover:text-brand-700 text-sm md:text-base break-all">jeff@stapleyinc.com</a>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -206,7 +206,7 @@ export default function ContactPageClient({ defaultSubject = '' }) {
             </div>
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
+              <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>
             </div>
           </div>
