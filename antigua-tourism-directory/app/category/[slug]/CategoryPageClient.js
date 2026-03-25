@@ -1,18 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function CategoryPageClient({ category, listings, parishes, totalCount, totalPages, currentPage }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const router = useRouter()
-
-  const handlePageChange = (page) => {
-    router.push(`/category/${category.slug}?page=${page}`)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -222,16 +215,21 @@ export default function CategoryPageClient({ category, listings, parishes, total
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Pagination — using Link tags for SEO crawlability */}
             {totalPages > 1 && (
               <div className="mt-10 md:mt-12 flex items-center justify-center gap-2 flex-wrap">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-brand-600 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition"
-                >
-                  ← Previous
-                </button>
+                {currentPage > 1 ? (
+                  <Link
+                    href={`/category/${category.slug}?page=${currentPage - 1}`}
+                    className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-brand-600 hover:text-brand-600 transition"
+                  >
+                    ← Previous
+                  </Link>
+                ) : (
+                  <span className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-300 font-semibold cursor-not-allowed opacity-40">
+                    ← Previous
+                  </span>
+                )}
 
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 2)
@@ -244,27 +242,32 @@ export default function CategoryPageClient({ category, listings, parishes, total
                     item === '...' ? (
                       <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">...</span>
                     ) : (
-                      <button
+                      <Link
                         key={item}
-                        onClick={() => handlePageChange(item)}
-                        className={`w-10 h-10 rounded-lg font-semibold transition ${
+                        href={`/category/${category.slug}?page=${item}`}
+                        className={`w-10 h-10 rounded-lg font-semibold transition flex items-center justify-center ${
                           currentPage === item
                             ? 'bg-brand-600 text-white'
                             : 'border-2 border-gray-200 text-gray-700 hover:border-brand-600 hover:text-brand-600'
                         }`}
                       >
                         {item}
-                      </button>
+                      </Link>
                     )
                   )}
 
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-brand-600 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition"
-                >
-                  Next →
-                </button>
+                {currentPage < totalPages ? (
+                  <Link
+                    href={`/category/${category.slug}?page=${currentPage + 1}`}
+                    className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-brand-600 hover:text-brand-600 transition"
+                  >
+                    Next →
+                  </Link>
+                ) : (
+                  <span className="px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-300 font-semibold cursor-not-allowed opacity-40">
+                    Next →
+                  </span>
+                )}
               </div>
             )}
           </>
@@ -319,7 +322,7 @@ export default function CategoryPageClient({ category, listings, parishes, total
             </div>
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
+              <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>
             </div>
           </div>
