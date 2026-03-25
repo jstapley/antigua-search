@@ -70,7 +70,7 @@ export async function POST(request) {
           },
           body: JSON.stringify({
             from: 'AntiguaSearch <notifications@antiguasearch.com>',
-            to: ['contact@antiguasearch.com'],
+            to: ['jeff@stapleyinc.com'],
             subject: `New Contact Form: ${formData.subject}`,
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
