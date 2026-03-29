@@ -234,7 +234,7 @@ export default function PricingClient() {
             </div>
             <div>
               <h6 className="font-bold mb-4">Contact</h6>
-              <p className="text-gray-400 text-sm">contact@antiguasearch.com</p>
+              <p className="text-gray-400 text-sm">jeff@stapleyinc.com</p>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua</p>
             </div>
           </div>

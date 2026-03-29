@@ -194,7 +194,7 @@ export default function BlogListClient({ posts }) {
             </div>
             <div>
               <h6 className="font-bold mb-4">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
+              <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>
             </div>
           </div>

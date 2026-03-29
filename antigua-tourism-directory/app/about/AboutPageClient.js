@@ -392,8 +392,8 @@ export default function AboutPageClient() {
               <h3 className="font-bold mb-4 text-base md:text-lg">Contact</h3>
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li>
-                  <a href="mailto:contact@antiguasearch.com" className="hover:text-white break-all">
-                    contact@antiguasearch.com
+                  <a href="mailto:jeff@stapleyinc.com" className="hover:text-white break-all">
+                    jeff@stapleyinc.com
                   </a>
                 </li>
                 <li>Jolly Harbour, Antigua</li>

@@ -346,7 +346,7 @@ export default async function AdvertisePage() {
             </div>
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">contact@antiguasearch.com</p>
+              <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
               <p className="text-gray-400 text-sm">St. John's, Antigua & Barbuda</p>
             </div>
           </div>

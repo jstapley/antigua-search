@@ -154,7 +154,7 @@ export default async function HomePage() {
     },
     "contactPoint": {
       "@type": "ContactPoint",
-      "email": "contact@antiguasearch.com",
+      "email": "jeff@stapleyinc.com",
       "contactType": "Customer Service"
     }
   }
