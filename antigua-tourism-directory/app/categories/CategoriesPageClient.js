@@ -66,6 +66,7 @@ export default function CategoriesPageClient({ categories }) {
               <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">
                 About Us
               </Link>
+              <Link href="/blog" className="text-gray-700 hover:text-brand-600 font-medium">Blog</Link>
               <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
                 Contact
               </Link>

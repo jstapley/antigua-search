@@ -66,6 +66,7 @@ export default function ParishesPageClient({ parishes }) {
               <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">
                 About Us
               </Link>
+              <Link href="/blog" className="text-gray-700 hover:text-brand-600 font-medium">Blog</Link>
               <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">
                 Contact
               </Link>
@@ -125,6 +126,13 @@ export default function ParishesPageClient({ parishes }) {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
+              </Link>
+              <Link 
+                href="/blog" 
+                className="block text-gray-700 hover:text-brand-600 font-medium py-2" 
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Blog
               </Link>
               <Link
                 href="/contact"
