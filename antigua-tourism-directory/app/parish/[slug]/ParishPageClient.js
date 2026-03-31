@@ -48,6 +48,7 @@ export default function ParishPageClient({ parish, listings, categories, totalCo
               <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
               <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
               <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
+              <Link href="/blog" className="text-gray-700 hover:text-brand-600 font-medium">Blog</Link>
               <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
               <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
               <Link href="/add-listing" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">
@@ -70,6 +71,7 @@ export default function ParishPageClient({ parish, listings, categories, totalCo
               <Link href="/parishes" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Browse Parishes</Link>
               <Link href="/categories" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
               <Link href="/about" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+              <Link href="/blog" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
               <Link href="/contact" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
               <Link href="/login" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
               <Link href="/add-listing" className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>
@@ -311,6 +313,7 @@ export default function ParishPageClient({ parish, listings, categories, totalCo
                 <Link href="/parishes" className="block text-gray-400 hover:text-white transition">Browse Parishes</Link>
                 <Link href="/categories" className="block text-gray-400 hover:text-white transition">All Categories</Link>
                 <Link href="/about" className="block text-gray-400 hover:text-white transition">About Us</Link>
+                <Link href="/blog" className="text-gray-700 hover:text-brand-600 font-medium">Blog</Link>
               </div>
             </div>
             <div>
