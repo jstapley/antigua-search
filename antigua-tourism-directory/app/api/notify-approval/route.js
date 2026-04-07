@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server'
 export async function POST(request) {
   try {
     const data = await request.json()
+    console.log('notify-approval called with:', data)
     
     // Revalidate the listing page so it's live immediately
     revalidatePath(`/listing/${data.listing_slug}`)
