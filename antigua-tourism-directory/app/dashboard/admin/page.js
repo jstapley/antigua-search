@@ -273,8 +273,49 @@ export default function AdminDashboard() {
   const handleApproveListing = async (listingId, businessName) => {
     setLoadingListing(listingId)
     try {
-      const { error } = await supabase.from('listings').update({ status: 'active' }).eq('id', listingId)
+      // 1. Approve the listing
+      const { error } = await supabase
+        .from('listings')
+        .update({ status: 'active' })
+        .eq('id', listingId)
       if (error) throw error
+
+      // 2. Find the listing slug and claimed user email
+      const { data: listing } = await supabase
+        .from('listings')
+        .select('slug, category:categories(name), parish:parishes(name)')
+        .eq('id', listingId)
+        .single()
+
+      const { data: claim } = await supabase
+        .from('claimed_listings')
+        .select('user_id')
+        .eq('listing_id', listingId)
+        .single()
+
+      if (claim?.user_id) {
+        const { data: userProfile } = await supabase
+          .from('user_profiles')
+          .select('email')
+          .eq('id', claim.user_id)
+          .single()
+
+        if (userProfile?.email && listing) {
+          // 3. Send customer confirmation email
+          await fetch('/api/notify-claim', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              business_name: businessName,
+              category: listing.category?.name || 'General',
+              parish: listing.parish?.name || 'Antigua',
+              user_email: userProfile.email,
+              listing_slug: listing.slug
+            })
+          })
+        }
+      }
+
       showModal('Approved', `"${businessName}" is now active and visible to the public.`, 'success', loadAllData)
     } catch (error) {
       showModal('Error', 'Could not approve listing: ' + error.message, 'error')
@@ -282,7 +323,6 @@ export default function AdminDashboard() {
       setLoadingListing(null)
     }
   }
-
   const handleRejectListing = async (listingId, businessName) => {
     setLoadingListing(listingId)
     try {
