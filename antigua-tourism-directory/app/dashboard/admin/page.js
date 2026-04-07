@@ -287,6 +287,9 @@ export default function AdminDashboard() {
         .eq('id', listingId)
         .single()
 
+            console.log('Listing fetched:', listing)          // ADD THIS
+            console.log('contact_email:', listing?.contact_email) // ADD THIS
+
       // 3. Send approval email to submitter if we have their contact email
       if (listing?.contact_email) {
         await fetch('/api/notify-approval', {
