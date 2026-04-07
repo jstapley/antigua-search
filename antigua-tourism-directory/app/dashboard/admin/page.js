@@ -269,7 +269,6 @@ export default function AdminDashboard() {
     })
   }
 
-  // Listing handlers
   const handleApproveListing = async (listingId, businessName) => {
     setLoadingListing(listingId)
     try {
@@ -284,9 +283,14 @@ export default function AdminDashboard() {
       const res = await fetch(`/api/admin/get-listing?id=${listingId}`)
       const listing = await res.json()
 
+      // DEBUG — remove after fix confirmed
+      console.log('get-listing status:', res.status)
+      console.log('get-listing response:', listing)
+      console.log('contact_email:', listing?.contact_email)
+
       // 3. Send approval email to submitter if we have their contact email
       if (listing?.contact_email) {
-        await fetch('/api/notify-approval', {
+        const emailRes = await fetch('/api/notify-approval', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -298,6 +302,13 @@ export default function AdminDashboard() {
             listing_slug: listing.slug
           })
         })
+        // DEBUG — remove after fix confirmed
+        const emailResult = await emailRes.json()
+        console.log('notify-approval result:', emailResult)
+      } else {
+        // DEBUG — remove after fix confirmed
+        console.log('No contact_email found — skipping approval email')
+        console.log('Full listing object:', JSON.stringify(listing))
       }
 
       showModal('Approved', `"${businessName}" is now active and visible to the public.`, 'success', loadAllData)
