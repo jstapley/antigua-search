@@ -280,15 +280,12 @@ export default function AdminDashboard() {
         .eq('id', listingId)
       if (error) throw error
 
-      // 2. Fetch listing details for the email
-      const { data: listing } = await supabase
-        .from('listings')
-        .select('slug, contact_email, contact_name, category:categories(name), parish:parishes(name)')
-        .eq('id', listingId)
-        .single()
+      // 2. Fetch listing details for the email via admin API (bypasses RLS)
+      const res = await fetch(`/api/admin/get-listing?id=${listingId}`)
+      const listing = await res.json()
 
-            console.log('Listing fetched:', listing)          // ADD THIS
-            console.log('contact_email:', listing?.contact_email) // ADD THIS
+          console.log('Listing fetched:', listing)          // ADD THIS
+          console.log('contact_email:', listing?.contact_email) // ADD THIS
 
       // 3. Send approval email to submitter if we have their contact email
       if (listing?.contact_email) {
