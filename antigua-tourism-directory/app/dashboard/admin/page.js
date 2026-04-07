@@ -293,12 +293,16 @@ export default function AdminDashboard() {
         .eq('listing_id', listingId)
         .single()
 
+      console.log('Claim lookup result:', claim)
+
       if (claim?.user_id) {
         const { data: userProfile } = await supabase
           .from('user_profiles')
           .select('email')
           .eq('id', claim.user_id)
           .single()
+
+        console.log('User profile lookup:', userProfile)
 
         if (userProfile?.email && listing) {
           // 3. Send customer confirmation email
