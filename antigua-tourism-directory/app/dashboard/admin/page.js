@@ -9,7 +9,6 @@ import { supabase } from '@/lib/supabase'
 import Modal from '@/components/Modal'
 import { Star, Check, X, Trash2, ExternalLink } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
-import { sendListingApprovalEmail, sendClaimApprovalEmail } from '@/lib/resend'
 
 export default function AdminDashboard() {
   const { user, loading } = useAuth()
@@ -290,13 +289,17 @@ export default function AdminDashboard() {
 
       // 3. Send approval email to submitter if we have their contact email
       if (listing?.contact_email) {
-        await sendListingApprovalEmail({
-          business_name: businessName,
-          category: listing.category?.name,
-          parish: listing.parish?.name,
-          contact_email: listing.contact_email,
-          contact_name: listing.contact_name,
-          listing_slug: listing.slug
+        await fetch('/api/notify-approval', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            business_name: businessName,
+            category: listing.category?.name,
+            parish: listing.parish?.name,
+            contact_email: listing.contact_email,
+            contact_name: listing.contact_name,
+            listing_slug: listing.slug
+          })
         })
       }
 
@@ -427,12 +430,16 @@ export default function AdminDashboard() {
         .eq('id', claim.listing_id)
         .single()
 
-      await sendClaimApprovalEmail({
-        business_name: claim.listing.business_name,
-        category: listing?.category?.name,
-        parish: listing?.parish?.name,
-        user_email: claim.user.email,
-        listing_slug: listing?.slug
+      await fetch('/api/notify-claim-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          business_name: claim.listing.business_name,
+          category: listing?.category?.name,
+          parish: listing?.parish?.name,
+          user_email: claim.user.email,
+          listing_slug: listing?.slug
+        })
       })
     }
 
