@@ -23,6 +23,9 @@ export async function POST(request) {
       sendNewListingNotification(listingData),
       sendSubmissionConfirmation(listingData)
     ])
+    
+    console.log('Admin result:', adminResult)       // ADD THIS
+    console.log('Submitter result:', submitterResult)
 
     if (!adminResult.success) {
       console.error('Admin notification failed:', adminResult.error)
