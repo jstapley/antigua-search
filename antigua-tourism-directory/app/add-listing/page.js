@@ -304,6 +304,7 @@ export default function AddListingPage() {
             category_name: selectedCategory?.name || 'Not specified',
             parish_name: selectedParish?.name || 'Not specified',
             contact_name: listingData.contact_name,
+            contact_email: listingData.contact_email,
             email: listingData.email,
             phone: listingData.phone,
             website: listingData.website,
