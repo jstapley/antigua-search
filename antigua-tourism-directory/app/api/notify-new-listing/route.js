@@ -13,7 +13,8 @@ export async function GET() {
 export async function POST(request) {
   try {
     const listingData = await request.json()
-
+    console.log('contact_email received:', listingData.contact_email)
+    
     if (!listingData.business_name) {
       return NextResponse.json({ error: 'Business name is required' }, { status: 400 })
     }
@@ -23,7 +24,7 @@ export async function POST(request) {
       sendNewListingNotification(listingData),
       sendSubmissionConfirmation(listingData)
     ])
-    
+
     console.log('Admin result:', adminResult)       // ADD THIS
     console.log('Submitter result:', submitterResult)
 
