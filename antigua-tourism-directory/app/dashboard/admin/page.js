@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase'
 import Modal from '@/components/Modal'
 import { Star, Check, X, Trash2, ExternalLink } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import { sendListingApprovalEmail, sendClaimApprovalEmail } from '@/lib/resend'
 
 export default function AdminDashboard() {
   const { user, loading } = useAuth()
@@ -280,44 +281,23 @@ export default function AdminDashboard() {
         .eq('id', listingId)
       if (error) throw error
 
-      // 2. Find the listing slug and claimed user email
+      // 2. Fetch listing details for the email
       const { data: listing } = await supabase
         .from('listings')
-        .select('slug, category:categories(name), parish:parishes(name)')
+        .select('slug, contact_email, contact_name, category:categories(name), parish:parishes(name)')
         .eq('id', listingId)
         .single()
 
-      const { data: claim } = await supabase
-        .from('claimed_listings')
-        .select('user_id')
-        .eq('listing_id', listingId)
-        .single()
-
-      console.log('Claim lookup result:', claim)
-
-      if (claim?.user_id) {
-        const { data: userProfile } = await supabase
-          .from('user_profiles')
-          .select('email')
-          .eq('id', claim.user_id)
-          .single()
-
-        console.log('User profile lookup:', userProfile)
-
-        if (userProfile?.email && listing) {
-          // 3. Send customer confirmation email
-          await fetch('/api/notify-claim', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              business_name: businessName,
-              category: listing.category?.name || 'General',
-              parish: listing.parish?.name || 'Antigua',
-              user_email: userProfile.email,
-              listing_slug: listing.slug
-            })
-          })
-        }
+      // 3. Send approval email to submitter if we have their contact email
+      if (listing?.contact_email) {
+        await sendListingApprovalEmail({
+          business_name: businessName,
+          category: listing.category?.name,
+          parish: listing.parish?.name,
+          contact_email: listing.contact_email,
+          contact_name: listing.contact_name,
+          listing_slug: listing.slug
+        })
       }
 
       showModal('Approved', `"${businessName}" is now active and visible to the public.`, 'success', loadAllData)
@@ -327,6 +307,7 @@ export default function AdminDashboard() {
       setLoadingListing(null)
     }
   }
+
   const handleRejectListing = async (listingId, businessName) => {
     setLoadingListing(listingId)
     try {
@@ -426,12 +407,36 @@ export default function AdminDashboard() {
   }
 
   const handleApproveClaim = async (claimId) => {
-    const { error } = await supabase.from('claimed_listings').update({ verified: true }).eq('id', claimId)
+    const claim = claims.find(c => c.id === claimId)
+
+    const { error } = await supabase
+      .from('claimed_listings')
+      .update({ verified: true })
+      .eq('id', claimId)
+
     if (error) {
       showModal('Error', 'Could not approve claim: ' + error.message, 'error')
-    } else {
-      showModal('Approved', 'Claim approved successfully.', 'success', loadAllData)
+      return
     }
+
+    // Send approval email to the owner who claimed it
+    if (claim?.listing && claim?.user?.email) {
+      const { data: listing } = await supabase
+        .from('listings')
+        .select('slug, category:categories(name), parish:parishes(name)')
+        .eq('id', claim.listing_id)
+        .single()
+
+      await sendClaimApprovalEmail({
+        business_name: claim.listing.business_name,
+        category: listing?.category?.name,
+        parish: listing?.parish?.name,
+        user_email: claim.user.email,
+        listing_slug: listing?.slug
+      })
+    }
+
+    showModal('Approved', 'Claim approved successfully.', 'success', loadAllData)
   }
 
   const handleRejectClaim = (claimId) => {
