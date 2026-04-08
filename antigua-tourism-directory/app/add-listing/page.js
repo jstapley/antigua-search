@@ -4,9 +4,11 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/lib/AuthContext'
 import { Loader } from '@googlemaps/js-api-loader'
 
 export default function AddListingPage() {
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     business_name: '',
     category_id: '',
@@ -75,7 +77,6 @@ export default function AddListingPage() {
 
       const google = await loader.load()
 
-      // Center on Antigua & Barbuda
       const antiguaCenter = { lat: 17.0608, lng: -61.7964 }
 
       const map = new google.maps.Map(mapRef.current, {
@@ -95,7 +96,6 @@ export default function AddListingPage() {
 
       mapInstanceRef.current = map
 
-      // Create draggable marker
       const marker = new google.maps.Marker({
         map: map,
         draggable: true,
@@ -105,20 +105,17 @@ export default function AddListingPage() {
 
       markerRef.current = marker
 
-      // Click on map to place marker
       map.addListener('click', (e) => {
         placeMarker(e.latLng, google)
       })
 
-      // Drag marker to update location
       marker.addListener('dragend', (e) => {
         updateLocation(e.latLng, google)
       })
 
-      // Initialize autocomplete for address search
       if (searchInputRef.current) {
         const autocomplete = new google.maps.places.Autocomplete(searchInputRef.current, {
-          componentRestrictions: { country: 'ag' }, // Antigua & Barbuda
+          componentRestrictions: { country: 'ag' },
           fields: ['geometry', 'formatted_address', 'name']
         })
 
@@ -130,7 +127,6 @@ export default function AddListingPage() {
             map.setCenter(place.geometry.location)
             map.setZoom(16)
             
-            // Update address field
             const address = place.formatted_address || place.name || ''
             setFormData(prev => ({ ...prev, address }))
           }
@@ -149,11 +145,8 @@ export default function AddListingPage() {
   const placeMarker = (location, google) => {
     markerRef.current.setPosition(location)
     markerRef.current.setVisible(true)
-    
-    // Bounce animation
     markerRef.current.setAnimation(google.maps.Animation.BOUNCE)
     setTimeout(() => markerRef.current.setAnimation(null), 750)
-    
     updateLocation(location, google)
   }
 
@@ -167,7 +160,6 @@ export default function AddListingPage() {
       longitude: lng.toFixed(6)
     }))
 
-    // Reverse geocode to get address
     const geocoder = new google.maps.Geocoder()
     try {
       const result = await geocoder.geocode({ location })
@@ -276,7 +268,6 @@ export default function AddListingPage() {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null
       }
 
-      // Insert listing (without .select() to avoid RLS permission issue)
       const { error: submitError } = await supabase
         .from('listings')
         .insert([listingData])
@@ -288,14 +279,10 @@ export default function AddListingPage() {
 
       console.log('✅ Listing created successfully')
 
-      // Send email notification using the data we already have
       try {
-        // Get category and parish names
         const selectedCategory = categories.find(cat => cat.id === formData.category_id)
         const selectedParish = parishes.find(par => par.id === formData.parish_id)
 
-        console.log('📧 Sending email notification...')
-        
         const emailResponse = await fetch('/api/notify-new-listing', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -328,7 +315,6 @@ export default function AddListingPage() {
 
       setSuccess(true)
       
-      // Reset form
       setFormData({
         business_name: '',
         category_id: '',
@@ -352,7 +338,6 @@ export default function AddListingPage() {
       setImageFile(null)
       setImagePreview(null)
       
-      // Clear marker
       if (markerRef.current) {
         markerRef.current.setVisible(false)
       }
@@ -434,12 +419,53 @@ export default function AddListingPage() {
           Fill out the form below and we'll review your submission.
         </p>
 
+        {/* Soft login/signup prompt for non-logged-in users */}
+        {!user && (
+          <div className="bg-brand-50 border border-brand-200 rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p className="text-brand-800 text-sm md:text-base">
+              💡 <strong>Have an account?</strong> Sign in to manage and track your listing after submission.
+            </p>
+            <div className="flex gap-2 shrink-0">
+              <Link
+                href="/login?redirect=/add-listing"
+                className="bg-white border border-brand-300 text-brand-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-50 transition"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup?redirect=/add-listing"
+                className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-700 transition"
+              >
+                Sign Up Free
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Logged in confirmation */}
+        {user && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center gap-3">
+            <span className="text-green-600 text-xl">✓</span>
+            <p className="text-green-800 text-sm md:text-base">
+              Signed in as <strong>{user.email}</strong> — your listing will be linked to your account.
+            </p>
+          </div>
+        )}
+
         {success && (
           <div className="bg-green-50 border-l-4 border-green-500 p-4 md:p-6 mb-6 md:mb-8">
             <h3 className="text-base md:text-lg font-bold text-green-800 mb-2">Success! 🎉</h3>
             <p className="text-green-700 text-sm md:text-base">
               Your listing has been submitted and is pending review. We'll be in touch soon!
             </p>
+            {!user && (
+              <p className="text-green-700 text-sm md:text-base mt-2">
+                <Link href="/signup" className="font-semibold underline hover:text-green-900">
+                  Create a free account
+                </Link>{' '}
+                to claim and manage your listing once it's approved.
+              </p>
+            )}
           </div>
         )}
 
@@ -643,7 +669,6 @@ export default function AddListingPage() {
               Search for your address or click on the map to mark your exact location
             </p>
 
-            {/* Address Search */}
             <div className="mb-4">
               <label className="block text-sm font-bold text-gray-900 mb-2">
                 Search Address
@@ -659,7 +684,6 @@ export default function AddListingPage() {
               </p>
             </div>
 
-            {/* Interactive Map */}
             <div className="mb-4 relative">
               <div 
                 ref={mapRef}
@@ -675,7 +699,6 @@ export default function AddListingPage() {
               )}
             </div>
 
-            {/* Address Display */}
             <div className="mb-4">
               <label className="block text-sm font-bold text-gray-900 mb-2">
                 Address *
@@ -691,7 +714,6 @@ export default function AddListingPage() {
               />
             </div>
 
-            {/* Location Confirmation */}
             {formData.latitude && formData.longitude && (
               <div className="bg-green-50 border-l-4 border-green-500 p-3 md:p-4 mb-4">
                 <div className="flex items-start">
@@ -716,7 +738,6 @@ export default function AddListingPage() {
               </div>
             )}
 
-            {/* Advanced: Manual Coordinate Entry */}
             <div className="mt-4">
               <button
                 type="button"
@@ -773,73 +794,34 @@ export default function AddListingPage() {
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  📘 Facebook Page
-                </label>
-                <input
-                  type="url"
-                  name="facebook_url"
-                  value={formData.facebook_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">📘 Facebook Page</label>
+                <input type="url" name="facebook_url" value={formData.facebook_url} onChange={handleChange}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
-                  placeholder="https://facebook.com/yourbusiness"
-                />
+                  placeholder="https://facebook.com/yourbusiness" />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  📸 Instagram
-                </label>
-                <input
-                  type="url"
-                  name="instagram_url"
-                  value={formData.instagram_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">📸 Instagram</label>
+                <input type="url" name="instagram_url" value={formData.instagram_url} onChange={handleChange}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
-                  placeholder="https://instagram.com/yourbusiness"
-                />
+                  placeholder="https://instagram.com/yourbusiness" />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  🔍 Google Business Profile
-                </label>
-                <input
-                  type="url"
-                  name="google_business_url"
-                  value={formData.google_business_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">🔍 Google Business Profile</label>
+                <input type="url" name="google_business_url" value={formData.google_business_url} onChange={handleChange}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
-                  placeholder="https://maps.google.com/..."
-                />
+                  placeholder="https://maps.google.com/..." />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  🦉 TripAdvisor
-                </label>
-                <input
-                  type="url"
-                  name="tripadvisor_url"
-                  value={formData.tripadvisor_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">🦉 TripAdvisor</label>
+                <input type="url" name="tripadvisor_url" value={formData.tripadvisor_url} onChange={handleChange}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
-                  placeholder="https://tripadvisor.com/..."
-                />
+                  placeholder="https://tripadvisor.com/..." />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  🐦 Twitter/X
-                </label>
-                <input
-                  type="url"
-                  name="twitter_url"
-                  value={formData.twitter_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">🐦 Twitter/X</label>
+                <input type="url" name="twitter_url" value={formData.twitter_url} onChange={handleChange}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
-                  placeholder="https://twitter.com/yourbusiness"
-                />
+                  placeholder="https://twitter.com/yourbusiness" />
               </div>
             </div>
           </div>
@@ -851,31 +833,14 @@ export default function AddListingPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Your Name *
-                </label>
-                <input
-                  type="text"
-                  name="contact_name"
-                  value={formData.contact_name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
-                />
+                <label className="block text-sm font-bold text-gray-900 mb-2">Your Name *</label>
+                <input type="text" name="contact_name" value={formData.contact_name} onChange={handleChange} required
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base" />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Your Email *
-                </label>
-                <input
-                  type="email"
-                  name="contact_email"
-                  value={formData.contact_email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
-                />
+                <label className="block text-sm font-bold text-gray-900 mb-2">Your Email *</label>
+                <input type="email" name="contact_email" value={formData.contact_email} onChange={handleChange} required
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base" />
               </div>
             </div>
           </div>
@@ -888,6 +853,17 @@ export default function AddListingPage() {
           >
             {uploadingImage ? 'Uploading Image...' : loading ? 'Submitting...' : 'Submit Listing'}
           </button>
+
+          {/* Post-submit signup nudge for non-logged-in users */}
+          {!user && (
+            <p className="text-center text-sm text-gray-500">
+              After submitting,{' '}
+              <Link href="/signup" className="text-brand-600 font-semibold hover:text-brand-700">
+                create a free account
+              </Link>{' '}
+              to claim and manage your listing once it's approved.
+            </p>
+          )}
         </form>
       </div>
     </div>
