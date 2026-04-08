@@ -11,8 +11,16 @@ export async function POST(request) {
     const { userId } = await request.json()
     if (!userId) return NextResponse.json({ error: 'userId required' }, { status: 400 })
 
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    // Delete profile first (service role bypasses RLS)
+    const { error: profileError } = await supabaseAdmin
+      .from('user_profiles')
+      .delete()
+      .eq('id', userId)
+    if (profileError) return NextResponse.json({ error: profileError.message }, { status: 500 })
+
+    // Then delete auth user
+    const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId)
+    if (authError) return NextResponse.json({ error: authError.message }, { status: 500 })
 
     return NextResponse.json({ success: true })
   } catch (error) {

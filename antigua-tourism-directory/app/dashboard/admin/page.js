@@ -487,7 +487,6 @@ export default function AdminDashboard() {
   }
 
   const handleDeleteUser = (userId, userName) => {
-    // Prevent admin from deleting themselves
     if (userId === user.id) {
       showModal('Cannot Delete', 'You cannot delete your own account.', 'error')
       return
@@ -503,22 +502,13 @@ export default function AdminDashboard() {
         onClick: async () => {
           setModal(prev => ({ ...prev, isOpen: false }))
           try {
-            // Delete from user_profiles first (RLS allows this for admins)
-            const { error: profileError } = await supabase
-              .from('user_profiles')
-              .delete()
-              .eq('id', userId)
-            if (profileError) throw profileError
-
-            // Delete from auth via admin API route
             const res = await fetch('/api/admin/delete-user', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ userId })
             })
             const result = await res.json()
-            if (!res.ok) throw new Error(result.error || 'Failed to delete auth user')
-
+            if (!res.ok) throw new Error(result.error || 'Failed to delete user')
             showModal('Deleted', `User "${userName}" has been deleted.`, 'success', loadAllData)
           } catch (error) {
             showModal('Error', 'Could not delete user: ' + error.message, 'error')
