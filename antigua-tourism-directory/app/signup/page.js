@@ -26,14 +26,21 @@ export default function SignupPage() {
       return
     }
 
+
     const { error } = await signUp(email, password, fullName)
 
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      router.push('/dashboard')
-    }
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+      } else {
+        // Send welcome email
+        await fetch('/api/notify-welcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name: fullName, email })
+        })
+        router.push('/dashboard')
+      }
   }
 
   return (

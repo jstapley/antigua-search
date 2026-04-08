@@ -397,3 +397,86 @@ export async function sendClaimNotification(claimData) {
     html
   })
 }
+
+// Send Welcome Email after registration
+
+export async function sendWelcomeEmail({ full_name, email }) {
+  if (!email) return { success: false, error: 'No email provided' }
+
+  const customerHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      ${emailHeader('Welcome to AntiguaSearch! 🌴', 'The complete business directory for Antigua & Barbuda')}
+      <div style="padding: 30px; background: #ffffff;">
+        <h2 style="color: #1f2937; margin-top: 0;">Hi ${full_name || 'there'},</h2>
+        <p style="color: #4b5563; line-height: 1.6;">
+          Welcome to AntiguaSearch.com — the complete business directory and travel guide for Antigua and Barbuda. We're glad you're here.
+        </p>
+        <p style="color: #4b5563; line-height: 1.6;">
+          Here's what you can do with your new account:
+        </p>
+        <ul style="color: #4b5563; line-height: 1.8; padding-left: 20px;">
+          <li><strong>Add your business</strong> — get found by thousands of visitors exploring Antigua and Barbuda</li>
+          <li><strong>Claim an existing listing</strong> — if your business is already listed, claim it to manage your details</li>
+          <li><strong>Write reviews</strong> — share your experience with local businesses</li>
+        </ul>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${SITE_URL}/add-listing"
+             style="background: #318DD0; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; margin-right: 12px;">
+            Add Your Business →
+          </a>
+        </div>
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-top: 24px;">
+          <h3 style="color: #1f2937; margin-top: 0;">Already listed on AntiguaSearch?</h3>
+          <p style="color: #4b5563; line-height: 1.6; margin: 0 0 16px;">
+            If your business is already in our directory, you can claim it to update your photos, description, hours, and contact details.
+          </p>
+          <a href="${SITE_URL}/dashboard"
+             style="background: #10b981; color: white; padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">
+            Go to My Dashboard →
+          </a>
+        </div>
+      </div>
+      ${emailFooter()}
+    </div>
+  `
+
+  const adminHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      ${emailHeader('👤 New User Registration', 'Someone just created an account')}
+      <div style="padding: 30px; background: #ffffff;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563; width: 120px;">Name:</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${full_name || 'Not provided'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; font-weight: bold; color: #4b5563;">Email:</td>
+            <td style="padding: 10px; color: #1f2937;"><a href="mailto:${email}" style="color: #318DD0;">${email}</a></td>
+          </tr>
+        </table>
+        <div style="margin-top: 30px; text-align: center;">
+          <a href="${SITE_URL}/dashboard/admin?tab=users"
+             style="background: #318DD0; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+            View in Admin →
+          </a>
+        </div>
+      </div>
+      ${emailFooter()}
+    </div>
+  `
+
+  const [customerResult, adminResult] = await Promise.all([
+    sendEmail({
+      to: email,
+      subject: `Welcome to AntiguaSearch.com, ${full_name || 'there'}! 🌴`,
+      html: customerHtml
+    }),
+    sendEmail({
+      to: ADMIN_EMAIL,
+      subject: `👤 New User Registration: ${full_name || email}`,
+      html: adminHtml
+    })
+  ])
+
+  return { success: customerResult.success && adminResult.success }
+}

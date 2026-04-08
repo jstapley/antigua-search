@@ -108,6 +108,13 @@ export default function AboutPageClient() {
                 About Us
               </Link>
               <Link
+                href="/blog"
+                className="block text-brand-600 font-bold py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link
                 href="/contact"
                 className="block text-gray-700 hover:text-brand-600 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
