@@ -323,6 +323,15 @@ export default function CategoryPageClient({ category, listings, parishes, total
               </div>
             </div>
             <div>
+              <h6 className="font-bold mb-4 text-base md:text-lg">Websites</h6>
+              <div className="space-y-2 text-sm">
+                <a href="https://www.antiguasearch.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">AntiguaSearch.com</a>
+                <a href="https://www.grenadasearch.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">GrenadaSearch.com</a>
+                <a href="https://www.stapleyinc.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">StapleyInc.com</a>
+                <a href="https://www.antiguamarinesolutions.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">AntiguaMarineSolutions.com</a>
+              </div>
+            </div>
+            <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
               <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>

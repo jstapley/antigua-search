@@ -388,7 +388,7 @@ export default function AboutPageClient() {
                 <li><Link href="/search" className="hover:text-white">Search</Link></li>
               </ul>
             </div>
-
+            
             <div>
               <h3 className="font-bold mb-4 text-base md:text-lg">For Businesses</h3>
               <ul className="space-y-2 text-gray-400 text-sm">
@@ -397,7 +397,15 @@ export default function AboutPageClient() {
                 <li><Link href="/about" className="hover:text-white">About Us</Link></li>
               </ul>
             </div>
-
+            <div>
+              <h6 className="font-bold mb-4 text-base md:text-lg">Websites</h6>
+              <div className="space-y-2 text-sm">
+                <a href="https://www.antiguasearch.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">AntiguaSearch.com</a>
+                <a href="https://www.grenadasearch.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">GrenadaSearch.com</a>
+                <a href="https://www.stapleyinc.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">StapleyInc.com</a>
+                <a href="https://www.antiguamarinesolutions.com" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-white transition">AntiguaMarineSolutions.com</a>
+              </div>
+            </div>
             <div>
               <h3 className="font-bold mb-4 text-base md:text-lg">Contact</h3>
               <ul className="space-y-2 text-gray-400 text-sm">
