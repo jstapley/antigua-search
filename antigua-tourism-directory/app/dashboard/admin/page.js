@@ -269,28 +269,21 @@ export default function AdminDashboard() {
     })
   }
 
+  // Listing handlers
   const handleApproveListing = async (listingId, businessName) => {
     setLoadingListing(listingId)
     try {
-      // 1. Approve the listing
       const { error } = await supabase
         .from('listings')
         .update({ status: 'active' })
         .eq('id', listingId)
       if (error) throw error
 
-      // 2. Fetch listing details for the email via admin API (bypasses RLS)
       const res = await fetch(`/api/admin/get-listing?id=${listingId}`)
       const listing = await res.json()
 
-      // DEBUG — remove after fix confirmed
-      console.log('get-listing status:', res.status)
-      console.log('get-listing response:', listing)
-      console.log('contact_email:', listing?.contact_email)
-
-      // 3. Send approval email to submitter if we have their contact email
       if (listing?.contact_email) {
-        const emailRes = await fetch('/api/notify-approval', {
+        await fetch('/api/notify-approval', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -302,13 +295,6 @@ export default function AdminDashboard() {
             listing_slug: listing.slug
           })
         })
-        // DEBUG — remove after fix confirmed
-        const emailResult = await emailRes.json()
-        console.log('notify-approval result:', emailResult)
-      } else {
-        // DEBUG — remove after fix confirmed
-        console.log('No contact_email found — skipping approval email')
-        console.log('Full listing object:', JSON.stringify(listing))
       }
 
       showModal('Approved', `"${businessName}" is now active and visible to the public.`, 'success', loadAllData)
@@ -430,7 +416,6 @@ export default function AdminDashboard() {
       return
     }
 
-    // Send approval email to the owner who claimed it
     if (claim?.listing && claim?.user?.email) {
       const { data: listing } = await supabase
         .from('listings')
@@ -494,6 +479,49 @@ export default function AdminDashboard() {
             showModal('Error', 'Could not change role: ' + error.message, 'error')
           } else {
             showModal('Success', `Role changed to ${newRole}.`, 'success', loadAllData)
+          }
+        }
+      },
+      onClose: () => setModal(prev => ({ ...prev, isOpen: false }))
+    })
+  }
+
+  const handleDeleteUser = (userId, userName) => {
+    // Prevent admin from deleting themselves
+    if (userId === user.id) {
+      showModal('Cannot Delete', 'You cannot delete your own account.', 'error')
+      return
+    }
+    setModal({
+      isOpen: true,
+      title: 'Delete User?',
+      message: `Are you sure you want to permanently delete "${userName}"? This will remove their account and cannot be undone.`,
+      type: 'warning',
+      confirmButton: {
+        label: 'Yes, Delete User',
+        danger: true,
+        onClick: async () => {
+          setModal(prev => ({ ...prev, isOpen: false }))
+          try {
+            // Delete from user_profiles first (RLS allows this for admins)
+            const { error: profileError } = await supabase
+              .from('user_profiles')
+              .delete()
+              .eq('id', userId)
+            if (profileError) throw profileError
+
+            // Delete from auth via admin API route
+            const res = await fetch('/api/admin/delete-user', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId })
+            })
+            const result = await res.json()
+            if (!res.ok) throw new Error(result.error || 'Failed to delete auth user')
+
+            showModal('Deleted', `User "${userName}" has been deleted.`, 'success', loadAllData)
+          } catch (error) {
+            showModal('Error', 'Could not delete user: ' + error.message, 'error')
           }
         }
       },
@@ -940,7 +968,18 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">{new Date(userItem.created_at).toLocaleDateString()}</td>
                         <td className="px-6 py-4">
-                          <button onClick={() => handleChangeUserRole(userItem.id, userItem.full_name || userItem.email, userItem.role)} className="text-brand-600 hover:text-brand-700 font-semibold text-sm">Change Role</button>
+                          <div className="flex gap-3">
+                            <button onClick={() => handleChangeUserRole(userItem.id, userItem.full_name || userItem.email, userItem.role)}
+                              className="text-brand-600 hover:text-brand-700 font-semibold text-sm">
+                              Change Role
+                            </button>
+                            {userItem.id !== user.id && (
+                              <button onClick={() => handleDeleteUser(userItem.id, userItem.full_name || userItem.email)}
+                                className="text-red-600 hover:text-red-700 font-semibold text-sm">
+                                Delete
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
