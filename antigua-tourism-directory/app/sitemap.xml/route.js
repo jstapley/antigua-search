@@ -1,5 +1,5 @@
 // app/sitemap.xml/route.js
-// This generates a dynamic sitemap for all listings, categories, and parishes
+// This generates a dynamic sitemap for all listings, categories, parishes, and blog posts
 
 import { createClient } from '@supabase/supabase-js'
 
@@ -35,6 +35,15 @@ export async function GET() {
       .order('name')
 
     if (parishesError) console.error('Error fetching parishes:', parishesError)
+
+    // Fetch published blog posts
+    const { data: blogPosts, error: blogError } = await supabase
+      .from('blog_posts')
+      .select('slug, updated_at, published_at')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+
+    if (blogError) console.error('Error fetching blog posts:', blogError)
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -108,6 +117,14 @@ export async function GET() {
     <priority>0.7</priority>
   </url>
 
+  <!-- Blog Index -->
+  <url>
+    <loc>${baseUrl}/blog</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- All Category Pages -->
   ${categories?.map(category => `
   <url>
@@ -123,6 +140,15 @@ export async function GET() {
     <loc>${baseUrl}/parish/${parish.slug}</loc>
     <lastmod>${parish.updated_at ? new Date(parish.updated_at).toISOString() : new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join('') || ''}
+
+  <!-- All Published Blog Posts -->
+  ${blogPosts?.map(post => `
+  <url>
+    <loc>${baseUrl}/blog/${post.slug}</loc>
+    <lastmod>${post.updated_at ? new Date(post.updated_at).toISOString() : new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>`).join('') || ''}
 
