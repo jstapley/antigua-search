@@ -209,6 +209,9 @@ export default function AdminDashboard() {
       tags: post.tags ? post.tags.join(', ') : ''
     })
     setShowBlogForm(true)
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 50)
   }
 
   const handleBlogSubmit = async (e) => {
