@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase'
 import Modal from '@/components/Modal'
 import { Star, Check, X, Trash2, ExternalLink } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import OutreachTab from '@/components/OutreachTab'
 
 export default function AdminDashboard() {
   const { user, loading } = useAuth()
@@ -601,6 +602,7 @@ export default function AdminDashboard() {
                 {tab === 'claims' && '🏢 Pending Claims'}
                 {tab === 'users' && '👥 Users'}
                 {tab === 'blog' && '📝 Blog'}
+                {tab === 'outreach' && '📧 Outreach'}
               </button>
             ))}
           </div>
@@ -982,8 +984,7 @@ export default function AdminDashboard() {
             )}
           </div>
         )}
-
-        {activeTab === 'blog' && (
+{activeTab === 'blog' && (
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Blog Posts</h2>
@@ -1112,6 +1113,11 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+
+        {activeTab === 'outreach' && (
+          <OutreachTab listings={listings} />
+        )}
+
       </div>
     </div>
   )
