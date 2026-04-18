@@ -229,6 +229,14 @@ export default function OutreachTab({ listings }) {
     setEditingNotes(null)
   }
 
+  const handleDeleteContact = async (contactId) => {
+    if (!confirm('Delete this contact log entry?')) return
+    const { error } = await supabase.from('email_contacts').delete().eq('id', contactId)
+    if (!error) {
+      setContacts(prev => prev.filter(c => c.id !== contactId))
+    }
+  }
+
   const handleSaveTemplate = (templateId) => {
     setTemplates(prev => prev.map(t => t.id === templateId ? { ...t, ...editingTemplate } : t))
     setEditingTemplate(null)
@@ -476,6 +484,7 @@ export default function OutreachTab({ listings }) {
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Status</th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Date</th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Notes</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -531,6 +540,14 @@ export default function OutreachTab({ listings }) {
                             {contact.notes || <span className="text-gray-300 italic">Add note</span>}
                           </button>
                         )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => handleDeleteContact(contact.id)}
+                          className="text-xs text-red-400 hover:text-red-600 font-semibold transition"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
