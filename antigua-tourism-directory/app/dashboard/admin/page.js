@@ -588,7 +588,7 @@ export default function AdminDashboard() {
 
         <div className="mb-8 border-b border-gray-200">
           <div className="flex gap-4 overflow-x-auto">
-            {['overview', 'listings', 'reviews', 'claims', 'users', 'blog'].map(tab => (
+            {['overview', 'listings', 'reviews', 'claims', 'users', 'blog', 'outreach'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
