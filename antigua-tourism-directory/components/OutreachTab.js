@@ -137,7 +137,7 @@ export default function OutreachTab({ listings }) {
     if (selectedListingId) {
       const listing = listings.find(l => l.id === selectedListingId)
       setSelectedListing(listing || null)
-      setOverrideEmail(listing?.contact_email || '')
+      setOverrideEmail(listing?.contact_email || '[email not provided]')
     } else {
       setSelectedListing(null)
       setOverrideEmail('')
@@ -182,8 +182,8 @@ export default function OutreachTab({ listings }) {
   }
 
   const handleSend = async () => {
-    if (!selectedListingId || !overrideEmail || !subject || !htmlBody) {
-      alert('Please select a business, enter an email address, and fill in the subject and body.')
+    if (!selectedListingId || !overrideEmail || overrideEmail === '[email not provided]' || !subject || !htmlBody) {
+      alert('Please select a business, enter a valid email address, and fill in the subject and body.')
       return
     }
 
@@ -234,12 +234,14 @@ export default function OutreachTab({ listings }) {
     setEditingTemplate(null)
   }
 
-  const filteredListings = listings.filter(l =>
-    !listingSearch ||
-    l.business_name?.toLowerCase().includes(listingSearch.toLowerCase()) ||
-    l.category?.name?.toLowerCase().includes(listingSearch.toLowerCase()) ||
-    l.parish?.name?.toLowerCase().includes(listingSearch.toLowerCase())
-  )
+  const filteredListings = listings
+    .filter(l =>
+      !listingSearch ||
+      l.business_name?.toLowerCase().includes(listingSearch.toLowerCase()) ||
+      l.category?.name?.toLowerCase().includes(listingSearch.toLowerCase()) ||
+      l.parish?.name?.toLowerCase().includes(listingSearch.toLowerCase())
+    )
+    .sort((a, b) => (a.business_name || '').localeCompare(b.business_name || ''))
 
   const contactCounts = contacts.reduce((acc, c) => {
     const key = c.listing_id
@@ -314,7 +316,7 @@ export default function OutreachTab({ listings }) {
                 onChange={e => setOverrideEmail(e.target.value)}
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               />
-              {selectedListing?.contact_email && overrideEmail !== selectedListing.contact_email && (
+              {selectedListing?.contact_email && overrideEmail !== selectedListing.contact_email && overrideEmail !== '[email not provided]' && (
                 <button
                   onClick={() => setOverrideEmail(selectedListing.contact_email)}
                   className="text-xs text-brand-600 hover:underline mt-1"
