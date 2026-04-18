@@ -62,3 +62,26 @@ export async function PATCH(req) {
     return Response.json({ error: err.message }, { status: 500 })
   }
 }
+
+export async function DELETE(req) {
+  try {
+    const { id } = await req.json()
+
+    if (!id) {
+      return Response.json({ error: 'Missing contact id' }, { status: 400 })
+    }
+
+    const { error } = await supabaseAdmin
+      .from('email_contacts')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+
+    return Response.json({ success: true })
+
+  } catch (err) {
+    console.error('email-contacts DELETE error:', err)
+    return Response.json({ error: err.message }, { status: 500 })
+  }
+}

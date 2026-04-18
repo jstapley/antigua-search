@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 
 const DEFAULT_TEMPLATES = [
   {
@@ -12,7 +11,7 @@ const DEFAULT_TEMPLATES = [
     html_body: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
   <img src="https://www.antiguasearch.com/antigua-flag.png" alt="AntiguaSearch" style="width:48px;border-radius:50%;margin-bottom:16px;" />
   <h2 style="color:#1d4ed8;margin:0 0 16px;">Your business is on AntiguaSearch.com!</h2>
-  <p>Hi{{contact_name}},</p>
+  <p>Hi {{contact_name}},</p>
   <p>Great news — <strong>{{business_name}}</strong> has been listed on <a href="https://www.antiguasearch.com">AntiguaSearch.com</a>, Antigua & Barbuda's local business directory.</p>
   <p>Your listing is live right now:</p>
   <p style="margin:24px 0;">
@@ -40,7 +39,7 @@ const DEFAULT_TEMPLATES = [
     html_body: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
   <img src="https://www.antiguasearch.com/antigua-flag.png" alt="AntiguaSearch" style="width:48px;border-radius:50%;margin-bottom:16px;" />
   <h2 style="color:#1d4ed8;margin:0 0 16px;">⭐ Get more customers with a Featured Listing</h2>
-  <p>Hi{{contact_name}},</p>
+  <p>Hi {{contact_name}},</p>
   <p>Thanks for being part of AntiguaSearch.com. Your listing for <strong>{{business_name}}</strong> is live and visible to visitors searching for {{category}} in {{parish}}.</p>
   <p>Did you know you could appear <strong>at the very top</strong> of your category?</p>
   <div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:16px;margin:20px 0;">
@@ -67,7 +66,7 @@ const DEFAULT_TEMPLATES = [
     html_body: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
   <img src="https://www.antiguasearch.com/antigua-flag.png" alt="AntiguaSearch" style="width:48px;border-radius:50%;margin-bottom:16px;" />
   <h2 style="color:#1d4ed8;margin:0 0 16px;">Advertise {{business_name}} on AntiguaSearch.com</h2>
-  <p>Hi{{contact_name}},</p>
+  <p>Hi {{contact_name}},</p>
   <p>AntiguaSearch.com is Antigua & Barbuda's fastest-growing business directory, reaching thousands of tourists and locals every month who are actively searching for businesses, restaurants, activities and services.</p>
   <p>We'd love to offer <strong>{{business_name}}</strong> a premium advertising spot that puts your brand in front of exactly the right audience.</p>
   <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:16px;margin:20px 0;">
@@ -102,6 +101,8 @@ const STATUS_STYLES = {
   failed: 'bg-red-100 text-red-700'
 }
 
+const PAGE_SIZE = 20
+
 export default function OutreachTab({ listings }) {
   const [activeSection, setActiveSection] = useState('compose')
   const [templates, setTemplates] = useState(DEFAULT_TEMPLATES)
@@ -123,6 +124,8 @@ export default function OutreachTab({ listings }) {
   const [contacts, setContacts] = useState([])
   const [loadingContacts, setLoadingContacts] = useState(false)
   const [campaignFilter, setCampaignFilter] = useState('all')
+  const [contactSearch, setContactSearch] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
   const [editingNotes, setEditingNotes] = useState(null)
   const [notesValue, setNotesValue] = useState('')
 
@@ -131,6 +134,7 @@ export default function OutreachTab({ listings }) {
 
   useEffect(() => {
     if (activeSection === 'log') loadContacts()
+    setCurrentPage(1)
   }, [activeSection, campaignFilter])
 
   useEffect(() => {
@@ -176,7 +180,7 @@ export default function OutreachTab({ listings }) {
       .replaceAll('{{category}}', selectedListing.category?.name || '')
       .replaceAll('{{parish}}', selectedListing.parish?.name || '')
       .replaceAll('{{listing_url}}', `https://www.antiguasearch.com/listing/${selectedListing.slug}`)
-      .replaceAll('{{contact_name}}', selectedListing.contact_name ? ` ${selectedListing.contact_name}` : '')
+      .replaceAll('{{contact_name}}', selectedListing.contact_name || '')
       .replaceAll('{{phone}}', selectedListing.phone || '')
       .replaceAll('{{website}}', selectedListing.website || '')
   }
@@ -186,9 +190,7 @@ export default function OutreachTab({ listings }) {
       alert('Please select a business, enter a valid email address, and fill in the subject and body.')
       return
     }
-
     const template = templates.find(t => t.id === selectedTemplateId)
-
     setSending(true)
     setSendResult(null)
     try {
@@ -197,7 +199,7 @@ export default function OutreachTab({ listings }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           listing_id: selectedListingId,
-          template_id: selectedTemplateId || null,
+          template_id: null,
           campaign_type: template?.campaign_type || 'follow_up',
           sent_to: overrideEmail,
           subject,
@@ -231,9 +233,15 @@ export default function OutreachTab({ listings }) {
 
   const handleDeleteContact = async (contactId) => {
     if (!confirm('Delete this contact log entry?')) return
-    const { error } = await supabase.from('email_contacts').delete().eq('id', contactId)
-    if (!error) {
+    const res = await fetch('/api/admin/email-contacts', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: contactId })
+    })
+    if (res.ok) {
       setContacts(prev => prev.filter(c => c.id !== contactId))
+    } else {
+      alert('Could not delete entry. Please try again.')
     }
   }
 
@@ -251,11 +259,11 @@ export default function OutreachTab({ listings }) {
     )
     .sort((a, b) => (a.business_name || '').localeCompare(b.business_name || ''))
 
-  const contactCounts = contacts.reduce((acc, c) => {
-    const key = c.listing_id
-    acc[key] = (acc[key] || 0) + 1
-    return acc
-  }, {})
+  const filteredContacts = contacts.filter(c =>
+    !contactSearch || c.listing?.business_name?.toLowerCase().includes(contactSearch.toLowerCase())
+  )
+  const totalPages = Math.ceil(filteredContacts.length / PAGE_SIZE)
+  const paginatedContacts = filteredContacts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
     <div>
@@ -298,7 +306,6 @@ export default function OutreachTab({ listings }) {
                 {filteredListings.map(l => (
                   <option key={l.id} value={l.id}>
                     {l.business_name} ({l.category?.name}, {l.parish?.name})
-                    {contactCounts[l.id] ? ` — contacted ${contactCounts[l.id]}x` : ''}
                   </option>
                 ))}
               </select>
@@ -326,14 +333,6 @@ export default function OutreachTab({ listings }) {
                 onChange={e => setOverrideEmail(e.target.value)}
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
               />
-              {selectedListing?.contact_email && overrideEmail !== selectedListing.contact_email && overrideEmail !== '[email not provided]' && (
-                <button
-                  onClick={() => setOverrideEmail(selectedListing.contact_email)}
-                  className="text-xs text-brand-600 hover:underline mt-1"
-                >
-                  Use listing email: {selectedListing.contact_email}
-                </button>
-              )}
             </div>
 
             <div>
@@ -363,10 +362,7 @@ export default function OutreachTab({ listings }) {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-bold text-gray-900">Email Body (HTML) *</label>
-                <button
-                  onClick={() => setPreview(!preview)}
-                  className="text-xs text-brand-600 hover:underline"
-                >
+                <button onClick={() => setPreview(!preview)} className="text-xs text-brand-600 hover:underline">
                   {preview ? 'Edit HTML' : 'Preview'}
                 </button>
               </div>
@@ -406,7 +402,7 @@ export default function OutreachTab({ listings }) {
 
             <button
               onClick={handleSend}
-              disabled={sending || !selectedListingId || !overrideEmail || !subject || !htmlBody}
+              disabled={sending || !selectedListingId || !overrideEmail || overrideEmail === '[email not provided]' || !subject || !htmlBody}
               className="w-full bg-brand-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-brand-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
             >
               {sending ? 'Sending...' : '✉️ Send Email'}
@@ -421,7 +417,7 @@ export default function OutreachTab({ listings }) {
                 ['{{category}}', 'Category'],
                 ['{{parish}}', 'Parish'],
                 ['{{listing_url}}', 'Full listing URL'],
-                ['{{contact_name}}', 'Contact name (with leading space)'],
+                ['{{contact_name}}', 'Contact name'],
                 ['{{phone}}', 'Phone number'],
                 ['{{website}}', 'Website URL'],
               ].map(([tag, desc]) => (
@@ -434,7 +430,6 @@ export default function OutreachTab({ listings }) {
                 </div>
               ))}
             </div>
-
             {selectedListing && (
               <div className="mt-6">
                 <h3 className="font-bold text-gray-900 mb-3 text-sm">Subject preview</h3>
@@ -449,7 +444,14 @@ export default function OutreachTab({ listings }) {
 
       {activeSection === 'log' && (
         <div>
-          <div className="flex gap-4 items-center mb-6">
+          <div className="flex flex-wrap gap-3 items-center mb-6">
+            <input
+              type="text"
+              placeholder="Search business name..."
+              value={contactSearch}
+              onChange={e => { setContactSearch(e.target.value); setCurrentPage(1) }}
+              className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm w-56"
+            />
             <select
               value={campaignFilter}
               onChange={e => setCampaignFilter(e.target.value)}
@@ -462,7 +464,7 @@ export default function OutreachTab({ listings }) {
               <option value="follow_up">Follow Up</option>
             </select>
             <button onClick={loadContacts} className="text-sm text-brand-600 hover:underline">Refresh</button>
-            <span className="text-sm text-gray-500 ml-auto">{contacts.length} records</span>
+            <span className="text-sm text-gray-500 ml-auto">{filteredContacts.length} records</span>
           </div>
 
           {loadingContacts ? (
@@ -474,86 +476,137 @@ export default function OutreachTab({ listings }) {
               <p className="text-gray-600">Emails you send will appear here with open and click tracking.</p>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border-2 border-gray-200 overflow-x-auto">
-              <table className="w-full min-w-[700px]">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Business</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Campaign</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Sent To</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Notes</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {contacts.map(contact => (
-                    <tr key={contact.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">
-                        <div className="font-semibold text-sm text-gray-900">{contact.listing?.business_name || 'Unknown'}</div>
-                        {contact.listing?.slug && (
-                          <a href={`/listing/${contact.listing.slug}`} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-600 hover:underline">View →</a>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-medium text-gray-600">
-                          {CAMPAIGN_LABELS[contact.campaign_type] || contact.campaign_type}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 max-w-[160px] truncate">{contact.sent_to}</td>
-                      <td className="px-4 py-3">
-                        <div className="space-y-1">
-                          <span className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${STATUS_STYLES[contact.status] || 'bg-gray-100 text-gray-700'}`}>
-                            {contact.status}
-                          </span>
-                          {contact.opened_at && (
-                            <div className="text-xs text-gray-400">Opened {new Date(contact.opened_at).toLocaleDateString()}</div>
-                          )}
-                          {contact.clicked_at && (
-                            <div className="text-xs text-purple-500">Clicked {new Date(contact.clicked_at).toLocaleDateString()}</div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
-                        {new Date(contact.sent_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-4 py-3">
-                        {editingNotes === contact.id ? (
-                          <div className="flex gap-2">
-                            <input
-                              type="text"
-                              value={notesValue}
-                              onChange={e => setNotesValue(e.target.value)}
-                              className="text-xs border border-gray-300 rounded px-2 py-1 w-32 focus:outline-none focus:border-brand-600"
-                              onKeyDown={e => e.key === 'Enter' && handleSaveNotes(contact.id)}
-                              autoFocus
-                            />
-                            <button onClick={() => handleSaveNotes(contact.id)} className="text-xs text-green-600 font-semibold">Save</button>
-                            <button onClick={() => setEditingNotes(null)} className="text-xs text-gray-400">Cancel</button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => { setEditingNotes(contact.id); setNotesValue(contact.notes || '') }}
-                            className="text-xs text-gray-500 hover:text-brand-600 text-left"
-                          >
-                            {contact.notes || <span className="text-gray-300 italic">Add note</span>}
-                          </button>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <button
-                          onClick={() => handleDeleteContact(contact.id)}
-                          className="text-xs text-red-400 hover:text-red-600 font-semibold transition"
-                        >
-                          Delete
-                        </button>
-                      </td>
+            <>
+              <div className="bg-white rounded-xl border-2 border-gray-200 overflow-x-auto">
+                <table className="w-full min-w-[700px]">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Business</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Campaign</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Sent To</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Status</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Date</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Notes</th>
+                      <th className="px-4 py-3"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {paginatedContacts.length === 0 ? (
+                      <tr>
+                        <td colSpan="7" className="px-4 py-12 text-center text-gray-500">
+                          No results for "{contactSearch}"
+                        </td>
+                      </tr>
+                    ) : paginatedContacts.map(contact => (
+                      <tr key={contact.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-3">
+                          <div className="font-semibold text-sm text-gray-900">{contact.listing?.business_name || 'Unknown'}</div>
+                          {contact.listing?.slug && (
+                            <a href={`/listing/${contact.listing.slug}`} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-600 hover:underline">View →</a>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-xs font-medium text-gray-600">
+                          {CAMPAIGN_LABELS[contact.campaign_type] || contact.campaign_type}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600 max-w-[160px] truncate">{contact.sent_to}</td>
+                        <td className="px-4 py-3">
+                          <div className="space-y-1">
+                            <span className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${STATUS_STYLES[contact.status] || 'bg-gray-100 text-gray-700'}`}>
+                              {contact.status}
+                            </span>
+                            {contact.opened_at && (
+                              <div className="text-xs text-gray-400">Opened {new Date(contact.opened_at).toLocaleDateString()}</div>
+                            )}
+                            {contact.clicked_at && (
+                              <div className="text-xs text-purple-500">Clicked {new Date(contact.clicked_at).toLocaleDateString()}</div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                          {new Date(contact.sent_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-4 py-3">
+                          {editingNotes === contact.id ? (
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                value={notesValue}
+                                onChange={e => setNotesValue(e.target.value)}
+                                className="text-xs border border-gray-300 rounded px-2 py-1 w-32 focus:outline-none focus:border-brand-600"
+                                onKeyDown={e => e.key === 'Enter' && handleSaveNotes(contact.id)}
+                                autoFocus
+                              />
+                              <button onClick={() => handleSaveNotes(contact.id)} className="text-xs text-green-600 font-semibold">Save</button>
+                              <button onClick={() => setEditingNotes(null)} className="text-xs text-gray-400">Cancel</button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => { setEditingNotes(contact.id); setNotesValue(contact.notes || '') }}
+                              className="text-xs text-gray-500 hover:text-brand-600 text-left"
+                            >
+                              {contact.notes || <span className="text-gray-300 italic">Add note</span>}
+                            </button>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <button
+                            onClick={() => handleDeleteContact(contact.id)}
+                            className="text-xs text-red-400 hover:text-red-600 font-semibold transition"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-4">
+                  <span className="text-sm text-gray-500">
+                    Page {currentPage} of {totalPages} ({filteredContacts.length} records)
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                    >
+                      ← Prev
+                    </button>
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      const page = currentPage <= 3
+                        ? i + 1
+                        : currentPage >= totalPages - 2
+                          ? totalPages - 4 + i
+                          : currentPage - 2 + i
+                      if (page < 1 || page > totalPages) return null
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`px-3 py-1.5 text-sm border rounded-lg transition ${
+                            currentPage === page
+                              ? 'bg-brand-600 text-white border-brand-600'
+                              : 'border-gray-200 hover:bg-gray-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    })}
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                    >
+                      Next →
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
