@@ -88,7 +88,7 @@ export async function POST(req) {
       .from('email_contacts')
       .insert({
         listing_id,
-        template_id: template_id || null,
+        template_id: null,
         campaign_type,
         sent_to,
         subject: mergedSubject,
