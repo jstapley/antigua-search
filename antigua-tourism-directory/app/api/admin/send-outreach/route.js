@@ -67,6 +67,7 @@ export async function POST(req) {
       },
       body: JSON.stringify({
         from: 'AntiguaSearch <registrations@antiguasearch.com>',
+        reply_to: 'jeff@stapleyinc.com',
         to: [sent_to],
         subject: mergedSubject,
         html: mergedBody,
