@@ -137,7 +137,7 @@ export default function OutreachTab({ listings }) {
     if (selectedListingId) {
       const listing = listings.find(l => l.id === selectedListingId)
       setSelectedListing(listing || null)
-      setOverrideEmail(listing?.contact_email || listing?.email || '[email not provided]')
+      setOverrideEmail(listing?.contact_email?.trim() || listing?.email?.trim() || '[email not provided]')
     } else {
       setSelectedListing(null)
       setOverrideEmail('')
@@ -300,9 +300,9 @@ export default function OutreachTab({ listings }) {
               <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-1">
                 <div className="font-semibold text-gray-900">{selectedListing.business_name}</div>
                 <div className="text-gray-500">{selectedListing.category?.name} · {selectedListing.parish?.name}</div>
-                {(selectedListing.contact_email || selectedListing.email) && (
-                    <div className="text-gray-500">📧 {selectedListing.contact_email || selectedListing.email}</div>
-                    )}
+                {(selectedListing.contact_email?.trim() || selectedListing.email?.trim()) && (
+                  <div className="text-gray-500">📧 {selectedListing.contact_email?.trim() || selectedListing.email?.trim()}</div>
+                )}
                 {selectedListing.phone && <div className="text-gray-500">📞 {selectedListing.phone}</div>}
                 {selectedListing.contact_name && <div className="text-gray-500">👤 {selectedListing.contact_name}</div>}
                 <a href={`/listing/${selectedListing.slug}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline text-xs">View listing →</a>
