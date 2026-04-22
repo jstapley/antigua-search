@@ -44,6 +44,7 @@ next-env.d.ts
 /scripts/
 .env.local
 
+
 # Ignore API keys and output files
 *.log
 *.csv
