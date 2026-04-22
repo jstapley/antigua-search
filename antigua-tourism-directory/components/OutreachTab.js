@@ -84,7 +84,35 @@ const DEFAULT_TEMPLATES = [
   <p style="color:#666;font-size:13px;">Reply to this email or call us to discuss the right package for {{business_name}}.</p>
   <p style="color:#666;font-size:13px;">— Jeff Stapley, AntiguaSearch.com</p>
 </div>`
-  }
+  },
+  {
+  id: 'review_exchange',
+  name: 'Free Featured Listing (Review Exchange)',
+  campaign_type: 'follow_up',
+  subject: 'A free gift for {{business_name}} — no strings attached',
+  html_body: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
+  <img src="https://www.antiguasearch.com/antigua-flag.png" alt="AntiguaSearch" style="width:48px;border-radius:50%;margin-bottom:16px;" />
+  <h2 style="color:#1d4ed8;margin:0 0 16px;">⭐ A free gift for {{business_name}}</h2>
+  <p>Hi {{business_name}} team,</p>
+  <p>Your business is listed on <a href="{{listing_url}}">AntiguaSearch.com</a> — Antigua & Barbuda's local business directory, visited by thousands of tourists and locals every month.</p>
+  <p>We'd love to feature {{business_name}} at the top of your category for <strong>3 months, completely free</strong>. No payment, no commitment.</p>
+  <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:16px;margin:20px 0;">
+    <p style="margin:0;font-weight:600;">🎁 Here's the deal:</p>
+    <ul style="margin:8px 0 0;">
+      <li>Leave us a <strong>Google review</strong> sharing your experience with AntiguaSearch</li>
+      <li>We'll upgrade {{business_name}} to a <strong>Featured Listing for 3 months</strong> — no charge</li>
+      <li>Featured listings appear at the top of search results with a highlighted badge</li>
+    </ul>
+  </div>
+  <p style="margin:24px 0;">
+    <a href="https://g.page/r/CZyWPtFyWLYCEBM/review" style="background:#10b981;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">Leave a Google Review →</a>
+  </p>
+  <p>Once you've left a review, just reply to this email and we'll activate your featured listing within 24 hours.</p>
+  <p style="color:#666;font-size:13px;">Questions? Just reply to this email.</p>
+  <p style="color:#666;font-size:13px;">— Jeff Stapley, AntiguaSearch.com</p>
+  <p style="color:#999;font-size:11px;text-align:center;">Don't want to hear from us? <a href="mailto:jeff@stapleyinc.com?subject=Unsubscribe&body=Please remove me from your mailing list" style="color:#999;">Unsubscribe</a></p>
+</div>`
+}
 ]
 
 const CAMPAIGN_LABELS = {
