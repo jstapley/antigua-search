@@ -340,6 +340,22 @@ export default function AdminDashboard() {
     try {
       const { error } = await supabase.from('reviews').update({ status: 'approved' }).eq('id', reviewId)
       if (error) throw error
+
+      // Award points for approved review
+      const review = reviews.find(r => r.id === reviewId)
+      if (review?.user_id) {
+        await fetch('/api/points/award', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: review.user_id,
+            action: 'review_approved',
+            reference_id: reviewId,
+            description: `Review approved for: ${review.listing?.business_name || 'listing'}`
+          })
+        })
+      }
+
       showModal('Approved', 'Review approved successfully.', 'success', loadAllData)
     } catch (error) {
       showModal('Error', 'Could not approve review: ' + error.message, 'error')
@@ -353,6 +369,22 @@ export default function AdminDashboard() {
     try {
       const { error } = await supabase.from('reviews').update({ status: 'rejected' }).eq('id', reviewId)
       if (error) throw error
+
+      // Clawback points for rejected review
+      const review = reviews.find(r => r.id === reviewId)
+      if (review?.user_id && review?.status === 'approved') {
+        await fetch('/api/points/award', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: review.user_id,
+            action: 'review_rejected',
+            reference_id: reviewId,
+            description: `Review rejected for: ${review.listing?.business_name || 'listing'}`
+          })
+        })
+      }
+
       showModal('Rejected', 'Review rejected successfully.', 'success', loadAllData)
     } catch (error) {
       showModal('Error', 'Could not reject review: ' + error.message, 'error')
@@ -438,6 +470,20 @@ export default function AdminDashboard() {
           listing_slug: listing?.slug
         })
       })
+
+      // Award points for claiming a listing
+      if (claim.user_id) {
+        await fetch('/api/points/award', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: claim.user_id,
+            action: 'listing_claimed',
+            reference_id: claimId,
+            description: `Claimed listing: ${claim.listing.business_name}`
+          })
+        })
+      }
     }
 
     showModal('Approved', 'Claim approved successfully.', 'success', loadAllData)
@@ -984,7 +1030,8 @@ export default function AdminDashboard() {
             )}
           </div>
         )}
-{activeTab === 'blog' && (
+
+        {activeTab === 'blog' && (
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Blog Posts</h2>

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/lib/AuthContext'
 import { supabase } from '@/lib/supabase'
+import PointsWidget from '@/components/PointsWidget'
 
 export default function DashboardPage() {
   const { user, loading, signOut } = useAuth()
@@ -137,6 +138,9 @@ export default function DashboardPage() {
           <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Welcome back! 👋</h1>
           <p className="text-lg text-gray-600">Manage your business listings and reach more customers</p>
         </div>
+
+        {/* Points Widget */}
+        {!isAdmin && <PointsWidget userId={user.id} />}
 
         {/* Quick Actions */}
         <div className={`grid grid-cols-1 md:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6 mb-12`}>
