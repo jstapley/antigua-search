@@ -427,6 +427,14 @@ export default function EditListingPage({ params }) {
         onClick: async () => {
           setModal(prev => ({ ...prev, isOpen: false }))
           
+          // First check if this claim was verified so we know whether to clawback points
+          const { data: existingClaim } = await supabase
+            .from('claimed_listings')
+            .select('id, verified')
+            .eq('listing_id', listing.id)
+            .eq('user_id', user.id)
+            .single()
+
           const { error } = await supabase
             .from('claimed_listings')
             .delete()
@@ -440,6 +448,19 @@ export default function EditListingPage({ params }) {
               'error'
             )
           } else {
+            // Clawback points if claim was verified/approved
+            if (existingClaim?.verified) {
+              await fetch('/api/points/award', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  user_id: user.id,
+                  action: 'claim_rejected',
+                  reference_id: existingClaim.id,
+                  description: `Unclaimed listing: ${listing.business_name}`
+                })
+              })
+            }
             showModal(
               'Unclaimed',
               'You have successfully unclaimed this business.',
