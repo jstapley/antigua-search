@@ -78,7 +78,6 @@ export default function EditListingPage({ params }) {
   const loadData = async () => {
     const resolvedParams = await params
     
-    // Load listing
     const { data: listingData } = await supabase
       .from('listings')
       .select('*')
@@ -90,7 +89,6 @@ export default function EditListingPage({ params }) {
       return
     }
 
-    // Check if user is admin
     const { data: profile } = await supabase
       .from('user_profiles')
       .select('role')
@@ -99,7 +97,6 @@ export default function EditListingPage({ params }) {
 
     const isAdmin = profile?.role === 'admin'
 
-    // Check if user owns this listing (if not admin)
     if (!isAdmin) {
       const { data: claim } = await supabase
         .from('claimed_listings')
@@ -135,12 +132,10 @@ export default function EditListingPage({ params }) {
       image_url: listingData.image_url || ''
     })
 
-    // Set image preview if image exists
     if (listingData.image_url) {
      setImagePreview(listingData.image_url)
     }
 
-    // Load categories and parishes
     const { data: cats } = await supabase.from('categories').select('*').order('name')
     const { data: pars } = await supabase.from('parishes').select('*').order('name')
     
@@ -148,17 +143,15 @@ export default function EditListingPage({ params }) {
     setParishes(pars || [])
     setLoadingData(false)
 
-// Initialize map AFTER state updates - increased delay
   setTimeout(() => {
     if (listingData.latitude && listingData.longitude) {
       initMap(parseFloat(listingData.latitude), parseFloat(listingData.longitude))
     } else {
       initMap()
     }
-    }, 500) // Increased from 100 to 500ms
+    }, 500)
   }
 
-  // Initialize Google Maps (same as add-listing)
   const initMap = async (lat, lng) => {
     try {
       const loader = new Loader({
@@ -169,7 +162,6 @@ export default function EditListingPage({ params }) {
 
       const google = await loader.load()
 
-      // Center on listing location or Antigua
       const center = lat && lng 
         ? { lat, lng }
         : { lat: 17.0608, lng: -61.7964 }
@@ -191,7 +183,6 @@ export default function EditListingPage({ params }) {
 
       mapInstanceRef.current = map
 
-      // Create draggable marker
       const marker = new google.maps.Marker({
         map: map,
         draggable: true,
@@ -199,7 +190,6 @@ export default function EditListingPage({ params }) {
         title: 'Drag me to your business location'
       })
 
-      // Set marker position if coordinates exist
       if (lat && lng) {
         marker.setPosition({ lat, lng })
         marker.setVisible(true)
@@ -207,17 +197,14 @@ export default function EditListingPage({ params }) {
 
       markerRef.current = marker
 
-      // Click on map to place marker
       map.addListener('click', (e) => {
         placeMarker(e.latLng, google)
       })
 
-      // Drag marker to update location
       marker.addListener('dragend', (e) => {
         updateLocation(e.latLng, google)
       })
 
-      // Initialize autocomplete for address search
       if (searchInputRef.current) {
         const autocomplete = new google.maps.places.Autocomplete(searchInputRef.current, {
           componentRestrictions: { country: 'ag' },
@@ -266,7 +253,6 @@ export default function EditListingPage({ params }) {
       longitude: lng.toFixed(6)
     }))
 
-    // Reverse geocode to get address
     const geocoder = new google.maps.Geocoder()
     try {
       const result = await geocoder.geocode({ location })
@@ -300,7 +286,6 @@ export default function EditListingPage({ params }) {
     })
   }
 
-  // Image upload handler
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -328,7 +313,6 @@ export default function EditListingPage({ params }) {
     setImagePreview(null)
   }
 
-  // Upload image to Supabase Storage
   const uploadImage = async () => {
     if (!imageFile) return formData.image_url
 
@@ -371,10 +355,8 @@ export default function EditListingPage({ params }) {
     
     setSaving(true)
 
-    // Upload image if new one selected
     const imageUrl = await uploadImage()
 
-    // Use RPC function
     const { error } = await supabase.rpc('update_listing_via_rpc', {
       listing_id: listing.id,
       p_business_name: formData.business_name,
@@ -400,18 +382,9 @@ export default function EditListingPage({ params }) {
 
     if (error) {
       console.error('Update error:', error)
-      showModal(
-        'Error',
-        'Could not save changes: ' + error.message,
-        'error'
-      )
+      showModal('Error', 'Could not save changes: ' + error.message, 'error')
     } else {
-      showModal(
-        'Success!',
-        'Your listing has been updated successfully.',
-        'success',
-        () => router.push('/dashboard')
-      )
+      showModal('Success!', 'Your listing has been updated successfully.', 'success', () => router.push('/dashboard'))
     }
   }
 
@@ -426,14 +399,6 @@ export default function EditListingPage({ params }) {
         danger: true,
         onClick: async () => {
           setModal(prev => ({ ...prev, isOpen: false }))
-          
-          // First check if this claim was verified so we know whether to clawback points
-          const { data: existingClaim } = await supabase
-            .from('claimed_listings')
-            .select('id, verified')
-            .eq('listing_id', listing.id)
-            .eq('user_id', user.id)
-            .single()
 
           const { error } = await supabase
             .from('claimed_listings')
@@ -442,31 +407,24 @@ export default function EditListingPage({ params }) {
             .eq('user_id', user.id)
 
           if (error) {
-            showModal(
-              'Error',
-              'Could not unclaim listing: ' + error.message,
-              'error'
-            )
+            showModal('Error', 'Could not unclaim listing: ' + error.message, 'error')
           } else {
-            // Clawback points if claim was verified/approved
-            if (existingClaim?.verified) {
+            // Always clawback points on unclaim — if they had no points it's a no-op
+            try {
               await fetch('/api/points/award', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   user_id: user.id,
                   action: 'claim_rejected',
-                  reference_id: existingClaim.id,
+                  reference_id: listing.id,
                   description: `Unclaimed listing: ${listing.business_name}`
                 })
               })
+            } catch (err) {
+              console.error('Points clawback error:', err)
             }
-            showModal(
-              'Unclaimed',
-              'You have successfully unclaimed this business.',
-              'success',
-              () => router.push('/dashboard')
-            )
+            showModal('Unclaimed', 'You have successfully unclaimed this business.', 'success', () => router.push('/dashboard'))
           }
         }
       },
@@ -489,7 +447,6 @@ export default function EditListingPage({ params }) {
     <div className="min-h-screen bg-gray-50">
       <Modal {...modal} />
 
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
@@ -506,10 +463,7 @@ export default function EditListingPage({ params }) {
                 <div className="text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
-            <Link
-              href="/dashboard"
-              className="text-gray-700 hover:text-brand-600 font-medium"
-            >
+            <Link href="/dashboard" className="text-gray-700 hover:text-brand-600 font-medium">
               ← Back to Dashboard
             </Link>
           </div>
@@ -518,27 +472,19 @@ export default function EditListingPage({ params }) {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Edit Listing</h1>
-        <p className="text-lg text-gray-600 mb-8">
-          Update your business information
-        </p>
+        <p className="text-lg text-gray-600 mb-8">Update your business information</p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Current Image & Upload */}
           <div className="border-t-2 border-gray-200 pt-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Business Image</h3>
             
-          {/* Current Image or Preview */}
             {imagePreview && (
               <div className="mb-4">
                 <p className="text-sm font-bold text-gray-900 mb-2">
                   {imageFile ? 'New Image Preview:' : 'Current Image:'}
                 </p>
                 <div className="relative w-full h-64 rounded-lg overflow-hidden border-2 border-gray-200">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                 </div>
                 {imageFile && (
                   <button
@@ -555,200 +501,102 @@ export default function EditListingPage({ params }) {
               </div>
             )}
 
-            {/* Image Upload */}
             <div>
               <label className="block text-sm font-bold text-gray-900 mb-2">
                 {formData.image_url ? 'Replace Image' : 'Upload Image'}
               </label>
-              <p className="text-sm text-gray-600 mb-3">
-                Upload a high-quality image of your business (max 5MB, JPG/PNG)
-              </p>
+              <p className="text-sm text-gray-600 mb-3">Upload a high-quality image of your business (max 5MB, JPG/PNG)</p>
               
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brand-400 transition">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-              id="image-upload"
-            />
-            <label htmlFor="image-upload" className="cursor-pointer">
-              <div className="text-4xl mb-2">📸</div>
-              <p className="text-gray-600 mb-1">
-                {imagePreview ? 'Click to replace image' : 'Click to upload an image'}
-              </p>
-              <p className="text-sm text-gray-500">JPG, PNG up to 5MB</p>
-            </label>
-          </div>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brand-400 transition">
+                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" />
+                <label htmlFor="image-upload" className="cursor-pointer">
+                  <div className="text-4xl mb-2">📸</div>
+                  <p className="text-gray-600 mb-1">{imagePreview ? 'Click to replace image' : 'Click to upload an image'}</p>
+                  <p className="text-sm text-gray-500">JPG, PNG up to 5MB</p>
+                </label>
+              </div>
             </div>
           </div>
 
-          {/* Business Name */}
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-2">
-              Business Name *
-            </label>
-            <input
-              type="text"
-              name="business_name"
-              value={formData.business_name}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-            />
+            <label className="block text-sm font-bold text-gray-900 mb-2">Business Name *</label>
+            <input type="text" name="business_name" value={formData.business_name} onChange={handleChange} required
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Category */}
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">
-                Category *
-              </label>
-              <select
-                name="category_id"
-                value={formData.category_id}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-              >
+              <label className="block text-sm font-bold text-gray-900 mb-2">Category *</label>
+              <select name="category_id" value={formData.category_id} onChange={handleChange} required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none">
                 <option value="">Select a category</option>
                 {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.icon_emoji} {cat.name}
-                  </option>
+                  <option key={cat.id} value={cat.id}>{cat.icon_emoji} {cat.name}</option>
                 ))}
               </select>
             </div>
 
-            {/* Parish */}
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">
-                Parish *
-              </label>
-              <select
-                name="parish_id"
-                value={formData.parish_id}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-              >
+              <label className="block text-sm font-bold text-gray-900 mb-2">Parish *</label>
+              <select name="parish_id" value={formData.parish_id} onChange={handleChange} required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none">
                 <option value="">Select a parish</option>
                 {parishes.map(par => (
-                  <option key={par.id} value={par.id}>
-                    {par.name}
-                  </option>
+                  <option key={par.id} value={par.id}>{par.name}</option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Short Description */}
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-2">
-              Short Description *
-            </label>
-            <input
-              type="text"
-              name="short_description"
-              value={formData.short_description}
-              onChange={handleChange}
-              required
-              maxLength="150"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-            />
+            <label className="block text-sm font-bold text-gray-900 mb-2">Short Description *</label>
+            <input type="text" name="short_description" value={formData.short_description} onChange={handleChange}
+              required maxLength="150"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" />
             <p className="text-sm text-gray-500 mt-1">{formData.short_description.length}/150</p>
           </div>
 
-          {/* Full Description */}
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-2">
-              Full Description *
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-              rows="6"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none resize-none"
-            />
+            <label className="block text-sm font-bold text-gray-900 mb-2">Full Description *</label>
+            <textarea name="description" value={formData.description} onChange={handleChange} required rows="6"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none resize-none" />
           </div>
 
-          {/* Contact Information */}
           <div className="border-t-2 border-gray-200 pt-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                />
+                <label className="block text-sm font-bold text-gray-900 mb-2">Phone</label>
+                <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                />
+                <label className="block text-sm font-bold text-gray-900 mb-2">Email</label>
+                <input type="email" name="email" value={formData.email} onChange={handleChange}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" />
               </div>
             </div>
-
             <div className="mt-6">
-              <label className="block text-sm font-bold text-gray-900 mb-2">
-                Website
-              </label>
-              <input
-                type="url"
-                name="website"
-                value={formData.website}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-              />
+              <label className="block text-sm font-bold text-gray-900 mb-2">Website</label>
+              <input type="url" name="website" value={formData.website} onChange={handleChange}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" />
             </div>
           </div>
 
-          {/* Interactive Map Location Picker */}
           <div className="border-t-2 border-gray-200 pt-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">📍 Business Location</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Search for your address or click on the map to mark your exact location
-            </p>
+            <p className="text-sm text-gray-600 mb-4">Search for your address or click on the map to mark your exact location</p>
 
-            {/* Address Search */}
             <div className="mb-4">
-              <label className="block text-sm font-bold text-gray-900 mb-2">
-                Search Address
-              </label>
-              <input
-                ref={searchInputRef}
-                type="text"
+              <label className="block text-sm font-bold text-gray-900 mb-2">Search Address</label>
+              <input ref={searchInputRef} type="text"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                placeholder="Start typing your address..."
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Type to search, or click on the map below
-              </p>
+                placeholder="Start typing your address..." />
+              <p className="text-xs text-gray-500 mt-1">Type to search, or click on the map below</p>
             </div>
 
-            {/* Interactive Map */}
             <div className="mb-4 relative">
-              <div 
-                ref={mapRef}
-                className="w-full h-96 rounded-lg border-2 border-gray-200 bg-gray-100"
-              />
+              <div ref={mapRef} className="w-full h-96 rounded-lg border-2 border-gray-200 bg-gray-100" />
               {!mapLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
                   <div className="text-center">
@@ -759,39 +607,22 @@ export default function EditListingPage({ params }) {
               )}
             </div>
 
-            {/* Address Display */}
             <div className="mb-4">
-              <label className="block text-sm font-bold text-gray-900 mb-2">
-                Address *
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-              />
+              <label className="block text-sm font-bold text-gray-900 mb-2">Address *</label>
+              <input type="text" name="address" value={formData.address} onChange={handleChange} required
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none" />
             </div>
 
-            {/* Location Confirmation */}
             {formData.latitude && formData.longitude && (
               <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
                 <div className="flex items-start">
                   <div className="text-green-400 mr-3">✓</div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-green-800 mb-1">
-                      Location Set Successfully
-                    </p>
-                    <p className="text-sm text-green-700 mb-2">
-                      {formData.address || 'Location marked on map'}
-                    </p>
-                    <a
-                      href={`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-brand-600 hover:text-brand-700 font-semibold"
-                    >
+                    <p className="text-sm font-semibold text-green-800 mb-1">Location Set Successfully</p>
+                    <p className="text-sm text-green-700 mb-2">{formData.address || 'Location marked on map'}</p>
+                    <a href={`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="text-sm text-brand-600 hover:text-brand-700 font-semibold">
                       Preview on Google Maps →
                     </a>
                   </div>
@@ -799,49 +630,27 @@ export default function EditListingPage({ params }) {
               </div>
             )}
 
-            {/* Advanced: Manual Coordinate Entry */}
             <div className="mt-4">
-              <button
-                type="button"
-                onClick={() => setShowAdvancedLocation(!showAdvancedLocation)}
-                className="text-sm text-gray-600 hover:text-gray-900 font-semibold flex items-center gap-2"
-              >
+              <button type="button" onClick={() => setShowAdvancedLocation(!showAdvancedLocation)}
+                className="text-sm text-gray-600 hover:text-gray-900 font-semibold flex items-center gap-2">
                 {showAdvancedLocation ? '▼' : '▶'} Advanced: Manual Coordinates
               </button>
               
               {showAdvancedLocation && (
                 <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-3">
-                    For advanced users: manually enter coordinates
-                  </p>
+                  <p className="text-sm text-gray-600 mb-3">For advanced users: manually enter coordinates</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-bold text-gray-900 mb-2">
-                        Latitude
-                      </label>
-                      <input
-                        type="number"
-                        step="any"
-                        name="latitude"
-                        value={formData.latitude}
-                        onChange={handleChange}
+                      <label className="block text-sm font-bold text-gray-900 mb-2">Latitude</label>
+                      <input type="number" step="any" name="latitude" value={formData.latitude} onChange={handleChange}
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                        placeholder="17.0608"
-                      />
+                        placeholder="17.0608" />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-gray-900 mb-2">
-                        Longitude
-                      </label>
-                      <input
-                        type="number"
-                        step="any"
-                        name="longitude"
-                        value={formData.longitude}
-                        onChange={handleChange}
+                      <label className="block text-sm font-bold text-gray-900 mb-2">Longitude</label>
+                      <input type="number" step="any" name="longitude" value={formData.longitude} onChange={handleChange}
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                        placeholder="-61.7964"
-                      />
+                        placeholder="-61.7964" />
                     </div>
                   </div>
                 </div>
@@ -849,108 +658,58 @@ export default function EditListingPage({ params }) {
             </div>
           </div>
 
-          {/* Social Media & Business Profiles */}
           <div className="border-t-2 border-gray-200 pt-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Social Media & Business Profiles</h3>
             <p className="text-sm text-gray-600 mb-4">Add your social media and business profile links (optional)</p>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  📘 Facebook Page
-                </label>
-                <input
-                  type="url"
-                  name="facebook_url"
-                  value={formData.facebook_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">📘 Facebook Page</label>
+                <input type="url" name="facebook_url" value={formData.facebook_url} onChange={handleChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                  placeholder="https://facebook.com/yourbusiness"
-                />
+                  placeholder="https://facebook.com/yourbusiness" />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  📸 Instagram
-                </label>
-                <input
-                  type="url"
-                  name="instagram_url"
-                  value={formData.instagram_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">📸 Instagram</label>
+                <input type="url" name="instagram_url" value={formData.instagram_url} onChange={handleChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                  placeholder="https://instagram.com/yourbusiness"
-                />
+                  placeholder="https://instagram.com/yourbusiness" />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  🔍 Google Business Profile
-                </label>
-                <input
-                  type="url"
-                  name="google_business_url"
-                  value={formData.google_business_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">🔍 Google Business Profile</label>
+                <input type="url" name="google_business_url" value={formData.google_business_url} onChange={handleChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                  placeholder="https://maps.google.com/..."
-                />
+                  placeholder="https://maps.google.com/..." />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  🦉 TripAdvisor
-                </label>
-                <input
-                  type="url"
-                  name="tripadvisor_url"
-                  value={formData.tripadvisor_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">🦉 TripAdvisor</label>
+                <input type="url" name="tripadvisor_url" value={formData.tripadvisor_url} onChange={handleChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                  placeholder="https://tripadvisor.com/..."
-                />
+                  placeholder="https://tripadvisor.com/..." />
               </div>
-
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  🐦 Twitter/X
-                </label>
-                <input
-                  type="url"
-                  name="twitter_url"
-                  value={formData.twitter_url}
-                  onChange={handleChange}
+                <label className="block text-sm font-bold text-gray-900 mb-2">🐦 Twitter/X</label>
+                <input type="url" name="twitter_url" value={formData.twitter_url} onChange={handleChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
-                  placeholder="https://twitter.com/yourbusiness"
-                />
+                  placeholder="https://twitter.com/yourbusiness" />
               </div>
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="border-t-2 border-gray-200 pt-6">
             <div className="flex gap-4 mb-4">
-              <Link
-                href="/dashboard"
-                className="flex-1 text-center bg-gray-200 text-gray-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-300 transition"
-              >
+              <Link href="/dashboard"
+                className="flex-1 text-center bg-gray-200 text-gray-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-300 transition">
                 Cancel
               </Link>
-              <button
-                type="submit"
-                disabled={saving || uploadingImage}
-                className="flex-1 bg-brand-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-brand-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button type="submit" disabled={saving || uploadingImage}
+                className="flex-1 bg-brand-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-brand-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
                 {saving ? 'Saving...' : uploadingImage ? 'Uploading Image...' : 'Save Changes'}
               </button>
             </div>
 
-            {/* Unclaim Button */}
-            <button
-              type="button"
-              onClick={handleUnclaim}
-              className="w-full bg-red-50 text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-red-100 transition border-2 border-red-200"
-            >
+            <button type="button" onClick={handleUnclaim}
+              className="w-full bg-red-50 text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-red-100 transition border-2 border-red-200">
               Unclaim This Business
             </button>
             <p className="text-sm text-gray-500 text-center mt-2">
