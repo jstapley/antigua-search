@@ -37,7 +37,6 @@ export default function AdminDashboard() {
   const [loadingReview, setLoadingReview] = useState(null)
   const [loadingListing, setLoadingListing] = useState(null)
 
-  // Blog state
   const [blogPosts, setBlogPosts] = useState([])
   const [showBlogForm, setShowBlogForm] = useState(false)
   const [editingPost, setEditingPost] = useState(null)
@@ -47,7 +46,6 @@ export default function AdminDashboard() {
     status: 'draft', meta_title: '', meta_description: '', tags: ''
   })
 
-  // Search and filter state
   const [listingSearch, setListingSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
 
@@ -179,7 +177,6 @@ export default function AdminDashboard() {
     })
   }
 
-  // Blog handlers
   const generateBlogSlug = (title) => {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
   }
@@ -273,7 +270,6 @@ export default function AdminDashboard() {
     })
   }
 
-  // Listing handlers
   const handleApproveListing = async (listingId, businessName) => {
     setLoadingListing(listingId)
     try {
@@ -370,7 +366,7 @@ export default function AdminDashboard() {
       const { error } = await supabase.from('reviews').update({ status: 'rejected' }).eq('id', reviewId)
       if (error) throw error
 
-      // Clawback points for rejected review
+      // Clawback points for rejected review (only if was previously approved)
       const review = reviews.find(r => r.id === reviewId)
       if (review?.user_id && review?.status === 'approved') {
         await fetch('/api/points/award', {
@@ -490,6 +486,7 @@ export default function AdminDashboard() {
   }
 
   const handleRejectClaim = (claimId) => {
+    const claim = claims.find(c => c.id === claimId)
     setModal({
       isOpen: true,
       title: 'Reject Claim?',
@@ -500,12 +497,35 @@ export default function AdminDashboard() {
         danger: true,
         onClick: async () => {
           setModal(prev => ({ ...prev, isOpen: false }))
+
+          // Check if this claim was previously approved (verified=true) and clawback points
+          const { data: existingClaim } = await supabase
+            .from('claimed_listings')
+            .select('verified, user_id')
+            .eq('id', claimId)
+            .single()
+
           const { error } = await supabase.from('claimed_listings').delete().eq('id', claimId)
           if (error) {
             showModal('Error', 'Could not reject claim: ' + error.message, 'error')
-          } else {
-            showModal('Rejected', 'Claim rejected successfully.', 'success', loadAllData)
+            return
           }
+
+          // Clawback points if this was a verified (approved) claim
+          if (existingClaim?.verified && existingClaim?.user_id) {
+            await fetch('/api/points/award', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                user_id: existingClaim.user_id,
+                action: 'claim_rejected',
+                reference_id: claimId,
+                description: `Claim removed: ${claim?.listing?.business_name || 'listing'}`
+              })
+            })
+          }
+
+          showModal('Rejected', 'Claim rejected successfully.', 'success', loadAllData)
         }
       },
       onClose: () => setModal(prev => ({ ...prev, isOpen: false }))

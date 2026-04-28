@@ -13,7 +13,8 @@ function getSupabaseAdmin() {
 const POINT_VALUES = {
   listing_claimed: 25,
   review_approved: 10,
-  review_rejected: -10
+  review_rejected: -10,
+  claim_rejected: -25
 }
 
 const REWARD_THRESHOLD = 500
