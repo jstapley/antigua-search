@@ -3,7 +3,7 @@
 
 export async function GET() {
   const robotsTxt = `# AntiguaSearch.com Robots.txt
-# Updated: February 2026
+# Updated: May 2026
 
 User-agent: *
 Allow: /
@@ -15,6 +15,10 @@ Disallow: /login
 Disallow: /signup
 Disallow: /api/
 Disallow: /edit-listing/
+
+# Disallow dynamic pages with no SEO value
+Disallow: /search
+Disallow: /search?
 
 # Allow static assets
 Allow: /antigua-flag.png
