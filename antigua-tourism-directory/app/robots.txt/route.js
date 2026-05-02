@@ -19,6 +19,7 @@ Disallow: /edit-listing/
 # Disallow dynamic pages with no SEO value
 Disallow: /search
 Disallow: /search?
+Disallow: /contact?
 
 # Allow static assets
 Allow: /antigua-flag.png
