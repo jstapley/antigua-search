@@ -132,7 +132,7 @@ export default function PricingClient() {
               <div className="text-center mb-6">
                 <div className="inline-block bg-yellow-400 text-brand-900 px-6 py-2 rounded-full font-bold text-sm mb-4">FEATURED LISTING</div>
                 <h2 className="text-3xl font-black text-white mb-3">Premium Placement</h2>
-                <p className="text-3xl text-white font-bold mb-2">EC$350<span className="text-lg">/year</span></p>
+                <p className="text-3xl text-white font-bold mb-2">EC$300<span className="text-lg">/year</span></p>
                 <p className="text-white/90 text-sm mb-2">Less than EC$1 per day</p>
                 <p className="text-white/90">Stand out from the competition with premium visibility</p>
               </div>
@@ -153,7 +153,7 @@ export default function PricingClient() {
               </div>
               <div className="text-center">
                 <Link href="/login" className="block bg-yellow-400 hover:bg-yellow-300 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">
-                  Get Featured Now — EC$350/yr →
+                  Get Featured Now — EC$300/yr →
                 </Link>
                 <p className="text-white/70 mt-3 text-xs">Login to your listing to upgrade • Secure payment via Stripe</p>
               </div>
@@ -190,7 +190,7 @@ export default function PricingClient() {
           <div className="grid md:grid-cols-2 gap-6">
             {[
               ['Is the basic listing really free?', 'Yes! Creating a complete business profile on AntiguaSearch.com is 100% free with no hidden costs.'],
-              ['How much is a Featured Listing?', 'EC$350 per year — less than EC$1 per day for premium placement across the directory.'],
+              ['How much is a Featured Listing?', 'EC$300 per year — less than EC$1 per day for premium placement across the directory.'],
               ['How long does featured status last?', 'Your featured listing is active for 1 full year from the date of payment. We\'ll remind you 30 days before it expires.'],
               ['Can I upgrade my existing listing?', 'Yes! Log in, visit your listing page, and click the "Upgrade to Featured" button.'],
               ['What payment methods are accepted?', 'We accept all major credit and debit cards via Stripe, a secure payment processor.'],
