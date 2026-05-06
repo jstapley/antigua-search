@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-export const revalidate = 300 // Refresh every 5 minutes
+export const revalidate = 300
 
 export const metadata = {
   title: 'Advertise With Us | AntiguaSearch.com',
@@ -9,7 +9,7 @@ export const metadata = {
   keywords: 'advertise antigua, business advertising antigua, tourism advertising, antigua marketing, business promotion'
 }
 
-async function getBusinessCount(): Promise<string> {
+async function getBusinessCount() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/business-count`, {
       next: { revalidate: 300 }
@@ -26,6 +26,7 @@ export default async function AdvertisePage() {
 
   return (
     <div className="min-h-screen bg-white">
+
       {/* Top Banner */}
       <div className="bg-brand-600 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto">
@@ -37,15 +38,11 @@ export default async function AdvertisePage() {
                 <span className="text-sm md:text-base ml-1">browsing this month</span>
               </div>
             </div>
-            
             <div className="flex items-center gap-2 text-center">
               <span className="text-xl">🏪</span>
               <span className="text-sm md:text-base">Own a business?</span>
-              <Link
-                href="/advertise"
-                className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap"
-              >
-                Advertise Your Business
+              <Link href="/add-listing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
+                Add Your Business Free
               </Link>
             </div>
           </div>
@@ -57,19 +54,12 @@ export default async function AdvertisePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center gap-3">
-              <Image 
-                src="/antigua-flag.png" 
-                alt="Antigua Flag" 
-                width={50} 
-                height={50}
-                className="rounded-full"
-              />
+              <Image src="/antigua-flag.png" alt="Antigua Flag" width={50} height={50} className="rounded-full" />
               <div>
                 <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
                 <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
               </div>
             </Link>
-
             <nav className="hidden lg:flex gap-6 items-center">
               <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
               <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
@@ -77,49 +67,34 @@ export default async function AdvertisePage() {
               <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
               <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
               <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
-              <Link 
-                href="/add-listing" 
-                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
-              >
-                + Add Your Business
-              </Link>
+              <Link href="/add-listing" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">+ Add Your Business</Link>
             </nav>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">
-            Advertise Your Business
-          </h1>
-          <h2 className="text-2xl md:text-3xl font-bold text-yellow-300 mb-6">
-            Reach Thousands of Potential Customers
-          </h2>
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">Advertise Your Business</h1>
+          <h2 className="text-2xl md:text-3xl font-bold text-yellow-300 mb-6">Reach Thousands of Potential Customers</h2>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
             Connect with tourists and locals actively searching for businesses like yours in Antigua & Barbuda
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href="/pricing"
-              className="bg-yellow-400 text-brand-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-lg"
-            >
-              View Pricing Plans →
+            <Link href="/pricing" className="bg-yellow-400 text-brand-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-lg">
+              View All Pricing Plans →
             </Link>
-            <Link 
-              href="/contact"
-              className="bg-white/20 text-white px-10 py-4 rounded-xl font-bold text-lg border-2 border-white/50 hover:bg-white/30 transition"
-            >
-              Contact Sales
+            <Link href="/contact" className="bg-white/20 text-white px-10 py-4 rounded-xl font-bold text-lg border-2 border-white/50 hover:bg-white/30 transition">
+              Contact Us
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-brand-100">
               <div className="text-5xl font-extrabold text-brand-600 mb-2">1,200+</div>
@@ -140,173 +115,143 @@ export default async function AdvertisePage() {
         </div>
       </section>
 
-      {/* Advertising Options */}
+      {/* Pricing — same three tiers as /pricing */}
       <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Advertising Options</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the perfect package to showcase your business to potential customers
-            </p>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Simple, Transparent Pricing</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Choose the option that suits your business</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Featured Listings */}
-            <div className="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl p-8 text-white border-4 border-yellow-400 shadow-2xl">
+          <div className="grid md:grid-cols-3 gap-6">
+
+            {/* Free */}
+            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-green-400 rounded-2xl p-8 shadow-lg flex flex-col">
               <div className="text-center mb-6">
-                <div className="inline-block bg-yellow-400 text-brand-900 px-6 py-2 rounded-full font-bold text-sm mb-4">
-                  MOST POPULAR
-                </div>
-                <h3 className="text-3xl font-black mb-3">Featured Business Listing</h3>
-                <div className="text-4xl font-black mb-2">
-                  $25<span className="text-xl">/month</span>
-                </div>
-                <p className="text-white/90">Stand out from the competition</p>
+                <div className="inline-block bg-green-500 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">100% FREE FOREVER</div>
+                <h3 className="text-2xl font-black text-white mb-3">Free Listing</h3>
+                <p className="text-3xl text-white font-bold mb-2">EC$0<span className="text-lg">/year</span></p>
+                <p className="text-white/90 text-sm">Everything you need to get found online</p>
               </div>
-
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-400 text-xl flex-shrink-0">✓</span>
-                  <span>Gold border & star badge on your listing</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-400 text-xl flex-shrink-0">✓</span>
-                  <span>Top placement in category search results</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-400 text-xl flex-shrink-0">✓</span>
-                  <span>Featured on homepage rotation</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-400 text-xl flex-shrink-0">✓</span>
-                  <span>Priority placement in all search results</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-400 text-xl flex-shrink-0">✓</span>
-                  <span>Enhanced listing with full details</span>
-                </li>
-              </ul>
-
-              <Link
-                href="/contact?subject=Featured Listing Inquiry"
-                className="block w-full bg-yellow-400 hover:bg-yellow-300 text-brand-900 text-center py-4 rounded-xl font-black text-lg transition"
-              >
-                Get Early Access →
+              <div className="space-y-3 mb-8 flex-1">
+                {[
+                  'Complete Business Profile',
+                  'Contact Information',
+                  'Website & Social Links',
+                  'Claim & Manage Your Listing',
+                  'Customer Reviews & Ratings',
+                  'Mobile-Friendly Design'
+                ].map(item => (
+                  <div key={item} className="flex items-center gap-3">
+                    <span className="text-green-400 text-xl flex-shrink-0">✓</span>
+                    <span className="text-white font-medium text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <Link href="/add-listing" className="block bg-yellow-400 hover:bg-yellow-300 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg text-center">
+                Add Your Business Free →
               </Link>
+              <p className="text-white/70 mt-3 text-xs text-center">No credit card required</p>
+            </div>
+
+            {/* Featured */}
+            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-yellow-400 rounded-2xl p-8 shadow-lg flex flex-col">
+              <div className="text-center mb-6">
+                <div className="inline-block bg-yellow-400 text-brand-900 px-6 py-2 rounded-full font-bold text-sm mb-4">FEATURED LISTING</div>
+                <h3 className="text-2xl font-black text-white mb-3">Premium Placement</h3>
+                <p className="text-3xl text-white font-bold mb-2">EC$300<span className="text-lg">/year</span></p>
+                <p className="text-white/90 text-sm mb-1">Less than EC$1 per day</p>
+                <p className="text-white/80 text-sm">Stand out from the competition</p>
+              </div>
+              <div className="space-y-3 mb-8 flex-1">
+                <p className="text-white font-bold text-sm text-center mb-2">Everything in Free, plus:</p>
+                {[
+                  'Gold border & star badge',
+                  'Top of category results',
+                  'Homepage featured section',
+                  'Priority in all search results',
+                  'Annual renewal reminder'
+                ].map(item => (
+                  <div key={item} className="flex items-center gap-3">
+                    <span className="text-yellow-400 text-xl flex-shrink-0">⭐</span>
+                    <span className="text-white font-medium text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <Link href="/login" className="block bg-yellow-400 hover:bg-yellow-300 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg text-center">
+                Get Featured Now →
+              </Link>
+              <p className="text-white/70 mt-3 text-xs text-center">Login to upgrade • Secure payment via Stripe</p>
             </div>
 
             {/* Display Advertising */}
-            <div className="bg-white rounded-3xl p-8 border-4 border-gray-200 shadow-xl">
+            <div className="bg-white border-4 border-gray-200 rounded-2xl p-8 shadow-lg flex flex-col">
               <div className="text-center mb-6">
-                <div className="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-bold text-sm mb-4">
-                  COMING SOON
-                </div>
-                <h3 className="text-3xl font-black text-gray-900 mb-3">Display Advertising</h3>
-                <div className="text-4xl font-black text-brand-600 mb-2">Custom</div>
-                <p className="text-gray-600">High-visibility banner ads</p>
+                <div className="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-bold text-sm mb-4">COMING SOON</div>
+                <h3 className="text-2xl font-black text-gray-900 mb-3">Display Advertising</h3>
+                <p className="text-3xl text-brand-600 font-bold mb-2">Custom</p>
+                <p className="text-gray-500 text-sm">High-visibility banner ads</p>
               </div>
-
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start gap-3">
-                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
-                  <span className="text-gray-700">Homepage banner placement</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
-                  <span className="text-gray-700">Category page sidebar ads</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
-                  <span className="text-gray-700">Custom ad design & placement</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
-                  <span className="text-gray-700">Detailed performance analytics</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
-                  <span className="text-gray-700">Flexible campaign durations</span>
-                </li>
-              </ul>
-
-              <Link
-                href="/contact"
-                className="block w-full bg-brand-600 hover:bg-brand-700 text-white text-center py-4 rounded-xl font-black text-lg transition"
-              >
+              <div className="space-y-3 mb-8 flex-1">
+                {[
+                  'Homepage banner placement',
+                  'Category page sidebar ads',
+                  'Custom ad design & placement',
+                  'Detailed performance analytics',
+                  'Flexible campaign durations'
+                ].map(item => (
+                  <div key={item} className="flex items-center gap-3">
+                    <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
+                    <span className="text-gray-700 font-medium text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <Link href="/contact" className="block bg-brand-600 hover:bg-brand-700 text-white font-black text-lg px-8 py-4 rounded-xl transition shadow-lg text-center">
                 Contact for Pricing →
               </Link>
+              <p className="text-gray-400 mt-3 text-xs text-center">Get in touch to discuss your campaign</p>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Why Advertise Section */}
+      {/* Why Advertise */}
       <section className="py-20 bg-gradient-to-b from-yellow-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
-              Why Advertise on AntiguaSearch.com?
-            </h2>
-            <p className="text-xl text-gray-600">
-              The premier platform for reaching tourists and locals in Antigua & Barbuda
-            </p>
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Why Advertise on AntiguaSearch.com?</h2>
+            <p className="text-xl text-gray-600">The premier platform for reaching tourists and locals in Antigua & Barbuda</p>
           </div>
-
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="text-5xl mb-4">🎯</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Targeted Audience</h3>
-              <p className="text-gray-600">Reach customers actively searching for businesses in your category and location</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="text-5xl mb-4">📈</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Growing Traffic</h3>
-              <p className="text-gray-600">Our visitor count is growing monthly as we become the go-to directory for Antigua</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="text-5xl mb-4">💰</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Affordable Pricing</h3>
-              <p className="text-gray-600">Get premium visibility without breaking the bank - starting at just $25/month</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="text-5xl mb-4">🌴</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Tourism Focused</h3>
-              <p className="text-gray-600">Perfect for hotels, restaurants, tours, and any business targeting tourists</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="text-5xl mb-4">📱</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Mobile Optimized</h3>
-              <p className="text-gray-600">Your ads look great on all devices - desktop, tablet, and mobile</p>
-            </div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="text-5xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Quick Setup</h3>
-              <p className="text-gray-600">Get your featured listing live in minutes - no complicated setup required</p>
-            </div>
+            {[
+              ['🎯', 'Targeted Audience', 'Reach customers actively searching for businesses in your category and location'],
+              ['📈', 'Growing Traffic', 'Our visitor count grows monthly as we become the go-to directory for Antigua'],
+              ['💰', 'Affordable Pricing', 'Get premium visibility for less than EC$1 per day with an annual featured listing'],
+              ['🌴', 'Tourism Focused', 'Perfect for hotels, restaurants, tours, and any business targeting visitors'],
+              ['📱', 'Mobile Optimized', 'Your listing looks great on all devices — desktop, tablet, and mobile'],
+              ['⚡', 'Quick Setup', 'Get your featured listing live in minutes — no complicated setup required']
+            ].map(([emoji, title, desc]) => (
+              <div key={title} className="bg-white rounded-2xl p-8 shadow-lg">
+                <div className="text-5xl mb-4">{emoji}</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">{title}</h3>
+                <p className="text-gray-600">{desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA */}
       <section className="bg-gradient-to-r from-brand-700 to-blue-600 py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
-            Ready to Grow Your Business?
-          </h2>
-          <p className="text-xl text-white/90 mb-8">
-            Join {businessCount} businesses already advertising on AntiguaSearch.com
-          </p>
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">Ready to Grow Your Business?</h2>
+          <p className="text-xl text-white/90 mb-8">Join {businessCount} businesses already listed on AntiguaSearch.com</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact?subject=Featured Listing Inquiry"
-              className="bg-yellow-400 hover:bg-yellow-300 text-brand-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl"
-            >
-              Get Early Access
+            <Link href="/pricing" className="bg-yellow-400 hover:bg-yellow-300 text-brand-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl">
+              See All Pricing Plans →
             </Link>
-            <Link
-              href="/contact"
-              className="bg-white/20 hover:bg-white/30 text-white px-12 py-5 rounded-xl font-black text-xl border-2 border-white transition"
-            >
+            <Link href="/contact" className="bg-white/20 hover:bg-white/30 text-white px-12 py-5 rounded-xl font-black text-xl border-2 border-white transition">
               Contact Us
             </Link>
           </div>
@@ -315,44 +260,40 @@ export default async function AdvertisePage() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <Image src="/antigua-flag.png" alt="Antigua Flag" width={40} height={40} className="rounded-full" />
-                <div>
-                  <div className="font-bold text-base md:text-lg">Antigua Search</div>
-                  <div className="text-xs md:text-sm text-gray-400">Directory</div>
-                </div>
+                <div><div className="font-bold">Antigua Search</div><div className="text-sm text-gray-400">Directory</div></div>
               </div>
-              <p className="text-gray-400 text-sm">Your complete guide to experiencing the best of Antigua & Barbuda</p>
+              <p className="text-gray-400 text-sm">Your complete guide to Antigua & Barbuda</p>
             </div>
             <div>
-              <h6 className="font-bold mb-4 text-base md:text-lg">Quick Links</h6>
+              <h6 className="font-bold mb-4">Quick Links</h6>
               <div className="space-y-2 text-sm">
-                <Link href="/" className="block text-gray-400 hover:text-white transition">Home</Link>
-                <Link href="/parishes" className="block text-gray-400 hover:text-white transition">Browse Parishes</Link>
-                <Link href="/categories" className="block text-gray-400 hover:text-white transition">All Categories</Link>
-                <Link href="/about" className="block text-gray-400 hover:text-white transition">About Us</Link>
+                <Link href="/" className="block text-gray-400 hover:text-white">Home</Link>
+                <Link href="/parishes" className="block text-gray-400 hover:text-white">Browse Parishes</Link>
+                <Link href="/categories" className="block text-gray-400 hover:text-white">Categories</Link>
+                <Link href="/about" className="block text-gray-400 hover:text-white">About</Link>
               </div>
             </div>
             <div>
-              <h6 className="font-bold mb-4 text-base md:text-lg">For Business</h6>
+              <h6 className="font-bold mb-4">For Business</h6>
               <div className="space-y-2 text-sm">
-                <Link href="/add-listing" className="block text-gray-400 hover:text-white transition">List Your Business</Link>
-                <Link href="/advertise" className="block text-gray-400 hover:text-white transition">Advertise With Us</Link>
-                <Link href="/pricing" className="block text-gray-400 hover:text-white transition">Pricing</Link>
+                <Link href="/add-listing" className="block text-gray-400 hover:text-white">List Your Business</Link>
+                <Link href="/advertise" className="block text-gray-400 hover:text-white">Advertise With Us</Link>
+                <Link href="/pricing" className="block text-gray-400 hover:text-white">Pricing</Link>
               </div>
             </div>
             <div>
-              <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
-              <p className="text-gray-400 text-sm">St. John's, Antigua & Barbuda</p>
+              <h6 className="font-bold mb-4">Contact</h6>
+              <p className="text-gray-400 text-sm">jeff@stapleyinc.com</p>
+              <p className="text-gray-400 text-sm">St. John&apos;s, Antigua</p>
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center">
             <p className="text-gray-400 text-sm">© 2026 Antigua Search. All rights reserved.</p>
-            <p className="text-gray-500 text-xs mt-2">{businessCount} Business Listings • 12 Categories • Discover Paradise</p>
           </div>
         </div>
       </footer>

@@ -32,8 +32,8 @@ export default function PricingClient() {
             <div className="flex items-center gap-2 text-center">
               <span className="text-xl">🏪</span>
               <span className="text-sm md:text-base">Own a business?</span>
-              <Link href="/advertise" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
-                Advertise Your Business
+              <Link href="/add-listing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
+                Add Your Business Free
               </Link>
             </div>
           </div>
@@ -83,79 +83,109 @@ export default function PricingClient() {
 
       <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-4">List Your Business - FREE!</h1>
-          <p className="text-xl md:text-2xl text-yellow-300 font-bold mb-3">No Hidden Fees. No Credit Card Required. Forever Free.</p>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-4">Simple, Transparent Pricing</h1>
+          <p className="text-xl md:text-2xl text-yellow-300 font-bold mb-3">List for Free. Upgrade When You're Ready.</p>
           <p className="text-lg text-white/90 max-w-3xl mx-auto">
-            Join {businessCount} businesses already listed on Antigua & Barbuda&apos;s premier business directory
+            Join {businessCount} businesses already listed on Antigua & Barbuda's premier business directory
           </p>
         </div>
       </section>
 
       <section className="bg-gradient-to-b from-yellow-50 to-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
+
             {/* Free Plan */}
-            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-green-400 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition">
+            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-green-400 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition flex flex-col">
               <div className="text-center mb-6">
                 <div className="inline-block bg-green-500 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">100% FREE FOREVER</div>
-                <h2 className="text-3xl font-black text-white mb-3">Complete Business Profile</h2>
-                <p className="text-3xl text-white font-bold mb-2">$0<span className="text-lg">/month</span></p>
-                <p className="text-white/90 text-sm">Everything you need to showcase your business</p>
+                <h2 className="text-2xl font-black text-white mb-3">Free Listing</h2>
+                <p className="text-3xl text-white font-bold mb-2">EC$0<span className="text-lg">/year</span></p>
+                <p className="text-white/90 text-sm">Everything you need to get found online</p>
               </div>
-              <div className="space-y-3 mb-8">
+              <div className="space-y-3 mb-8 flex-1">
                 {[
                   ['Complete Business Profile', 'Business name, category, location, and description'],
                   ['Contact Information', 'Phone, email, and physical address'],
                   ['Website & Social Links', 'Link to your website, Facebook, Instagram, and more'],
-                  ['Photo Gallery', 'Showcase your business with multiple photos'],
-                  ['Customer Reviews & Ratings', 'Build trust with verified reviews'],
+                  ['Claim & Manage Your Listing', 'Take ownership and keep your info up to date'],
+                  ['Customer Reviews & Ratings', 'Build trust with verified customer reviews'],
                   ['Mobile-Friendly Design', 'Looks great on all devices']
                 ].map(([title, desc]) => (
                   <div key={title} className="flex items-start gap-3">
                     <div className="text-green-400 text-xl flex-shrink-0">✓</div>
-                    <div><h3 className="text-white font-bold">{title}</h3><p className="text-white/80 text-sm">{desc}</p></div>
+                    <div><p className="text-white font-bold text-sm">{title}</p><p className="text-white/80 text-xs">{desc}</p></div>
                   </div>
                 ))}
               </div>
               <div className="text-center">
-                <Link href="/add-listing" className="block bg-yellow-400 hover:bg-yellow-300 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">Add Your Business Now →</Link>
+                <Link href="/add-listing" className="block bg-yellow-400 hover:bg-yellow-300 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">Add Your Business Free →</Link>
                 <p className="text-white/70 mt-3 text-xs">No credit card required • Takes less than 5 minutes</p>
               </div>
             </div>
 
             {/* Featured Plan */}
-            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-yellow-400 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition relative overflow-hidden">
-
-
+            <div className="bg-gradient-to-br from-brand-600 to-brand-800 border-4 border-yellow-400 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition relative overflow-hidden flex flex-col">
               <div className="text-center mb-6">
                 <div className="inline-block bg-yellow-400 text-brand-900 px-6 py-2 rounded-full font-bold text-sm mb-4">FEATURED LISTING</div>
-                <h2 className="text-3xl font-black text-white mb-3">Premium Placement</h2>
+                <h2 className="text-2xl font-black text-white mb-3">Premium Placement</h2>
                 <p className="text-3xl text-white font-bold mb-2">EC$300<span className="text-lg">/year</span></p>
-                <p className="text-white/90 text-sm mb-2">Less than EC$1 per day</p>
-                <p className="text-white/90">Stand out from the competition with premium visibility</p>
+                <p className="text-white/90 text-sm mb-1">Less than EC$1 per day</p>
+                <p className="text-white/80 text-sm">Stand out from the competition</p>
               </div>
-              <div className="space-y-3 mb-8">
-                <h3 className="text-lg font-bold text-white mb-4 text-center">Everything in Free, plus:</h3>
+              <div className="space-y-3 mb-8 flex-1">
+                <p className="text-white font-bold text-sm text-center mb-2">Everything in Free, plus:</p>
                 {[
                   ['Gold border & star badge', 'Stand out with premium styling across the directory'],
                   ['Top of category results', 'Appear first when customers browse your category'],
                   ['Homepage featured section', 'Maximum visibility — seen by every visitor'],
-                  ['Priority placement', 'Always listed first in search results'],
-                  ['Annual renewal reminder', 'We\'ll remind you before your listing expires']
+                  ['Priority in all search results', 'Always listed first across the directory'],
+                  ['Annual renewal reminder', "We'll remind you before your listing expires"]
                 ].map(([title, desc]) => (
                   <div key={title} className="flex items-start gap-3">
                     <div className="text-yellow-400 text-xl flex-shrink-0">⭐</div>
-                    <div><h3 className="text-white font-bold">{title}</h3><p className="text-white/80 text-sm">{desc}</p></div>
+                    <div><p className="text-white font-bold text-sm">{title}</p><p className="text-white/80 text-xs">{desc}</p></div>
                   </div>
                 ))}
               </div>
               <div className="text-center">
                 <Link href="/login" className="block bg-yellow-400 hover:bg-yellow-300 text-brand-900 font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">
-                  Get Featured Now — EC$300/yr →
+                  Get Featured Now →
                 </Link>
                 <p className="text-white/70 mt-3 text-xs">Login to your listing to upgrade • Secure payment via Stripe</p>
               </div>
             </div>
+
+            {/* Display Advertising */}
+            <div className="bg-white border-4 border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition flex flex-col">
+              <div className="text-center mb-6">
+                <div className="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-bold text-sm mb-4">COMING SOON</div>
+                <h2 className="text-2xl font-black text-gray-900 mb-3">Display Advertising</h2>
+                <p className="text-3xl text-brand-600 font-bold mb-2">Custom</p>
+                <p className="text-gray-500 text-sm">High-visibility banner ads</p>
+              </div>
+              <div className="space-y-3 mb-8 flex-1">
+                {[
+                  ['Homepage banner placement', 'Maximum exposure to every visitor'],
+                  ['Category page sidebar ads', 'Target customers in your niche'],
+                  ['Custom ad design & placement', 'We help you create effective ads'],
+                  ['Detailed performance analytics', 'Track impressions, clicks, and conversions'],
+                  ['Flexible campaign durations', 'Weekly, monthly, or seasonal campaigns']
+                ].map(([title, desc]) => (
+                  <div key={title} className="flex items-start gap-3">
+                    <div className="text-brand-600 text-xl flex-shrink-0">✓</div>
+                    <div><p className="text-gray-900 font-bold text-sm">{title}</p><p className="text-gray-500 text-xs">{desc}</p></div>
+                  </div>
+                ))}
+              </div>
+              <div className="text-center">
+                <Link href="/contact" className="block bg-brand-600 hover:bg-brand-700 text-white font-black text-lg px-8 py-4 rounded-xl transition shadow-lg">
+                  Contact for Pricing →
+                </Link>
+                <p className="text-gray-400 mt-3 text-xs">Get in touch to discuss your campaign goals</p>
+              </div>
+            </div>
+
           </div>
 
           {/* How it works */}
@@ -187,12 +217,12 @@ export default function PricingClient() {
           <h2 className="text-3xl font-black text-gray-900 text-center mb-8">Frequently Asked Questions</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
-              ['Is the basic listing really free?', 'Yes! Creating a complete business profile on AntiguaSearch.com is 100% free with no hidden costs.'],
-              ['How much is a Featured Listing?', 'EC$300 per year — less than EC$1 per day for premium placement across the directory.'],
-              ['How long does featured status last?', 'Your featured listing is active for 1 full year from the date of payment. We\'ll remind you 30 days before it expires.'],
-              ['Can I upgrade my existing listing?', 'Yes! Log in, visit your listing page, and click the "Upgrade to Featured" button.'],
-              ['What payment methods are accepted?', 'We accept all major credit and debit cards via Stripe, a secure payment processor.'],
-              ['What happens when it expires?', 'Your listing stays active — it just reverts to a standard (free) listing. We\'ll email you a renewal link before expiry.']
+              ['Is the basic listing really free?', 'Yes — creating a complete business profile on AntiguaSearch.com is 100% free with no hidden costs, forever.'],
+              ['How much is a Featured Listing?', 'EC$300 per year — less than EC$1 per day for premium placement across the entire directory.'],
+              ['How long does featured status last?', "Your featured listing is active for one full year from the date of payment. We'll remind you 30 days before it expires."],
+              ['Can I upgrade my existing listing?', 'Yes. Log in, visit your listing page, and click the "Upgrade to Featured" button to pay and upgrade instantly.'],
+              ['What payment methods are accepted?', 'We accept all major credit and debit cards via Stripe, a secure international payment processor.'],
+              ['What happens when it expires?', "Your listing stays active — it just reverts to a standard free listing. We'll email you a renewal link before expiry."]
             ].map(([q, a]) => (
               <div key={q} className="bg-white p-6 rounded-xl border border-gray-200">
                 <h3 className="text-lg font-bold text-gray-900 mb-2">{q}</h3>
