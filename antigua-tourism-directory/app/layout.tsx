@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/lib/AuthContext";
 import "./globals.css";
 import GoogleAnalytics from '@/components/GoogleAnalytics'
+import CookieConsent from '@/components/CookieConsent'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -80,7 +81,7 @@ export default function RootLayout({
           media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
         />
 
-        {/* Ahrefs Analytics - using inline script to bypass Next.js preload conversion */}
+        {/* Ahrefs Analytics */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -116,14 +117,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Google Analytics */}
+        {/* Google Analytics with Consent Mode v2 */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
-        
+
         <AuthProvider>
           {children}
         </AuthProvider>
+
+        {/* Cookie consent banner — renders after page content */}
+        <CookieConsent />
       </body>
     </html>
   );
