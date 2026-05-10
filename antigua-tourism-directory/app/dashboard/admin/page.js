@@ -498,8 +498,8 @@ export default function AdminDashboard() {
       listing.business_name.toLowerCase().includes(listingSearch.toLowerCase()) ||
       listing.category?.name.toLowerCase().includes(listingSearch.toLowerCase()) ||
       listing.parish?.name.toLowerCase().includes(listingSearch.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || listing.status === statusFilter
-    return matchesSearch && matchesStatus
+    if (statusFilter === 'no_description') return matchesSearch && !listing.short_description
+    return matchesSearch && (statusFilter === 'all' || listing.status === statusFilter)
   })
 
   return (
@@ -716,6 +716,7 @@ export default function AdminDashboard() {
                     <option value="active">Active Only</option>
                     <option value="pending">Pending Only</option>
                     <option value="rejected">Rejected Only</option>
+                    <option value="no_description">No Description</option>
                   </select>
                 </div>
                 {(listingSearch || statusFilter !== 'all') && (
