@@ -40,11 +40,17 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object
 
-    if (session.payment_status === 'paid') {
-      const { listingId, listingName, userEmail } = session.metadata
+      if (session.payment_status === 'paid') {
+        const { listingId, listingName, userEmail } = session.metadata
+
+        // Skip if this isn't an AntiguaSearch featured listing payment
+        if (!listingId) {
+          console.log('Skipping - no listingId in metadata, likely a StapleyInc payment')
+          return NextResponse.json({ received: true })
+        }
 
       const featuredUntil = new Date()
       featuredUntil.setFullYear(featuredUntil.getFullYear() + 1)
