@@ -34,8 +34,8 @@ export default async function AdvertisePage() {
             <div className="flex items-center gap-2 text-center md:text-left">
               <span className="text-2xl">📊</span>
               <div>
-                <span className="font-bold text-lg md:text-xl">1247 people</span>
-                <span className="text-sm md:text-base ml-1">browsing this month</span>
+                <span className="font-bold text-lg md:text-xl">2000+ visitors</span>
+                <span className="text-sm md:text-base ml-1">each month</span>
               </div>
             </div>
             <div className="flex items-center gap-2 text-center">
