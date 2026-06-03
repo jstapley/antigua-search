@@ -97,7 +97,7 @@ export default async function AdvertisePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl p-8 text-center shadow-lg border-2 border-brand-100">
-              <div className="text-5xl font-extrabold text-brand-600 mb-2">1,200+</div>
+              <div className="text-5xl font-extrabold text-brand-600 mb-2">2,000+</div>
               <div className="text-xl font-semibold text-gray-900 mb-2">Monthly Visitors</div>
               <div className="text-gray-600">Actively searching for businesses</div>
             </div>
