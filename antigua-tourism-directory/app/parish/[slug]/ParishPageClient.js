@@ -23,7 +23,7 @@ export default function ParishPageClient({ parish, listings, categories, totalCo
             <div className="flex items-center gap-2 text-center">
               <span className="text-xl">🏪</span>
               <span className="text-sm md:text-base">Own a business?</span>
-              <Link href="/add-listing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
+              <Link href="/pricing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
                 Get premium visibility
               </Link>
             </div>

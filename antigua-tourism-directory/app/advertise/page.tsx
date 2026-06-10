@@ -41,7 +41,7 @@ export default async function AdvertisePage() {
             <div className="flex items-center gap-2 text-center">
               <span className="text-xl">🏪</span>
               <span className="text-sm md:text-base">Own a business?</span>
-              <Link href="/add-listing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
+              <Link href="/pricing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
                 Add Your Business Free
               </Link>
             </div>
@@ -85,8 +85,8 @@ export default async function AdvertisePage() {
             <Link href="/pricing" className="bg-yellow-400 text-brand-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition shadow-lg">
               View All Pricing Plans →
             </Link>
-            <Link href="/contact" className="bg-white/20 text-white px-10 py-4 rounded-xl font-bold text-lg border-2 border-white/50 hover:bg-white/30 transition">
-              Contact Us
+            <Link href="/contact?subject=Sponsored%20Ads%20Inquiry" className="bg-white/20 text-white px-10 py-4 rounded-xl font-bold text-lg border-2 border-white/50 hover:bg-white/30 transition">
+              Enquire About Ads
             </Link>
           </div>
         </div>
@@ -184,32 +184,41 @@ export default async function AdvertisePage() {
               <p className="text-white/70 mt-3 text-xs text-center">Login to upgrade • Secure payment via Stripe</p>
             </div>
 
-            {/* Display Advertising */}
-            <div className="bg-white border-4 border-gray-200 rounded-2xl p-8 shadow-lg flex flex-col">
-              <div className="text-center mb-6">
-                <div className="inline-block bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-bold text-sm mb-4">COMING SOON</div>
-                <h3 className="text-2xl font-black text-gray-900 mb-3">Display Advertising</h3>
-                <p className="text-3xl text-brand-600 font-bold mb-2">Custom</p>
-                <p className="text-gray-500 text-sm">High-visibility banner ads</p>
+            {/* Business Spotlight — Sponsored Ads */}
+            <div className="bg-white border-4 border-brand-200 rounded-2xl p-8 shadow-lg flex flex-col relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 bg-brand-600 text-white text-center py-2 text-xs font-bold tracking-wide">
+                NOW AVAILABLE
+              </div>
+              <div className="text-center mb-6 mt-6">
+                <div className="inline-block bg-brand-600 text-white px-6 py-2 rounded-full font-bold text-sm mb-4">SPONSORED ADS</div>
+                <h3 className="text-2xl font-black text-gray-900 mb-3">Business Spotlight</h3>
+                <p className="text-3xl text-brand-600 font-bold mb-1">From EC$150<span className="text-lg">/month</span></p>
+                <p className="text-gray-500 text-sm mb-1">Flexible weekly, monthly, or seasonal</p>
+                <p className="text-gray-500 text-sm">Target customers actively browsing Antigua businesses</p>
               </div>
               <div className="space-y-3 mb-8 flex-1">
+                <p className="text-gray-700 font-bold text-sm text-center mb-3">What's included:</p>
                 {[
-                  'Homepage banner placement',
-                  'Category page sidebar ads',
-                  'Custom ad design & placement',
-                  'Detailed performance analytics',
-                  'Flexible campaign durations'
-                ].map(item => (
-                  <div key={item} className="flex items-center gap-3">
+                  ['Homepage banner placement', 'Maximum exposure to every visitor on the site'],
+                  ['Category page ads', 'Target customers browsing your specific niche'],
+                  ['Parish page placement', 'Reach customers searching in your area'],
+                  ['Custom ad design assistance', 'We help you create effective ads'],
+                  ['Performance analytics', 'Track impressions, clicks, and conversions'],
+                  ['Flexible campaign durations', 'Weekly, monthly, or seasonal campaigns']
+                ].map(([title, desc]) => (
+                  <div key={title} className="flex items-start gap-3">
                     <span className="text-brand-600 text-xl flex-shrink-0">✓</span>
-                    <span className="text-gray-700 font-medium text-sm">{item}</span>
+                    <div>
+                      <p className="text-gray-900 font-bold text-sm">{title}</p>
+                      <p className="text-gray-500 text-xs">{desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
-              <Link href="/contact" className="block bg-brand-600 hover:bg-brand-700 text-white font-black text-lg px-8 py-4 rounded-xl transition shadow-lg text-center">
+              <Link href="/contact?subject=Sponsored%20Ads%20Inquiry" className="block bg-brand-600 hover:bg-brand-700 text-white font-black text-lg px-8 py-4 rounded-xl transition shadow-lg text-center">
                 Contact for Pricing →
               </Link>
-              <p className="text-gray-400 mt-3 text-xs text-center">Get in touch to discuss your campaign</p>
+              <p className="text-gray-400 mt-3 text-xs text-center">Get in touch to discuss your campaign goals</p>
             </div>
 
           </div>
@@ -251,8 +260,8 @@ export default async function AdvertisePage() {
             <Link href="/pricing" className="bg-yellow-400 hover:bg-yellow-300 text-brand-900 px-12 py-5 rounded-xl font-black text-xl transition shadow-2xl">
               See All Pricing Plans →
             </Link>
-            <Link href="/contact" className="bg-white/20 hover:bg-white/30 text-white px-12 py-5 rounded-xl font-black text-xl border-2 border-white transition">
-              Contact Us
+            <Link href="/contact?subject=Sponsored%20Ads%20Inquiry" className="bg-white/20 hover:bg-white/30 text-white px-12 py-5 rounded-xl font-black text-xl border-2 border-white transition">
+              Enquire About Ads
             </Link>
           </div>
         </div>
