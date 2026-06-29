@@ -33,7 +33,7 @@ export default function GetAppPage() {
             <div className="flex items-center gap-2 text-center md:text-left">
               <span className="text-2xl">📊</span>
               <div>
-                <span className="font-bold text-lg md:text-xl">1247 people</span>
+                <span className="font-bold text-lg md:text-xl">2771 people</span>
                 <span className="text-sm md:text-base ml-1">browsing this month</span>
               </div>
             </div>

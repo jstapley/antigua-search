@@ -110,7 +110,7 @@ export default async function HomePage() {
       .limit(3),
     
     // Monthly visitors count (you can implement this later)
-    Promise.resolve({ count: 1247 }) // Placeholder for now
+    Promise.resolve({ count: 2771 }) // Placeholder for now
   ])
 
   // Process parishes with counts
@@ -196,7 +196,7 @@ export default async function HomePage() {
         parishes={parishesWithCounts}
         categories={categoriesWithCounts}
         featuredListings={featuredListings || []}
-        monthlyVisitors={monthlyVisitors || 1247}
+        monthlyVisitors={monthlyVisitors || 2771}
       />
     </>
   )
