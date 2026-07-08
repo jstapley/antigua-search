@@ -100,57 +100,12 @@ export default function ContactPageClient({ defaultSubject = '' }) {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
-          <div className="lg:col-span-1">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="bg-brand-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">✉️</span></div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">Email Us</h3>
-                  <a href="mailto:jeff@stapleyinc.com" className="text-brand-600 hover:text-brand-700 text-sm md:text-base break-all">jeff@stapleyinc.com</a>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-brand-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">📍</span></div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">Location</h3>
-                  <p className="text-gray-600 text-sm md:text-base">St. John&apos;s<br />Antigua & Barbuda</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="bg-brand-100 p-3 rounded-lg flex-shrink-0"><span className="text-2xl">🕐</span></div>
-                <div className="w-full">
-                  <h3 className="font-bold text-gray-900 mb-3 text-sm md:text-base">Business Hours</h3>
-                  <div className="space-y-2 text-xs md:text-sm">
-                    {[['Sunday', 'Closed'], ['Monday', '9:00 AM - 5:00 PM'], ['Tuesday', '9:00 AM - 5:00 PM'], ['Wednesday', '9:00 AM - 5:00 PM'], ['Thursday', '9:00 AM - 5:00 PM'], ['Friday', '9:00 AM - 5:00 PM'], ['Saturday', 'Closed']].map(([day, hours]) => (
-                      <div key={day} className="flex justify-between">
-                        <span className="text-gray-600 font-medium">{day}:</span>
-                        <span className="text-gray-900">{hours}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2">AST (Atlantic Standard Time)</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 p-4 md:p-6 bg-gray-50 rounded-xl border-2 border-gray-200">
-              <h3 className="font-bold text-gray-900 mb-4 text-sm md:text-base">Quick Links</h3>
-              <div className="space-y-2 text-sm md:text-base">
-                <Link href="/add-listing" className="block text-brand-600 hover:text-brand-700">→ List Your Business</Link>
-                <Link href="/advertise" className="block text-brand-600 hover:text-brand-700">→ Advertise With Us</Link>
-                <Link href="/about" className="block text-brand-600 hover:text-brand-700">→ About Us</Link>
-                <Link href="/parishes" className="block text-brand-600 hover:text-brand-700">→ Browse Parishes</Link>
-                <Link href="/categories" className="block text-brand-600 hover:text-brand-700">→ All Categories</Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-2">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
-            <ContactForm defaultSubject={defaultSubject} />
-          </div>
+        <div className="max-w-2xl">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Send a Message to AntiguaSearch.com</h2>
+          <p className="text-gray-600 text-base md:text-lg mb-8">
+            Have questions about listing your business, advertising with us, or partnership opportunities? We&apos;d love to hear from you. Fill out the form below and we&apos;ll get back to you as soon as possible.
+          </p>
+          <ContactForm defaultSubject={defaultSubject} />
         </div>
 
         <div className="mt-12 md:mt-16 pt-12 md:pt-16 border-t border-gray-200">
