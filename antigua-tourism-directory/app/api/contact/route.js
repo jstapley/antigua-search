@@ -59,24 +59,31 @@ export async function POST(request) {
     // 2. Sync to GHL
     const ghlApiKey = process.env.GHL_API_KEY
     const ghlLocationId = 'QHKsLhdyIdBDrIKEfUZ3'
+    const GHL_API_BASE = 'https://services.leadconnectorhq.com'
     
     if (!ghlApiKey) {
       console.warn('⚠️ GHL_API_KEY not set — contact not synced to GHL')
     } else {
       try {
+        const nameParts = formData.name.trim().split(' ')
+        const firstName = nameParts[0] || 'Unknown'
+        const lastName = nameParts.slice(1).join(' ') || ''
+
         // Upsert contact to GHL
-        const ghlResponse = await fetch('https://rest.gohighlevel.com/v1/contacts/upsert', {
+        const ghlResponse = await fetch(`${GHL_API_BASE}/contacts/upsert`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${ghlApiKey}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Version': '2021-07-28'
           },
           body: JSON.stringify({
             locationId: ghlLocationId,
-            email: formData.email,
+            firstName: firstName,
+            lastName: lastName,
+            email: formData.email || undefined,
             phone: formData.phone || undefined,
-            firstName: formData.name.split(' ')[0],
-            lastName: formData.name.split(' ').slice(1).join(' ') || '',
+            tags: ['Contact Form Inquiry'],
             source: 'Contact Form'
           })
         })
@@ -86,34 +93,27 @@ export async function POST(request) {
         if (!ghlResponse.ok) {
           console.error('❌ GHL upsert error:', JSON.stringify(ghlData))
         } else {
-          const contactId = ghlData.data?.id
+          const contactId = ghlData.contact?.id
           console.log('✅ Synced to GHL, contact id:', contactId)
 
-          // Apply tags based on inquiry type
-          if (contactId) {
-            const tagsToApply = ['Contact Form Inquiry']
-            if (formData.businessInquiry) {
-              tagsToApply.push('Business Inquiry')
-            }
-
-            // Add tags to contact
-            for (const tag of tagsToApply) {
-              try {
-                await fetch(`https://rest.gohighlevel.com/v1/contacts/${contactId}/tags`, {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': `Bearer ${ghlApiKey}`,
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    locationId: ghlLocationId,
-                    tags: [tag]
-                  })
+          // Apply Business Inquiry tag if needed
+          if (contactId && formData.businessInquiry) {
+            try {
+              await fetch(`${GHL_API_BASE}/contacts/${contactId}/tags`, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${ghlApiKey}`,
+                  'Content-Type': 'application/json',
+                  'Version': '2021-07-28'
+                },
+                body: JSON.stringify({
+                  locationId: ghlLocationId,
+                  tags: ['Business Inquiry']
                 })
-                console.log(`✅ Applied tag "${tag}" to GHL contact`)
-              } catch (tagError) {
-                console.error(`❌ Error applying tag "${tag}":`, tagError)
-              }
+              })
+              console.log('✅ Applied "Business Inquiry" tag to GHL contact')
+            } catch (tagError) {
+              console.error('❌ Error applying Business Inquiry tag:', tagError)
             }
           }
         }
