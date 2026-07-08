@@ -69,6 +69,21 @@ export async function POST(request) {
         const firstName = nameParts[0] || 'Unknown'
         const lastName = nameParts.slice(1).join(' ') || ''
 
+        // Build contact payload with only non-empty fields
+        const contactPayload = {
+          locationId: ghlLocationId,
+          firstName: firstName,
+          lastName: lastName,
+          tags: ['Contact Form Inquiry'],
+          source: 'Contact Form'
+        }
+        
+        // Only add email and phone if they exist
+        if (formData.email) contactPayload.email = formData.email
+        if (formData.phone) contactPayload.phone = formData.phone
+
+        console.log('📤 GHL payload:', JSON.stringify(contactPayload))
+
         // Upsert contact to GHL
         const ghlResponse = await fetch(`${GHL_API_BASE}/contacts/upsert`, {
           method: 'POST',
@@ -77,15 +92,7 @@ export async function POST(request) {
             'Content-Type': 'application/json',
             'Version': '2021-07-28'
           },
-          body: JSON.stringify({
-            locationId: ghlLocationId,
-            firstName: firstName,
-            lastName: lastName,
-            email: formData.email || undefined,
-            phone: formData.phone || undefined,
-            tags: ['Contact Form Inquiry'],
-            source: 'Contact Form'
-          })
+          body: JSON.stringify(contactPayload)
         })
 
         const ghlData = await ghlResponse.json()
