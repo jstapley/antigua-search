@@ -100,7 +100,7 @@ export default function ContactPageClient({ defaultSubject = '' }) {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Send a Message to AntiguaSearch.com</h2>
           <p className="text-gray-600 text-base md:text-lg mb-8">
             Have questions about listing your business, advertising with us, or partnership opportunities? We&apos;d love to hear from you. Fill out the form below and we&apos;ll get back to you as soon as possible.
