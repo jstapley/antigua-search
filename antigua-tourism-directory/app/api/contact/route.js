@@ -56,7 +56,73 @@ export async function POST(request) {
       console.log('✅ Saved to Supabase')
     }
 
-    // 2. Send email via Resend
+    // 2. Sync to GHL
+    const ghlApiKey = process.env.GHL_API_KEY
+    const ghlLocationId = 'QHKsLhdyIdBDrIKEfUZ3'
+    
+    if (!ghlApiKey) {
+      console.warn('⚠️ GHL_API_KEY not set — contact not synced to GHL')
+    } else {
+      try {
+        // Upsert contact to GHL
+        const ghlResponse = await fetch('https://rest.gohighlevel.com/v1/contacts/upsert', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${ghlApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            locationId: ghlLocationId,
+            email: formData.email,
+            phone: formData.phone || undefined,
+            firstName: formData.name.split(' ')[0],
+            lastName: formData.name.split(' ').slice(1).join(' ') || '',
+            source: 'Contact Form'
+          })
+        })
+
+        const ghlData = await ghlResponse.json()
+        
+        if (!ghlResponse.ok) {
+          console.error('❌ GHL upsert error:', JSON.stringify(ghlData))
+        } else {
+          const contactId = ghlData.data?.id
+          console.log('✅ Synced to GHL, contact id:', contactId)
+
+          // Apply tags based on inquiry type
+          if (contactId) {
+            const tagsToApply = ['Contact Form Inquiry']
+            if (formData.businessInquiry) {
+              tagsToApply.push('Business Inquiry')
+            }
+
+            // Add tags to contact
+            for (const tag of tagsToApply) {
+              try {
+                await fetch(`https://rest.gohighlevel.com/v1/contacts/${contactId}/tags`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${ghlApiKey}`,
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    locationId: ghlLocationId,
+                    tags: [tag]
+                  })
+                })
+                console.log(`✅ Applied tag "${tag}" to GHL contact`)
+              } catch (tagError) {
+                console.error(`❌ Error applying tag "${tag}":`, tagError)
+              }
+            }
+          }
+        }
+      } catch (ghlError) {
+        console.error('❌ GHL sync exception:', ghlError)
+      }
+    }
+
+    // 3. Send email via Resend
     const resendApiKey = process.env.RESEND_API_KEY
     if (!resendApiKey) {
       console.warn('⚠️ RESEND_API_KEY not set — email not sent')
