@@ -176,7 +176,7 @@ export default function MetricsDashboard() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis 
                 dataKey="date" 
-                stroke="#6b7280"
+                stroke="#2563eb"
                 style={{ fontSize: '12px' }}
               />
               <YAxis stroke="#6b7280" />
