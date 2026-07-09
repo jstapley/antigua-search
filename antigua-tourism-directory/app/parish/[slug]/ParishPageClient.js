@@ -9,27 +9,6 @@ export default function ParishPageClient({ parish, listings, categories, totalCo
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Top Stats Banner */}
-      <div className="bg-brand-600 text-white py-3 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-center md:text-left">
-              <span className="text-2xl">📊</span>
-              <div>
-                <span className="font-bold text-lg md:text-xl">1,247 people</span>
-                <span className="text-sm md:text-base ml-1">browsing this month</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-center">
-              <span className="text-xl">🏪</span>
-              <span className="text-sm md:text-base">Own a business?</span>
-              <Link href="/pricing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
-                Get premium visibility
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
