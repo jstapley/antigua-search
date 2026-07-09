@@ -27,52 +27,6 @@ export default async function AdvertisePage() {
   return (
     <div className="min-h-screen bg-white">
 
-      {/* Top Banner */}
-      <div className="bg-brand-600 text-white py-3 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-center md:text-left">
-              <span className="text-2xl">📊</span>
-              <div>
-                <span className="font-bold text-lg md:text-xl">2000+ visitors</span>
-                <span className="text-sm md:text-base ml-1">each month</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-center">
-              <span className="text-xl">🏪</span>
-              <span className="text-sm md:text-base">Own a business?</span>
-              <Link href="/pricing" className="text-yellow-300 font-semibold underline hover:text-yellow-200 text-sm md:text-base whitespace-nowrap">
-                Add Your Business Free
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center gap-3">
-              <Image src="/antigua-flag.png" alt="Antigua Flag" width={50} height={50} className="rounded-full" />
-              <div>
-                <div className="text-lg md:text-xl font-bold text-gray-900">ANTIGUA & BARBUDA</div>
-                <div className="text-xs md:text-sm text-brand-600 font-semibold">ANTIGUA SEARCH</div>
-              </div>
-            </Link>
-            <nav className="hidden lg:flex gap-6 items-center">
-              <Link href="/" className="text-gray-700 hover:text-brand-600 font-medium">Home</Link>
-              <Link href="/parishes" className="text-gray-700 hover:text-brand-600 font-medium">Browse Parishes</Link>
-              <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
-              <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
-              <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
-              <Link href="/add-listing" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">+ Add Your Business</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       {/* Hero */}
       <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
