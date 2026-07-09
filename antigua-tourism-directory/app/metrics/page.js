@@ -176,7 +176,7 @@ export default function MetricsDashboard() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis 
                 dataKey="date" 
-                stroke="#2563eb"
+                stroke="#1F70B0"
                 style={{ fontSize: '12px' }}
               />
               <YAxis stroke="#6b7280" />
@@ -189,7 +189,7 @@ export default function MetricsDashboard() {
               />
               <Bar 
                 dataKey="users" 
-                fill="#1d4ed8"
+                fill="#1F70B0"
                 label={{ position: 'top', fill: '#1f2937', fontSize: 12, fontWeight: 500 }}
                 radius={[8, 8, 0, 0]}
               />
