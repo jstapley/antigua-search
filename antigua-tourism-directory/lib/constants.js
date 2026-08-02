@@ -1,7 +1,7 @@
 // lib/constants.js
 // ⭐ SINGLE SOURCE OF TRUTH: Update this number once, it applies everywhere
 
-export const MONTHLY_VISITOR_COUNT = 3316
+export const MONTHLY_VISITOR_COUNT = 3737
 
 export const SITE_BRANDING = {
   name: 'ANTIGUA & BARBUDA',
