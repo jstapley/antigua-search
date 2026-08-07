@@ -3,84 +3,87 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { MONTHLY_VISITOR_COUNT } from '@/lib/constants'
 
 export default function MetricsDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // 30-day trend data
+  // July 2026 - 30-day trend data
   const trendData = [
-    { date: '9 Jun', users: 99 },
-    { date: '10 Jun', users: 85 },
-    { date: '11 Jun', users: 86 },
-    { date: '12 Jun', users: 116 },
-    { date: '13 Jun', users: 63 },
-    { date: '14 Jun', users: 85 },
-    { date: '15 Jun', users: 116 },
-    { date: '16 Jun', users: 91 },
-    { date: '17 Jun', users: 122 },
-    { date: '18 Jun', users: 146 },
-    { date: '19 Jun', users: 90 },
-    { date: '20 Jun', users: 97 },
-    { date: '21 Jun', users: 98 },
-    { date: '22 Jun', users: 139 },
-    { date: '23 Jun', users: 125 },
-    { date: '24 Jun', users: 113 },
-    { date: '25 Jun', users: 117 },
-    { date: '26 Jun', users: 120 },
-    { date: '27 Jun', users: 72 },
-    { date: '28 Jun', users: 93 },
-    { date: '29 Jun', users: 111 },
-    { date: '30 Jun', users: 127 },
     { date: '1 Jul', users: 101 },
     { date: '2 Jul', users: 116 },
-    { date: '3 Jul', users: 106 },
-    { date: '4 Jul', users: 225 },
-    { date: '5 Jul', users: 149 },
-    { date: '6 Jul', users: 138 },
+    { date: '3 Jul', users: 100 },
+    { date: '4 Jul', users: 106 },
+    { date: '5 Jul', users: 91 },
+    { date: '6 Jul', users: 149 },
+    { date: '7 Jul', users: 225 },
+    { date: '8 Jul', users: 150 },
+    { date: '9 Jul', users: 122 },
+    { date: '10 Jul', users: 122 },
+    { date: '11 Jul', users: 114 },
+    { date: '12 Jul', users: 117 },
+    { date: '13 Jul', users: 126 },
+    { date: '14 Jul', users: 103 },
+    { date: '15 Jul', users: 107 },
+    { date: '16 Jul', users: 89 },
+    { date: '17 Jul', users: 127 },
+    { date: '18 Jul', users: 103 },
+    { date: '19 Jul', users: 117 },
+    { date: '20 Jul', users: 137 },
+    { date: '21 Jul', users: 141 },
+    { date: '22 Jul', users: 115 },
+    { date: '23 Jul', users: 162 },
+    { date: '24 Jul', users: 138 },
+    { date: '25 Jul', users: 146 },
+    { date: '26 Jul', users: 102 },
+    { date: '27 Jul', users: 142 },
+    { date: '28 Jul', users: 143 },
+    { date: '29 Jul', users: 134 },
+    { date: '30 Jul', users: 139 },
   ]
 
-  // Top countries
+  // Top countries - July 2026
   const countries = [
-    { name: 'Antigua & Barbuda', sessions: 1576, percentage: 40.5 },
-    { name: 'United States', sessions: 952, percentage: 24.5 },
-    { name: 'Singapore', sessions: 259, percentage: 6.7 },
-    { name: 'United Kingdom', sessions: 224, percentage: 5.8 },
-    { name: 'Canada', sessions: 138, percentage: 3.6 },
+    { name: 'Antigua & Barbuda', sessions: 1911 },
+    { name: 'United States', sessions: 1135 },
+    { name: 'Singapore', sessions: 374 },
+    { name: 'United Kingdom', sessions: 274 },
+    { name: 'Canada', sessions: 176 },
   ]
 
-  // Top channels
+  // Top channels - July 2026
   const channels = [
-    { name: 'Organic Search', sessions: 2785, percentage: 71.6 },
-    { name: 'Direct', sessions: 866, percentage: 22.3 },
-    { name: 'AI Assistant', sessions: 107, percentage: 2.8 },
-    { name: 'Unassigned', sessions: 67, percentage: 1.7 },
-    { name: 'Cross-network', sessions: 50, percentage: 1.3 },
+    { name: 'Organic Search', sessions: 3581 },
+    { name: 'Direct', sessions: 936 },
+    { name: 'AI Assistant', sessions: 117 },
+    { name: 'Unassigned', sessions: 20 },
+    { name: 'Referral', sessions: 12 },
   ]
 
-  // Top blog posts
+  // Top blog posts - July 2026
   const blogPosts = [
-    { title: 'Shirley Heights Antigua: Complete Guide', sessions: 109, url: '/blog/shirley-heights-antigua-complete-guide' },
-    { title: 'Jolly Beach Antigua: Complete Guide for 2026', sessions: 106, url: '/blog/jolly-beach-antigua-complete-guide' },
-    { title: 'Sir Vivian Richards Stadium: Visitor Guide', sessions: 102, url: '/blog/sir-vivian-richards-stadium-guide' },
-    { title: 'Homepage', sessions: 100, url: '/' },
-    { title: 'Login', sessions: 87, url: '/login' },
+    { title: 'Antigua Carnival 2026: Costumes, Mas Bands & Playing', sessions: 242 },
+    { title: 'Shirley Heights Antigua: Complete Guide', sessions: 155 },
+    { title: 'Sir Vivian Richards Stadium: Visitor Guide', sessions: 104 },
+    { title: 'Getting Around Antigua Without a Car', sessions: 72 },
+    { title: 'Private Clinics, Medical Labs & Urgent Care Guide', sessions: 57 },
   ]
 
-  // Top listings
+  // Top listings - July 2026
   const listings = [
-    { name: "Woods Urgent Care", slug: 'woods-urgent-care', sessions: 40 },
-    { name: 'Antigua & Barbuda Transport Board', slug: 'antigua-transport-board', sessions: 26 },
-    { name: 'Cort Attorneys at Law', slug: 'cort-attorneys', sessions: 22 },
-    { name: 'E-Comp', slug: 'e-comp', sessions: 21 },
-    { name: 'Twist Mall', slug: 'twist-mall', sessions: 21 },
+    { name: 'Woods Urgent Care', sessions: 63 },
+    { name: 'Perry Bay Supermarket', sessions: 47 },
+    { name: 'Jackson Trucking, Backhoe & Water Delivery Services', sessions: 35 },
+    { name: 'Antigua & Barbuda Transport Board Inspection Centre', sessions: 33 },
+    { name: 'Veg International', sessions: 24 },
   ]
+
+  const maxCountry = Math.max(...countries.map(c => c.sessions))
+  const maxChannel = Math.max(...channels.map(c => c.sessions))
 
   return (
     <div className="min-h-screen bg-gray-50">
-    
-
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -138,28 +141,29 @@ export default function MetricsDashboard() {
       <div className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 text-white py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4">AntiguaSearch Traffic & Metrics</h1>
-          <p className="text-xl text-white/90 max-w-2xl mb-8">
+          <p className="text-xl text-white/90 max-w-2xl mb-2">
             Real-time data showing thousands of visitors discovering businesses in Antigua & Barbuda every month. See why businesses choose to advertise with us.
           </p>
-          
+          <p className="text-white/70 text-sm mb-8">Report period: July 1 – July 31, 2026</p>
+
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
-              <div className="text-white/80 text-sm font-medium mb-2">Active Users (Last 30 Days)</div>
-              <div className="text-4xl font-bold">3,184</div>
-              <div className="text-green-200 text-sm mt-2">↑ 44% growth</div>
+              <div className="text-white/80 text-sm font-medium mb-2">Active Users (July)</div>
+              <div className="text-4xl font-bold">3,738</div>
+              <div className="text-green-200 text-sm mt-2">↑ 29.5% growth</div>
             </div>
-            
+
             <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
               <div className="text-white/80 text-sm font-medium mb-2">Total Sessions</div>
-              <div className="text-4xl font-bold">3,889</div>
-              <div className="text-green-200 text-sm mt-2">↑ 50.9% increase</div>
+              <div className="text-4xl font-bold">4,695</div>
+              <div className="text-green-200 text-sm mt-2">↑ 37.0% increase</div>
             </div>
-            
+
             <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
               <div className="text-white/80 text-sm font-medium mb-2">New Users</div>
-              <div className="text-4xl font-bold">3,116</div>
-              <div className="text-green-200 text-sm mt-2">↑ 42.9% growth</div>
+              <div className="text-4xl font-bold">3,642</div>
+              <div className="text-green-200 text-sm mt-2">↑ 28.3% growth</div>
             </div>
           </div>
         </div>
@@ -167,40 +171,41 @@ export default function MetricsDashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
+
         {/* 30-Day Trend */}
         <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">30-Day Active Users Trend</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">July Active Users Trend</h2>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={trendData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis 
-                dataKey="date" 
-                stroke="#1F70B0"
-                style={{ fontSize: '12px' }}
+              <XAxis
+                dataKey="date"
+                stroke="#6b7280"
+                style={{ fontSize: '11px' }}
+                interval={1}
               />
               <YAxis stroke="#6b7280" />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{
                   backgroundColor: '#fff',
                   border: '1px solid #e5e7eb',
                   borderRadius: '8px'
                 }}
               />
-              <Bar 
-                dataKey="users" 
-                fill="#1F70B0"
-                label={{ position: 'top', fill: '#1f2937', fontSize: 12, fontWeight: 500 }}
-                radius={[8, 8, 0, 0]}
+              <Bar
+                dataKey="users"
+                fill="#2563eb"
+                label={{ position: 'top', fill: '#1f2937', fontSize: 11, fontWeight: 500 }}
+                radius={[6, 6, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
-          <p className="text-gray-600 text-sm mt-4">Peak traffic on July 4th with 225 active users. Growing trend demonstrates increasing interest in Antigua & Barbuda business discovery.</p>
+          <p className="text-gray-600 text-sm mt-4">Peak traffic on July 7th with 225 active users. Consistent upward trend through the month, closing with a strong final week.</p>
         </div>
 
         {/* Two Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          
+
           {/* Top Countries */}
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-6">Top 5 Countries</h3>
@@ -215,15 +220,15 @@ export default function MetricsDashboard() {
                       <span className="font-medium text-gray-900">{country.name}</span>
                     </div>
                     <div className="ml-11 bg-gray-200 rounded-full h-2 overflow-hidden">
-                      <div 
+                      <div
                         className="bg-brand-600 h-full transition-all"
-                        style={{ width: `${country.percentage}%` }}
+                        style={{ width: `${(country.sessions / maxCountry) * 100}%` }}
                       />
                     </div>
                   </div>
                   <div className="text-right ml-4">
                     <div className="font-bold text-gray-900">{country.sessions.toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">{country.percentage}%</div>
+                    <div className="text-xs text-gray-500">sessions</div>
                   </div>
                 </div>
               ))}
@@ -244,15 +249,15 @@ export default function MetricsDashboard() {
                       <span className="font-medium text-gray-900">{channel.name}</span>
                     </div>
                     <div className="ml-11 bg-gray-200 rounded-full h-2 overflow-hidden">
-                      <div 
+                      <div
                         className="bg-brand-600 h-full transition-all"
-                        style={{ width: `${channel.percentage}%` }}
+                        style={{ width: `${(channel.sessions / maxChannel) * 100}%` }}
                       />
                     </div>
                   </div>
                   <div className="text-right ml-4">
                     <div className="font-bold text-gray-900">{channel.sessions.toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">{channel.percentage}%</div>
+                    <div className="text-xs text-gray-500">sessions</div>
                   </div>
                 </div>
               ))}
@@ -262,7 +267,7 @@ export default function MetricsDashboard() {
 
         {/* Top Blog Posts & Listings */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          
+
           {/* Top Blog Posts */}
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-6">Top 5 Blog Posts</h3>
@@ -303,12 +308,12 @@ export default function MetricsDashboard() {
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-brand-600 to-blue-600 rounded-lg shadow-lg p-8 md:p-12 text-white text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Reach {MONTHLY_VISITOR_COUNT.toLocaleString()}+ Active Users Monthly
+            Reach 3,700+ Active Users Monthly
           </h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
             Your business could be featured in front of thousands of potential customers searching for services in Antigua & Barbuda every single day.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/advertise?tier=featured"
@@ -330,16 +335,21 @@ export default function MetricsDashboard() {
         </div>
 
         {/* Bottom Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Engagement Rate</h4>
-            <p className="text-3xl font-bold text-gray-900">42.12%</p>
+            <p className="text-3xl font-bold text-gray-900">44.05%</p>
             <p className="text-sm text-gray-600 mt-2">Visitors actively engage with business listings and content</p>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6">
             <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Avg. Views Per User</h4>
-            <p className="text-3xl font-bold text-gray-900">1.74</p>
+            <p className="text-3xl font-bold text-gray-900">1.72</p>
             <p className="text-sm text-gray-600 mt-2">Users browse multiple listings and pages per visit</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Bounce Rate</h4>
+            <p className="text-3xl font-bold text-gray-900">55.95%</p>
+            <p className="text-sm text-gray-600 mt-2">Slight increase but engagement rate remains healthy</p>
           </div>
         </div>
       </div>
