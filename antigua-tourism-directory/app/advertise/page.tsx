@@ -251,7 +251,7 @@ export default async function AdvertisePage() {
             </div>
             <div>
               <h6 className="font-bold mb-4">Contact</h6>
-              <p className="text-gray-400 text-sm">jeff@stapleyinc.com</p>
+              <Link href="/contact" className="text-gray-400 text-sm hover:text-white transition block">Contact Antigua Search</Link>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua</p>
             </div>
           </div>

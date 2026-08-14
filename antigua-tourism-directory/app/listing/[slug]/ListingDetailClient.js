@@ -57,7 +57,6 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
               <Link href="/categories" className="text-gray-700 hover:text-brand-600 font-medium">Categories</Link>
               <Link href="/about" className="text-gray-700 hover:text-brand-600 font-medium">About Us</Link>
               <Link href="/blog" className="text-gray-700 hover:text-brand-600 font-medium">Blog</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-brand-600 font-medium">Contact</Link>
               <Link href="/login" className="text-gray-700 hover:text-brand-600 font-medium">Login</Link>
               <Link href="/add-listing" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">
                 + Add Your Business
@@ -82,7 +81,6 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
               <Link href="/categories" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Categories</Link>
               <Link href="/about" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
               <Link href="/blog" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
-              <Link href="/contact" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
               <Link href="/login" className="block text-gray-700 hover:text-brand-600 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Login</Link>
               <Link href="/add-listing" className="block bg-brand-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-brand-700 transition text-center" onClick={() => setMobileMenuOpen(false)}>
                 + Add Your Business
@@ -345,7 +343,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
             </div>
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
+              <Link href="/contact" className="text-gray-400 text-sm mb-2 hover:text-white transition block">Contact Antigua Search</Link>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>
             </div>
           </div>

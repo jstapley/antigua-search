@@ -314,7 +314,7 @@ export default function ParishPageClient({ parish, listings, categories, totalCo
             </div>
             <div>
               <h6 className="font-bold mb-4 text-base md:text-lg">Contact</h6>
-              <p className="text-gray-400 text-sm mb-2">jeff@stapleyinc.com</p>
+              <Link href="/contact" className="text-gray-400 text-sm mb-2 hover:text-white transition block">Contact Antigua Search</Link>
               <p className="text-gray-400 text-sm">St. John&apos;s, Antigua & Barbuda</p>
             </div>
           </div>
