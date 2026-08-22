@@ -1,4 +1,8 @@
-# AntiguaSearch.com Robots.txt
+// app/robots.txt/route.js
+// Tells search engines what to crawl and what to ignore
+
+export async function GET() {
+  const robotsTxt = `# AntiguaSearch.com Robots.txt
 # Updated: August 2026
 
 User-agent: *
@@ -34,3 +38,12 @@ Allow: /
 
 User-agent: Slurp
 Allow: /
+`
+
+  return new Response(robotsTxt, {
+    headers: {
+      'Content-Type': 'text/plain',
+      'Cache-Control': 'public, max-age=86400' // Cache for 24 hours
+    }
+  })
+}
