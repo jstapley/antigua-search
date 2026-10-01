@@ -9,74 +9,74 @@ import { MONTHLY_VISITOR_COUNT } from '@/lib/constants'
 export default function MetricsDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // August 2026 - 30-day trend data
+  // September 2026 - 30-day trend data
   const trendData = [
-    { date: '1 Aug', users: 106 },
-    { date: '2 Aug', users: 122 },
-    { date: '3 Aug', users: 142 },
-    { date: '4 Aug', users: 169 },
-    { date: '5 Aug', users: 166 },
-    { date: '6 Aug', users: 124 },
-    { date: '7 Aug', users: 131 },
-    { date: '8 Aug', users: 93 },
-    { date: '9 Aug', users: 120 },
-    { date: '10 Aug', users: 148 },
-    { date: '11 Aug', users: 135 },
-    { date: '12 Aug', users: 161 },
-    { date: '13 Aug', users: 140 },
-    { date: '14 Aug', users: 117 },
-    { date: '15 Aug', users: 102 },
-    { date: '16 Aug', users: 104 },
-    { date: '17 Aug', users: 123 },
-    { date: '18 Aug', users: 157 },
-    { date: '19 Aug', users: 155 },
-    { date: '20 Aug', users: 160 },
-    { date: '21 Aug', users: 121 },
-    { date: '22 Aug', users: 122 },
-    { date: '23 Aug', users: 126 },
-    { date: '24 Aug', users: 138 },
-    { date: '25 Aug', users: 158 },
-    { date: '26 Aug', users: 130 },
-    { date: '27 Aug', users: 119 },
-    { date: '28 Aug', users: 127 },
-    { date: '29 Aug', users: 112 },
-    { date: '30 Aug', users: 120 },
+    { date: '1 Sep', users: 211 },
+    { date: '2 Sep', users: 149 },
+    { date: '3 Sep', users: 128 },
+    { date: '4 Sep', users: 121 },
+    { date: '5 Sep', users: 105 },
+    { date: '6 Sep', users: 107 },
+    { date: '7 Sep', users: 174 },
+    { date: '8 Sep', users: 138 },
+    { date: '9 Sep', users: 225 },
+    { date: '10 Sep', users: 135 },
+    { date: '11 Sep', users: 121 },
+    { date: '12 Sep', users: 91 },
+    { date: '13 Sep', users: 84 },
+    { date: '14 Sep', users: 120 },
+    { date: '15 Sep', users: 129 },
+    { date: '16 Sep', users: 116 },
+    { date: '17 Sep', users: 142 },
+    { date: '18 Sep', users: 160 },
+    { date: '19 Sep', users: 109 },
+    { date: '20 Sep', users: 139 },
+    { date: '21 Sep', users: 175 },
+    { date: '22 Sep', users: 148 },
+    { date: '23 Sep', users: 179 },
+    { date: '24 Sep', users: 128 },
+    { date: '25 Sep', users: 149 },
+    { date: '26 Sep', users: 117 },
+    { date: '27 Sep', users: 107 },
+    { date: '28 Sep', users: 126 },
+    { date: '29 Sep', users: 131 },
+    { date: '30 Sep', users: 123 },
   ]
 
-  // Top countries - August 2026
+  // Top countries - September 2026
   const countries = [
-    { name: 'Antigua & Barbuda', sessions: 2040 },
-    { name: 'United States', sessions: 1149 },
-    { name: 'United Kingdom', sessions: 395 },
-    { name: 'Singapore', sessions: 233 },
-    { name: 'Canada', sessions: 191 },
+    { name: 'Antigua & Barbuda', sessions: 1734 },
+    { name: 'United States', sessions: 988 },
+    { name: 'Singapore', sessions: 472 },
+    { name: 'United Kingdom', sessions: 353 },
+    { name: 'Canada', sessions: 198 },
   ]
 
-  // Top channels - August 2026
+  // Top channels - September 2026
   const channels = [
-    { name: 'Organic Search', sessions: 3802 },
-    { name: 'Direct', sessions: 859 },
-    { name: 'AI Assistant', sessions: 115 },
-    { name: 'Referral', sessions: 18 },
-    { name: 'Unassigned', sessions: 16 },
+    { name: 'Organic Search', sessions: 3291 },
+    { name: 'Direct', sessions: 1211 },
+    { name: 'AI Assistant', sessions: 85 },
+    { name: 'Cross-network', sessions: 59 },
+    { name: 'Unassigned', sessions: 52 },
   ]
 
-  // Top blog posts - August 2026
+  // Top blog posts - September 2026
   const blogPosts = [
-    { title: 'Antigua Carnival 2026: Costumes, Mas Bands & Playing', sessions: 139 },
-    { title: 'Getting Around Antigua Without a Car', sessions: 113 },
-    { title: 'Shirley Heights Antigua: Complete Guide', sessions: 110 },
-    { title: 'Sir Vivian Richards Stadium: Visitor Guide', sessions: 98 },
-    { title: 'Banks in Antigua & Barbuda: Complete Guide', sessions: 87 },
+    { title: 'Getting Around Antigua Without a Car', sessions: 100 },
+    { title: 'Shirley Heights Antigua: Complete Guide', sessions: 90 },
+    { title: 'Banks in Antigua & Barbuda: Complete Guide', sessions: 81 },
+    { title: 'Jolly Beach Antigua: The Complete Guide for 2026', sessions: 75 },
+    { title: 'Social Security Antigua 2026: ABSSB Guide', sessions: 54 },
   ]
 
-  // Top listings - August 2026
+  // Top listings - September 2026
   const listings = [
-    { name: 'Woods Urgent Care', sessions: 75 },
-    { name: 'Dr Abbott', sessions: 39 },
-    { name: "Women's Clinic", sessions: 33 },
-    { name: 'Savills Antigua', sessions: 30 },
-    { name: 'Public Market Complex', sessions: 28 },
+    { name: 'Woods Urgent Care', sessions: 47 },
+    { name: 'XPZ Supermarket', sessions: 37 },
+    { name: 'Dr Abbott', sessions: 34 },
+    { name: "Women's Clinic", sessions: 29 },
+    { name: 'The Cutting Edge Salon', sessions: 24 },
   ]
 
   const maxCountry = Math.max(...countries.map(c => c.sessions))
@@ -144,26 +144,26 @@ export default function MetricsDashboard() {
           <p className="text-xl text-white/90 max-w-2xl mb-2">
             Real-time data showing thousands of visitors discovering businesses in Antigua & Barbuda every month. See why businesses choose to advertise with us.
           </p>
-          <p className="text-white/70 text-sm mb-8">Report period: August 1 – August 30, 2026</p>
+          <p className="text-white/70 text-sm mb-8">Report period: September 1 – September 30, 2026</p>
 
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
-              <div className="text-white/80 text-sm font-medium mb-2">Active Users (August)</div>
-              <div className="text-4xl font-bold">3,935</div>
-              <div className="text-green-200 text-sm mt-2">↑ 5.3% growth</div>
+              <div className="text-white/80 text-sm font-medium mb-2">Active Users (September)</div>
+              <div className="text-4xl font-bold">3,954</div>
+              <div className="text-green-200 text-sm mt-2">↑ 0.5% growth</div>
             </div>
 
             <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
               <div className="text-white/80 text-sm font-medium mb-2">Total Sessions</div>
-              <div className="text-4xl font-bold">4,826</div>
-              <div className="text-green-200 text-sm mt-2">↑ 2.8% increase</div>
+              <div className="text-4xl font-bold">4,705</div>
+              <div className="text-red-200 text-sm mt-2">↓ 2.5% decrease</div>
             </div>
 
             <div className="bg-white/10 backdrop-blur rounded-lg p-6 border border-white/20">
               <div className="text-white/80 text-sm font-medium mb-2">New Users</div>
-              <div className="text-4xl font-bold">3,828</div>
-              <div className="text-green-200 text-sm mt-2">↑ 5.1% growth</div>
+              <div className="text-4xl font-bold">3,841</div>
+              <div className="text-green-200 text-sm mt-2">↑ 0.3% growth</div>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function MetricsDashboard() {
 
         {/* 30-Day Trend */}
         <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">August Active Users Trend</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">September Active Users Trend</h2>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={trendData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -200,7 +200,7 @@ export default function MetricsDashboard() {
               />
             </BarChart>
           </ResponsiveContainer>
-          <p className="text-gray-600 text-sm mt-4">Strong opening week with a peak of 169 active users on August 4th, a brief mid-month dip to 93 on August 8th, then a steady rebound through several 150+ days in the back half of the month.</p>
+          <p className="text-gray-600 text-sm mt-4">Strong opening day of 211 users on September 1st, peaking at 225 on September 9th, a mid-month trough of 84 on September 13th, then a solid recovery through several 170+ days in the final third of the month.</p>
         </div>
 
         {/* Two Column Grid */}
@@ -308,7 +308,7 @@ export default function MetricsDashboard() {
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-brand-600 to-blue-600 rounded-lg shadow-lg p-8 md:p-12 text-white text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Reach 3,900+ Active Users Monthly
+            Reach 3,950+ Active Users Monthly
           </h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
             Your business could be featured in front of thousands of potential customers searching for services in Antigua & Barbuda every single day.
@@ -338,18 +338,18 @@ export default function MetricsDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Engagement Rate</h4>
-            <p className="text-3xl font-bold text-gray-900">46.35%</p>
+            <p className="text-3xl font-bold text-gray-900">39.66%</p>
             <p className="text-sm text-gray-600 mt-2">Visitors actively engage with business listings and content</p>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6">
             <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Avg. Views Per User</h4>
-            <p className="text-3xl font-bold text-gray-900">1.74</p>
+            <p className="text-3xl font-bold text-gray-900">1.7</p>
             <p className="text-sm text-gray-600 mt-2">Users browse multiple listings and pages per visit</p>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6">
             <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Bounce Rate</h4>
-            <p className="text-3xl font-bold text-gray-900">53.65%</p>
-            <p className="text-sm text-gray-600 mt-2">Down from last month, alongside a stronger engagement rate</p>
+            <p className="text-3xl font-bold text-gray-900">60.34%</p>
+            <p className="text-sm text-gray-600 mt-2">Slightly up this month alongside steady active user growth</p>
           </div>
         </div>
       </div>
