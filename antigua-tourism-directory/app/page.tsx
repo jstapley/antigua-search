@@ -68,7 +68,8 @@ export default async function HomePage() {
     { data: parishes },
     { data: categories },
     { data: featuredListings },
-    { count: monthlyVisitors }
+    { count: monthlyVisitors },
+    { data: recentListings }
   ] = await Promise.all([
     // Total listings count
     supabase
@@ -110,7 +111,15 @@ export default async function HomePage() {
       .limit(3),
     
     // Monthly visitors count (you can implement this later)
-    Promise.resolve({ count: 2771 }) // Placeholder for now
+    Promise.resolve({ count: 2771 }), // Placeholder for now
+
+    // Recently added listings for internal linking (helps resolve orphan pages)
+    supabase
+      .from('listings')
+      .select(`id, business_name, slug, category:categories(name, icon_emoji), parish:parishes(name)`)
+      .eq('status', 'active')
+      .order('created_at', { ascending: false })
+      .limit(12)
   ])
 
   // Process parishes with counts
@@ -191,12 +200,13 @@ export default async function HomePage() {
       />
       
       {/* Main homepage component */}
-      <HomeClient 
+      <HomeClient
         stats={stats}
         parishes={parishesWithCounts}
         categories={categoriesWithCounts}
         featuredListings={featuredListings || []}
         monthlyVisitors={monthlyVisitors || 2771}
+        recentListings={recentListings || []}
       />
     </>
   )

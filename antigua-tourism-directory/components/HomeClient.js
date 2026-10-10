@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function HomeClient({ stats, parishes, categories, featuredListings, monthlyVisitors }) {
+export default function HomeClient({ stats, parishes, categories, featuredListings, monthlyVisitors, recentListings = [] }) {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -424,7 +424,34 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
         </div>
       </section>
 
-      {/* Footer - Mobile Responsive */}
+      {/* Recently Added — internal linking for SEO */}
+      {recentListings.length > 0 && (
+        <section className="bg-gray-50 py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Recently Added</h3>
+            <p className="text-gray-600 text-base md:text-lg mb-8">The latest businesses listed on AntiguaSearch.com</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {recentListings.map((listing) => (
+                <Link
+                  key={listing.id}
+                  href={`/listing/${listing.slug}`}
+                  className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-brand-400 transition-all duration-200 group"
+                >
+                  <div className="text-2xl mb-2">{listing.category?.icon_emoji || '🏢'}</div>
+                  <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-600 transition leading-tight mb-1 line-clamp-2">
+                    {listing.business_name}
+                  </div>
+                  <div className="text-xs text-gray-500">{listing.category?.name}</div>
+                  {listing.parish && (
+                    <div className="text-xs text-gray-400 mt-1">📍 {listing.parish.name}</div>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Footer - Mobile Responsive */}
       <footer className="bg-gray-900 text-white py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
