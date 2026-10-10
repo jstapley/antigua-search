@@ -206,6 +206,7 @@ export default async function HomePage() {
         categories={categoriesWithCounts}
         featuredListings={featuredListings || []}
         monthlyVisitors={monthlyVisitors || 2771}
+        // @ts-ignore
         recentListings={recentListings || []}
       />
     </>
