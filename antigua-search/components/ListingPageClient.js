@@ -108,7 +108,7 @@ export default function ListingPageClient({ listing }) {
         )}
 
         {/* Website & Social Links */}
-        {(listing.website || listing.facebook_url || listing.instagram_url || listing.google_business_url || listing.tripadvisor_url || listing.twitter_url) && (
+        {(listing.website || listing.facebook_url || listing.instagram_url || listing.google_business_url || listing.tripadvisor_url || listing.twitter_url || listing.youtube_url || listing.tiktok_url) && (
           <div>
             <div className="text-sm text-gray-500 mb-2">Online Presence</div>
             <div className="space-y-2">
@@ -173,7 +173,7 @@ export default function ListingPageClient({ listing }) {
                 </a>
               )}
               {listing.twitter_url && (
-                <a 
+                <a
                   href={listing.twitter_url}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -182,6 +182,30 @@ export default function ListingPageClient({ listing }) {
                 >
                   <span className="text-xl">🐦</span>
                   <span>Twitter</span>
+                </a>
+              )}
+              {listing.youtube_url && (
+                <a
+                  href={listing.youtube_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleSocialClick('youtube')}
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
+                >
+                  <span className="text-xl">▶️</span>
+                  <span>YouTube</span>
+                </a>
+              )}
+              {listing.tiktok_url && (
+                <a
+                  href={listing.tiktok_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleSocialClick('tiktok')}
+                  className="flex items-center gap-3 text-brand-600 hover:text-brand-700 font-semibold"
+                >
+                  <span className="text-xl">🎵</span>
+                  <span>TikTok</span>
                 </a>
               )}
             </div>
