@@ -36,6 +36,8 @@ export default function EditListingPage({ params }) {
     google_business_url: '',
     tripadvisor_url: '',
     twitter_url: '',
+    youtube_url: '',
+    tiktok_url: '',
     image_url: ''
   })
 
@@ -129,6 +131,8 @@ export default function EditListingPage({ params }) {
       google_business_url: listingData.google_business_url || '',
       tripadvisor_url: listingData.tripadvisor_url || '',
       twitter_url: listingData.twitter_url || '',
+      youtube_url: listingData.youtube_url || '',
+      tiktok_url: listingData.tiktok_url || '',
       image_url: listingData.image_url || ''
     })
 
@@ -375,6 +379,8 @@ export default function EditListingPage({ params }) {
       p_google_business_url: formData.google_business_url || null,
       p_tripadvisor_url: formData.tripadvisor_url || null,
       p_twitter_url: formData.twitter_url || null,
+      p_youtube_url: formData.youtube_url || null,
+      p_tiktok_url: formData.tiktok_url || null,
       p_image_url: imageUrl || null
     })
 
@@ -692,6 +698,18 @@ export default function EditListingPage({ params }) {
                 <input type="url" name="twitter_url" value={formData.twitter_url} onChange={handleChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
                   placeholder="https://twitter.com/yourbusiness" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-900 mb-2">▶️ YouTube</label>
+                <input type="url" name="youtube_url" value={formData.youtube_url} onChange={handleChange}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
+                  placeholder="https://youtube.com/@yourchannel" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-900 mb-2">🎵 TikTok</label>
+                <input type="url" name="tiktok_url" value={formData.tiktok_url} onChange={handleChange}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
+                  placeholder="https://tiktok.com/@yourbusiness" />
               </div>
             </div>
           </div>
