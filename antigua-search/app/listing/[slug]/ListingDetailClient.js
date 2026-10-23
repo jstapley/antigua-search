@@ -135,8 +135,8 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
           <div className="lg:col-span-2">
             {/* Hero Image */}
             {listing.image_url ? (
-              <div className="aspect-video relative bg-gray-100 rounded-2xl overflow-hidden mb-6">
-                <Image src={listing.image_url} alt={listing.business_name} fill className="object-cover" />
+              <div className="aspect-video relative bg-white rounded-2xl overflow-hidden mb-6 border border-gray-100">
+                <Image src={listing.image_url} alt={listing.business_name} fill className="object-contain" />
                 {listing.featured && (
                   <div className="absolute top-2 md:top-4 right-2 md:right-4 bg-yellow-400 text-brand-900 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-bold">
                     ⭐ Featured
