@@ -27,7 +27,9 @@ export default function AddListingPage() {
     instagram_url: '',
     google_business_url: '',
     tripadvisor_url: '',
-    twitter_url: ''
+    twitter_url: '',
+    youtube_url: '',
+    tiktok_url: ''
   })
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
@@ -333,7 +335,9 @@ export default function AddListingPage() {
         instagram_url: '',
         google_business_url: '',
         tripadvisor_url: '',
-        twitter_url: ''
+        twitter_url: '',
+        youtube_url: '',
+        tiktok_url: ''
       })
       setImageFile(null)
       setImagePreview(null)
@@ -822,6 +826,18 @@ export default function AddListingPage() {
                 <input type="url" name="twitter_url" value={formData.twitter_url} onChange={handleChange}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
                   placeholder="https://twitter.com/yourbusiness" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-900 mb-2">▶️ YouTube</label>
+                <input type="url" name="youtube_url" value={formData.youtube_url} onChange={handleChange}
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
+                  placeholder="https://youtube.com/@yourchannel" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-900 mb-2">🎵 TikTok</label>
+                <input type="url" name="tiktok_url" value={formData.tiktok_url} onChange={handleChange}
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm md:text-base"
+                  placeholder="https://tiktok.com/@yourbusiness" />
               </div>
             </div>
           </div>

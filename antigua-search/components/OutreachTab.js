@@ -160,10 +160,33 @@ export default function OutreachTab({ listings }) {
   // Template editor state
   const [editingTemplate, setEditingTemplate] = useState(null)
 
+  // Bulk send state
+  const [bulkListings, setBulkListings] = useState([])
+  const [bulkLoading, setBulkLoading] = useState(false)
+  const [bulkSelected, setBulkSelected] = useState(new Set())
+  const [bulkTemplateId, setBulkTemplateId] = useState('')
+  const [bulkSubject, setBulkSubject] = useState('')
+  const [bulkHtmlBody, setBulkHtmlBody] = useState('')
+  const [bulkSending, setBulkSending] = useState(false)
+  const [bulkProgress, setBulkProgress] = useState(null)
+  const [bulkSearch, setBulkSearch] = useState('')
+
   useEffect(() => {
     if (activeSection === 'log') loadContacts()
+    if (activeSection === 'bulk') loadBulkListings()
     setCurrentPage(1)
   }, [activeSection, campaignFilter])
+
+  useEffect(() => {
+    if (!bulkTemplateId) return
+    const template = templates.find(t => t.id === bulkTemplateId)
+    if (template) {
+      setBulkSubject(template.subject)
+      setBulkHtmlBody(template.html_body)
+    }
+    // Reload to update previously_contacted flags for this campaign
+    loadBulkListings(template?.campaign_type)
+  }, [bulkTemplateId])
 
   useEffect(() => {
     if (selectedListingId) {
@@ -185,6 +208,23 @@ export default function OutreachTab({ listings }) {
       }
     }
   }, [selectedTemplateId, templates])
+
+  const loadBulkListings = async (campaign_type) => {
+    setBulkLoading(true)
+    try {
+      const params = new URLSearchParams()
+      const ct = campaign_type || templates.find(t => t.id === bulkTemplateId)?.campaign_type
+      if (ct) params.set('campaign_type', ct)
+      const res = await fetch(`/api/admin/bulk-outreach?${params}`)
+      const data = await res.json()
+      setBulkListings(Array.isArray(data) ? data : [])
+      setBulkSelected(new Set())
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setBulkLoading(false)
+    }
+  }
 
   const loadContacts = async () => {
     setLoadingContacts(true)
@@ -249,6 +289,57 @@ export default function OutreachTab({ listings }) {
     }
   }
 
+  const handleBulkSend = async () => {
+    const selectedIds = [...bulkSelected]
+    if (!selectedIds.length || !bulkSubject || !bulkHtmlBody || !bulkTemplateId) return
+    const template = templates.find(t => t.id === bulkTemplateId)
+    if (!confirm(`Send "${bulkSubject}" to ${selectedIds.length} business${selectedIds.length !== 1 ? 'es' : ''}?`)) return
+
+    setBulkSending(true)
+    setBulkProgress({ sent: 0, failed: 0, total: selectedIds.length, errors: [], current: '' })
+
+    for (let i = 0; i < selectedIds.length; i++) {
+      const listing = bulkListings.find(l => l.id === selectedIds[i])
+      setBulkProgress(prev => ({ ...prev, current: listing?.business_name || '' }))
+      try {
+        const res = await fetch('/api/admin/send-outreach', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            listing_id: selectedIds[i],
+            campaign_type: template?.campaign_type || 'unclaimed_listing',
+            sent_to: listing?.effective_email,
+            subject: bulkSubject,
+            html_body: bulkHtmlBody,
+          })
+        })
+        const data = await res.json()
+        if (data.success) {
+          setBulkProgress(prev => ({ ...prev, sent: prev.sent + 1 }))
+        } else {
+          setBulkProgress(prev => ({
+            ...prev,
+            failed: prev.failed + 1,
+            errors: [...prev.errors, { business: listing?.business_name, error: data.error || 'Unknown error' }]
+          }))
+        }
+      } catch (err) {
+        setBulkProgress(prev => ({
+          ...prev,
+          failed: prev.failed + 1,
+          errors: [...prev.errors, { business: listing?.business_name, error: err.message }]
+        }))
+      }
+      if (i < selectedIds.length - 1) await new Promise(r => setTimeout(r, 300))
+    }
+
+    setBulkSending(false)
+    setBulkProgress(prev => ({ ...prev, current: '' }))
+    // Reload to update previously_contacted flags
+    loadBulkListings(template?.campaign_type)
+    setBulkSelected(new Set())
+  }
+
   const handleSaveNotes = async (contactId) => {
     await fetch('/api/admin/email-contacts', {
       method: 'PATCH',
@@ -298,6 +389,7 @@ export default function OutreachTab({ listings }) {
       <div className="flex gap-4 mb-6 border-b border-gray-200">
         {[
           { id: 'compose', label: '✉️ Compose & Send' },
+          { id: 'bulk', label: '📦 Bulk Send' },
           { id: 'log', label: '📋 Contact Log' },
           { id: 'templates', label: '📝 Templates' }
         ].map(s => (
@@ -469,6 +561,228 @@ export default function OutreachTab({ listings }) {
           </div>
         </div>
       )}
+
+      {activeSection === 'bulk' && (() => {
+        const filteredBulk = bulkListings.filter(l =>
+          !bulkSearch ||
+          l.business_name?.toLowerCase().includes(bulkSearch.toLowerCase()) ||
+          l.category?.name?.toLowerCase().includes(bulkSearch.toLowerCase()) ||
+          l.parish?.name?.toLowerCase().includes(bulkSearch.toLowerCase()) ||
+          l.effective_email?.toLowerCase().includes(bulkSearch.toLowerCase())
+        )
+        const allSelected = filteredBulk.length > 0 && filteredBulk.every(l => bulkSelected.has(l.id))
+        return (
+          <div className="space-y-6">
+            {/* Template selection */}
+            <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
+              <h3 className="font-bold text-gray-900 mb-4">1. Choose a Template</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-900 mb-2">Template *</label>
+                    <select
+                      value={bulkTemplateId}
+                      onChange={e => setBulkTemplateId(e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
+                    >
+                      <option value="">— Choose a template —</option>
+                      {templates.map(t => (
+                        <option key={t.id} value={t.id}>{t.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {bulkTemplateId && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-bold text-gray-900 mb-2">Subject</label>
+                        <input
+                          type="text"
+                          value={bulkSubject}
+                          onChange={e => setBulkSubject(e.target.value)}
+                          className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-gray-900 mb-2">Email Body (HTML)</label>
+                        <textarea
+                          value={bulkHtmlBody}
+                          onChange={e => setBulkHtmlBody(e.target.value)}
+                          rows={8}
+                          className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none font-mono text-xs resize-y"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+                {bulkTemplateId && bulkListings.length > 0 && (() => {
+                  const preview = bulkSelected.size > 0
+                    ? bulkListings.find(l => bulkSelected.has(l.id))
+                    : bulkListings[0]
+                  const previewMerge = (text) => !preview ? text : text
+                    .replaceAll('{{business_name}}', preview.business_name || '')
+                    .replaceAll('{{category}}', preview.category?.name || '')
+                    .replaceAll('{{parish}}', preview.parish?.name || '')
+                    .replaceAll('{{listing_url}}', `https://www.antiguasearch.com/listing/${preview.slug}`)
+                    .replaceAll('{{contact_name}}', preview.contact_name || '')
+                    .replaceAll('{{phone}}', preview.phone || '')
+                    .replaceAll('{{website}}', preview.website || '')
+                  return (
+                    <div className="bg-gray-50 rounded-xl p-4">
+                      <div className="text-xs font-semibold text-gray-500 uppercase mb-2">
+                        Preview — {preview?.business_name}
+                      </div>
+                      <div className="text-xs text-gray-600 mb-3 font-medium">{previewMerge(bulkSubject)}</div>
+                      <div
+                        className="bg-white border border-gray-200 rounded-lg p-3 text-xs overflow-auto max-h-64"
+                        dangerouslySetInnerHTML={{ __html: previewMerge(bulkHtmlBody) }}
+                      />
+                    </div>
+                  )
+                })()}
+              </div>
+            </div>
+
+            {/* Business selector */}
+            <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <h3 className="font-bold text-gray-900">
+                  2. Select Businesses
+                  {bulkListings.length > 0 && (
+                    <span className="ml-2 text-sm font-normal text-gray-500">
+                      {bulkListings.length} unclaimed with email
+                    </span>
+                  )}
+                </h3>
+                {bulkListings.length > 0 && (
+                  <div className="flex gap-3 items-center">
+                    <button
+                      onClick={() => setBulkSelected(allSelected ? new Set() : new Set(filteredBulk.map(l => l.id)))}
+                      className="text-sm text-brand-600 hover:underline font-semibold"
+                    >
+                      {allSelected ? 'Deselect all' : `Select all ${filteredBulk.length}`}
+                    </button>
+                    <button
+                      onClick={() => loadBulkListings()}
+                      className="text-sm text-gray-500 hover:underline"
+                    >
+                      Refresh
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {bulkLoading ? (
+                <div className="text-center py-8 text-gray-500">Loading unclaimed businesses...</div>
+              ) : bulkListings.length === 0 ? (
+                <div className="text-center py-8 text-gray-400">
+                  No unclaimed businesses with email addresses found.
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Search by name, category, parish, or email..."
+                    value={bulkSearch}
+                    onChange={e => setBulkSearch(e.target.value)}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm mb-4"
+                  />
+                  <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                    {filteredBulk.length === 0 ? (
+                      <div className="text-center py-6 text-gray-400">No results for "{bulkSearch}"</div>
+                    ) : filteredBulk.map(l => (
+                      <label
+                        key={l.id}
+                        className={`flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer transition ${
+                          bulkSelected.has(l.id) ? 'border-brand-600 bg-brand-50' : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={bulkSelected.has(l.id)}
+                          onChange={e => {
+                            setBulkSelected(prev => {
+                              const next = new Set(prev)
+                              e.target.checked ? next.add(l.id) : next.delete(l.id)
+                              return next
+                            })
+                          }}
+                          className="w-4 h-4 accent-brand-600 shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm text-gray-900 truncate">{l.business_name}</div>
+                          <div className="text-xs text-gray-500 truncate">
+                            {l.category?.name}{l.parish?.name ? ` · ${l.parish.name}` : ''} · {l.effective_email}
+                          </div>
+                        </div>
+                        {l.previously_contacted && (
+                          <span className="shrink-0 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
+                            Already contacted
+                          </span>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+                  <div className="mt-3 text-xs text-gray-500">
+                    {bulkSelected.size} selected
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Send / progress */}
+            {bulkProgress ? (
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-gray-900">
+                    {bulkSending ? 'Sending...' : 'Done'}
+                  </h3>
+                  <div className="text-sm text-gray-600">
+                    {bulkProgress.sent + bulkProgress.failed} / {bulkProgress.total}
+                  </div>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="h-3 rounded-full transition-all duration-300 bg-brand-600"
+                    style={{ width: `${((bulkProgress.sent + bulkProgress.failed) / bulkProgress.total) * 100}%` }}
+                  />
+                </div>
+                <div className="flex gap-6 text-sm">
+                  <span className="text-green-600 font-semibold">✓ {bulkProgress.sent} sent</span>
+                  {bulkProgress.failed > 0 && (
+                    <span className="text-red-600 font-semibold">✗ {bulkProgress.failed} failed</span>
+                  )}
+                  {bulkSending && bulkProgress.current && (
+                    <span className="text-gray-500">Sending to {bulkProgress.current}...</span>
+                  )}
+                </div>
+                {bulkProgress.errors.length > 0 && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs space-y-1">
+                    {bulkProgress.errors.map((e, i) => (
+                      <div key={i} className="text-red-700"><strong>{e.business}:</strong> {e.error}</div>
+                    ))}
+                  </div>
+                )}
+                {!bulkSending && (
+                  <button
+                    onClick={() => setBulkProgress(null)}
+                    className="text-sm text-brand-600 hover:underline"
+                  >
+                    ← Send another batch
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={handleBulkSend}
+                disabled={bulkSending || bulkSelected.size === 0 || !bulkTemplateId || !bulkSubject || !bulkHtmlBody}
+                className="w-full bg-brand-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-brand-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+              >
+                📦 Send to {bulkSelected.size} business{bulkSelected.size !== 1 ? 'es' : ''}
+              </button>
+            )}
+          </div>
+        )
+      })()}
 
       {activeSection === 'log' && (
         <div>
