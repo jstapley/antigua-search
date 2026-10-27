@@ -145,6 +145,32 @@ export default function HomeClient({ stats, parishes, categories, featuredListin
         </div>
       </header>
 
+      {/* Ad Banner - CHOGM 2026 */}
+      <div className="bg-white border-b border-gray-100 py-2">
+        <div className="max-w-5xl mx-auto px-4">
+          <a href="https://www.chogm26.com" target="_blank" rel="noopener noreferrer sponsored" className="block">
+            {/* Mobile banner */}
+            <Image
+              src="/CHOGM-320-100.png"
+              alt="CHOGM 2026 Antigua & Barbuda - Visit www.CHOGM26.com"
+              width={320}
+              height={100}
+              className="md:hidden w-full h-auto"
+              priority
+            />
+            {/* Desktop leaderboard */}
+            <Image
+              src="/CHOGM-970-90.png"
+              alt="CHOGM 2026 Antigua & Barbuda - Visit www.CHOGM26.com"
+              width={970}
+              height={90}
+              className="hidden md:block w-full h-auto"
+              priority
+            />
+          </a>
+        </div>
+      </div>
+
       {/* Hero Section - SEO OPTIMIZED WITH BUSINESS OWNER CTA */}
       <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-blue-600 py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
