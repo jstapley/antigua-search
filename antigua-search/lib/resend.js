@@ -398,6 +398,67 @@ export async function sendClaimNotification(claimData) {
   })
 }
 
+// ─── SCENARIO 3: New review submitted — notify Jeff ──────────────────────────
+
+export async function sendNewReviewNotification({ business_name, listing_slug, reviewer_name, rating, title, comment }) {
+  const listingUrl = `${SITE_URL}/listing/${listing_slug}`
+  const stars = '⭐'.repeat(rating)
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      ${emailHeader('⭐ New Review Pending', 'A review has been submitted and needs moderation')}
+      <div style="padding: 30px; background: #ffffff;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563; width: 140px;">Business:</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${business_name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Reviewer:</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${reviewer_name || 'Anonymous'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Rating:</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${stars} (${rating}/5)</td>
+          </tr>
+          ${title ? `
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Title:</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${title}</td>
+          </tr>` : ''}
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Review:</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937; font-style: italic;">"${comment}"</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; font-weight: bold; color: #4b5563;">Status:</td>
+            <td style="padding: 10px;">
+              <span style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: 600;">Pending Moderation</span>
+            </td>
+          </tr>
+        </table>
+        <div style="margin-top: 30px; text-align: center;">
+          <a href="${listingUrl}"
+             style="background: #318DD0; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; margin-right: 12px;">
+            View Listing →
+          </a>
+          <a href="${SITE_URL}/dashboard/admin?tab=reviews"
+             style="background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+            Moderate in Admin →
+          </a>
+        </div>
+      </div>
+      ${emailFooter()}
+    </div>
+  `
+
+  return sendEmail({
+    to: ADMIN_EMAIL,
+    subject: `⭐ New Review: ${business_name} — ${rating}/5 stars`,
+    html
+  })
+}
+
 // Send Welcome Email after registration
 
 export async function sendWelcomeEmail({ full_name, email }) {

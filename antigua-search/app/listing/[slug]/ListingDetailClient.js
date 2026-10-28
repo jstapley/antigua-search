@@ -259,7 +259,7 @@ export default function ListingDetailClient({ listing, isClaimed, relatedListing
               <ReviewList listingId={listing.id} />
             </div>
             <div className="lg:col-span-1">
-              <ReviewForm listingId={listing.id} />
+              <ReviewForm listingId={listing.id} businessName={listing.business_name} listingSlug={listing.slug} />
             </div>
           </div>
         </div>

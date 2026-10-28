@@ -6,10 +6,12 @@ import { Star } from 'lucide-react';
 
 interface ReviewFormProps {
   listingId: string;
+  businessName?: string;
+  listingSlug?: string;
   onSuccess?: () => void;
 }
 
-export default function ReviewForm({ listingId, onSuccess }: ReviewFormProps) {
+export default function ReviewForm({ listingId, businessName, listingSlug, onSuccess }: ReviewFormProps) {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [title, setTitle] = useState('');
@@ -63,6 +65,22 @@ export default function ReviewForm({ listingId, onSuccess }: ReviewFormProps) {
         });
 
       if (insertError) throw insertError;
+
+      // Notify admin of pending review (fire and forget)
+      if (businessName) {
+        fetch('/api/notify-review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            business_name: businessName,
+            listing_slug: listingSlug,
+            reviewer_name: user ? user.email : reviewerName.trim(),
+            rating,
+            title: title.trim() || null,
+            comment: comment.trim()
+          })
+        }).catch(err => console.error('Failed to send review notification:', err))
+      }
 
       // Success!
       setSuccess(true);
