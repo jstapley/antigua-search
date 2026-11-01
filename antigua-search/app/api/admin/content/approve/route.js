@@ -59,9 +59,23 @@ export async function POST(request) {
         }).eq('id', topic_id)
 
         // Send approval (with optional feedback) to the paused session
+        const metadataInstruction = `
+
+When you have finished writing the post, end your response with ONLY this metadata block — no trailing commentary, no post-delivery summary table:
+
+<!-- METADATA
+{
+  "slug": "short-seo-friendly-slug",
+  "meta_title": "SEO page title under 60 characters",
+  "meta_description": "SEO meta description under 160 characters",
+  "excerpt": "One or two sentence summary for the blog listing page",
+  "tags": ["Tag1", "Tag2", "Tag3", "Tag4", "Tag5"]
+}
+-->`
+
         const approvalMessage = feedback?.trim()
-          ? `The outline looks good with one change: ${feedback.trim()}. Please proceed and write the full blog post now.`
-          : 'The outline looks great. Please proceed and write the full blog post now.'
+          ? `The outline looks good with one change: ${feedback.trim()}. Please proceed and write the full blog post now.${metadataInstruction}`
+          : `The outline looks great. Please proceed and write the full blog post now.${metadataInstruction}`
 
         await anthropic.beta.sessions.events.send(topic.session_id, {
           events: [{
@@ -87,10 +101,23 @@ export async function POST(request) {
           } else if (event.type === 'agent.tool_use') {
             send({ type: 'tool', name: event.name || 'tool' })
           } else if (event.type === 'session.status_idle') {
-            // Writing complete — save draft
+            // Strip preamble: everything before the first # heading
+            const headingIdx = draft.search(/^#+ /m)
+            let cleanDraft = headingIdx > 0 ? draft.slice(headingIdx) : draft
+
+            // Extract and strip the <!-- METADATA ... --> block
+            let metadata = null
+            const metaMatch = cleanDraft.match(/<!--\s*METADATA\s*([\s\S]*?)-->/)
+            if (metaMatch) {
+              try { metadata = JSON.parse(metaMatch[1].trim()) } catch {}
+              cleanDraft = cleanDraft.replace(/<!--\s*METADATA[\s\S]*?-->/, '').trim()
+            }
+
+            // Writing complete — save clean draft + metadata
             await supabase.from('content_topics').update({
               status: 'draft_ready',
-              draft,
+              draft: cleanDraft,
+              metadata,
               updated_at: new Date().toISOString(),
             }).eq('id', topic_id)
 

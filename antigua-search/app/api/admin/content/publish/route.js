@@ -40,7 +40,8 @@ export async function POST(request) {
     return Response.json({ error: 'No draft content — approve the outline first' }, { status: 400 })
   }
 
-  const slug = generateSlug(topic.title)
+  const meta = topic.metadata || {}
+  const slug = meta.slug || generateSlug(topic.title)
   const now = new Date().toISOString()
 
   // Insert into blog_posts as a draft for final review in the Blog tab
@@ -50,9 +51,12 @@ export async function POST(request) {
       title: topic.title,
       slug,
       content: topic.draft,
+      excerpt: meta.excerpt || '',
+      meta_title: meta.meta_title || topic.title,
+      meta_description: meta.meta_description || '',
+      tags: Array.isArray(meta.tags) ? meta.tags : [],
       author: 'AntiguaSearch Team',
       status: 'draft',
-      tags: [],
       created_at: now,
       updated_at: now,
     }])
