@@ -36,6 +36,16 @@ export default function AdminDashboard() {
   const [enrichPreview, setEnrichPreview] = useState(null) // { listing_id, short_description, description }
   const [savingEnrich, setSavingEnrich] = useState(false)
 
+  // Content pipeline state
+  const [topics, setTopics] = useState([])
+  const [showTopicForm, setShowTopicForm] = useState(false)
+  const [topicForm, setTopicForm] = useState({ title: '', brief: '', urgency: 'HIGH' })
+  const [activeTopicId, setActiveTopicId] = useState(null)
+  const [streamLog, setStreamLog] = useState([])
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [expandedOutline, setExpandedOutline] = useState(null)
+  const [outlineFeedback, setOutlineFeedback] = useState('')
+
   const [blogPosts, setBlogPosts] = useState([])
   const [showBlogForm, setShowBlogForm] = useState(false)
   const [editingPost, setEditingPost] = useState(null)
@@ -115,6 +125,10 @@ export default function AdminDashboard() {
       .select('*').order('created_at', { ascending: false })
     setBlogPosts(blogData || [])
 
+    const topicsRes = await fetch('/api/admin/content/topics')
+    const topicsData = await topicsRes.json()
+    setTopics(Array.isArray(topicsData) ? topicsData : [])
+
     setLoadingData(false)
   }
 
@@ -174,6 +188,123 @@ export default function AdminDashboard() {
     } finally {
       setSavingEnrich(false)
     }
+  }
+
+  // ── Content pipeline handlers ────────────────────────────────────────────
+
+  const loadTopics = async () => {
+    const res = await fetch('/api/admin/content/topics')
+    const data = await res.json()
+    setTopics(Array.isArray(data) ? data : [])
+  }
+
+  const handleAddTopic = async (e) => {
+    e.preventDefault()
+    const res = await fetch('/api/admin/content/topics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(topicForm),
+    })
+    const data = await res.json()
+    if (!res.ok) { showModal('Error', data.error, 'error'); return }
+    setTopicForm({ title: '', brief: '', urgency: 'HIGH' })
+    setShowTopicForm(false)
+    loadTopics()
+  }
+
+  const handleDeleteTopic = (id, title) => {
+    setModal({
+      isOpen: true, title: 'Remove Topic?',
+      message: `Remove "${title}" from the queue? This cannot be undone.`,
+      type: 'warning',
+      confirmButton: {
+        label: 'Yes, Remove', danger: true,
+        onClick: async () => {
+          setModal(prev => ({ ...prev, isOpen: false }))
+          await fetch('/api/admin/content/topics', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id }),
+          })
+          loadTopics()
+        },
+      },
+      onClose: () => setModal(prev => ({ ...prev, isOpen: false })),
+    })
+  }
+
+  const streamAgentCall = async (url, body, topicId) => {
+    setActiveTopicId(topicId)
+    setStreamLog([])
+    setIsStreaming(true)
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      if (!res.ok) {
+        const err = await res.json()
+        showModal('Error', err.error || 'Request failed', 'error')
+        return
+      }
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop()
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          try {
+            const event = JSON.parse(line.slice(6))
+            if (event.type === 'text') {
+              setStreamLog(prev => [...prev, event.content])
+            } else if (event.type === 'tool') {
+              setStreamLog(prev => [...prev, `\n[🔧 Tool: ${event.name}]\n`])
+            } else if (event.type === 'status' || event.type === 'idle' || event.type === 'complete') {
+              setStreamLog(prev => [...prev, `\n✓ ${event.message}\n`])
+            } else if (event.type === 'error') {
+              setStreamLog(prev => [...prev, `\n⚠ Error: ${event.message}\n`])
+            }
+          } catch {}
+        }
+      }
+    } catch (err) {
+      showModal('Error', err.message, 'error')
+    } finally {
+      setIsStreaming(false)
+      setActiveTopicId(null)
+      loadTopics()
+    }
+  }
+
+  const handleStartWriting = (topic) => {
+    streamAgentCall('/api/admin/content/start', { topic_id: topic.id }, topic.id)
+  }
+
+  const handleApproveOutline = (topic) => {
+    streamAgentCall(
+      '/api/admin/content/approve',
+      { topic_id: topic.id, feedback: outlineFeedback },
+      topic.id
+    )
+    setExpandedOutline(null)
+    setOutlineFeedback('')
+  }
+
+  const handlePublish = async (topic) => {
+    const res = await fetch('/api/admin/content/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic_id: topic.id }),
+    })
+    const data = await res.json()
+    if (!res.ok) { showModal('Error', data.error, 'error'); return }
+    showModal('Sent to Blog!', `Draft created with slug "/${data.slug}". Find it in the Blog tab to review and publish.`, 'success', loadTopics)
   }
 
   // ── Blog handlers ────────────────────────────────────────────────────────
@@ -533,7 +664,7 @@ export default function AdminDashboard() {
 
         <div className="mb-8 border-b border-gray-200">
           <div className="flex gap-4 overflow-x-auto">
-            {['overview', 'listings', 'reviews', 'claims', 'users', 'blog', 'outreach'].map(tab => (
+            {['overview', 'listings', 'reviews', 'claims', 'users', 'blog', 'content', 'outreach'].map(tab => (
               <button key={tab} onClick={() => setActiveTab(tab)}
                 className={`px-4 py-2 font-semibold border-b-2 transition whitespace-nowrap ${activeTab === tab ? 'border-brand-600 text-brand-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}>
                 {tab === 'overview' && '📊 Overview'}
@@ -542,6 +673,7 @@ export default function AdminDashboard() {
                 {tab === 'claims' && '🏢 Pending Claims'}
                 {tab === 'users' && '👥 Users'}
                 {tab === 'blog' && '📝 Blog'}
+                {tab === 'content' && `✍️ Content ${topics.filter(t => t.status === 'outline_pending' || t.status === 'draft_ready').length > 0 ? `(${topics.filter(t => t.status === 'outline_pending' || t.status === 'draft_ready').length})` : ''}`}
                 {tab === 'outreach' && '📧 Outreach'}
               </button>
             ))}
@@ -951,6 +1083,211 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'content' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Content Pipeline</h2>
+                <p className="text-sm text-gray-500 mt-1">AI-assisted blog post workflow — add a topic, start writing, approve the outline, then send to the Blog tab.</p>
+              </div>
+              <button
+                onClick={() => setShowTopicForm(!showTopicForm)}
+                className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition"
+              >
+                {showTopicForm ? 'Cancel' : '+ Add Topic'}
+              </button>
+            </div>
+
+            {/* Add topic form */}
+            {showTopicForm && (
+              <form onSubmit={handleAddTopic} className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-6 space-y-4">
+                <h3 className="text-lg font-bold text-gray-900">New Topic</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-bold text-gray-900 mb-1">Title *</label>
+                    <input
+                      type="text" required
+                      value={topicForm.title}
+                      onChange={e => setTopicForm(p => ({ ...p, title: e.target.value }))}
+                      placeholder="e.g. Best Restaurants in English Harbour 2026"
+                      className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-900 mb-1">Urgency</label>
+                    <select
+                      value={topicForm.urgency}
+                      onChange={e => setTopicForm(p => ({ ...p, urgency: e.target.value }))}
+                      className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none"
+                    >
+                      <option value="CRITICAL">CRITICAL</option>
+                      <option value="HIGH">HIGH</option>
+                      <option value="MEDIUM">MEDIUM</option>
+                      <option value="LOW">LOW</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-900 mb-1">
+                    Brief * <span className="font-normal text-gray-500">— paste the full agent brief (TOPIC, PRIMARY KEYWORD, SUGGESTED ANGLE, etc.)</span>
+                  </label>
+                  <textarea
+                    required rows={10}
+                    value={topicForm.brief}
+                    onChange={e => setTopicForm(p => ({ ...p, brief: e.target.value }))}
+                    placeholder={`APPROVED TOPIC BRIEF - Please begin the full writing workflow.\n\nTOPIC: ...\nPRIMARY KEYWORD: ...\nSUGGESTED ANGLE: ...\n\nBegin with Step 1 (sitemap scan), then research, then present the outline for my approval before writing anything.`}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none font-mono text-sm resize-y"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button type="submit" className="bg-brand-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-700 transition">Add to Queue</button>
+                  <button type="button" onClick={() => setShowTopicForm(false)} className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Cancel</button>
+                </div>
+              </form>
+            )}
+
+            {/* Live stream output */}
+            {(isStreaming || streamLog.length > 0) && (
+              <div className="bg-gray-900 rounded-xl p-4 mb-6 font-mono text-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-gray-400 text-xs uppercase tracking-wide">Agent Output</span>
+                  {isStreaming && <span className="flex items-center gap-2 text-green-400 text-xs"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block" />Live</span>}
+                  {!isStreaming && <button onClick={() => setStreamLog([])} className="text-gray-500 hover:text-gray-300 text-xs">Clear</button>}
+                </div>
+                <div className="text-green-300 whitespace-pre-wrap max-h-96 overflow-y-auto leading-relaxed">
+                  {streamLog.join('')}
+                  {isStreaming && <span className="animate-pulse">▋</span>}
+                </div>
+              </div>
+            )}
+
+            {/* Topics table */}
+            {topics.length === 0 ? (
+              <div className="bg-white rounded-xl p-12 text-center border-2 border-dashed border-gray-300">
+                <div className="text-6xl mb-4">✍️</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">No topics yet</h3>
+                <p className="text-gray-600 mb-4">Run the SQL seed file in Supabase to load the 10 pre-built topics, or add one above.</p>
+                <code className="text-xs bg-gray-100 px-3 py-1 rounded">antigua-search/sql/content-topics.sql</code>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {topics.map(topic => {
+                  const urgencyColour = { CRITICAL: 'bg-red-100 text-red-700', HIGH: 'bg-orange-100 text-orange-700', MEDIUM: 'bg-yellow-100 text-yellow-700', LOW: 'bg-gray-100 text-gray-600' }[topic.urgency] || 'bg-gray-100 text-gray-600'
+                  const statusColour = { queued: 'bg-gray-100 text-gray-600', writing: 'bg-blue-100 text-blue-700', outline_pending: 'bg-yellow-100 text-yellow-800', draft_ready: 'bg-purple-100 text-purple-700', published: 'bg-green-100 text-green-700', failed: 'bg-red-100 text-red-700' }[topic.status] || 'bg-gray-100 text-gray-600'
+                  const isActive = activeTopicId === topic.id && isStreaming
+                  const needsAction = topic.status === 'outline_pending' || topic.status === 'draft_ready'
+
+                  return (
+                    <div key={topic.id} className={`bg-white rounded-xl border-2 p-5 ${needsAction ? 'border-yellow-300' : 'border-gray-200'}`}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${urgencyColour}`}>{topic.urgency}</span>
+                            <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${statusColour}`}>
+                              {isActive ? '⚡ writing...' : topic.status.replace('_', ' ')}
+                            </span>
+                          </div>
+                          <h3 className="font-semibold text-gray-900 leading-snug">{topic.title}</h3>
+                          <p className="text-xs text-gray-400 mt-1">{new Date(topic.created_at).toLocaleDateString()}</p>
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          {topic.status === 'queued' && (
+                            <button
+                              onClick={() => handleStartWriting(topic)}
+                              disabled={isStreaming}
+                              className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+                            >
+                              Start Writing
+                            </button>
+                          )}
+                          {topic.status === 'outline_pending' && (
+                            <button
+                              onClick={() => setExpandedOutline(expandedOutline === topic.id ? null : topic.id)}
+                              className="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-600 transition"
+                            >
+                              Review Outline
+                            </button>
+                          )}
+                          {topic.status === 'draft_ready' && (
+                            <button
+                              onClick={() => handlePublish(topic)}
+                              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition"
+                            >
+                              Send to Blog
+                            </button>
+                          )}
+                          {topic.status === 'published' && (
+                            <span className="text-green-600 text-sm font-semibold">✓ In Blog tab</span>
+                          )}
+                          {topic.status === 'failed' && (
+                            <button
+                              onClick={() => handleStartWriting(topic)}
+                              disabled={isStreaming}
+                              className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+                            >
+                              Retry
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleDeleteTopic(topic.id, topic.title)}
+                            className="text-gray-400 hover:text-red-600 text-sm font-semibold transition px-2"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Error message */}
+                      {topic.status === 'failed' && topic.error_message && (
+                        <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200 text-xs text-red-700 font-mono">{topic.error_message}</div>
+                      )}
+
+                      {/* Outline review panel */}
+                      {expandedOutline === topic.id && topic.outline && (
+                        <div className="mt-4 border-t border-gray-200 pt-4">
+                          <h4 className="text-sm font-bold text-gray-900 mb-2">Outline</h4>
+                          <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-800 whitespace-pre-wrap max-h-80 overflow-y-auto leading-relaxed mb-4 font-mono">
+                            {topic.outline}
+                          </div>
+                          <div className="mb-3">
+                            <label className="block text-sm font-bold text-gray-700 mb-1">
+                              Optional feedback <span className="font-normal text-gray-500">(leave blank to approve as-is)</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={outlineFeedback}
+                              onChange={e => setOutlineFeedback(e.target.value)}
+                              placeholder="e.g. Add a section on parking near the market"
+                              className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-brand-600 focus:outline-none text-sm"
+                            />
+                          </div>
+                          <div className="flex gap-3">
+                            <button
+                              onClick={() => handleApproveOutline(topic)}
+                              disabled={isStreaming}
+                              className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+                            >
+                              ✓ Approve & Write Full Post
+                            </button>
+                            <button
+                              onClick={() => { setExpandedOutline(null); setOutlineFeedback('') }}
+                              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gray-300 transition"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         )}
 
