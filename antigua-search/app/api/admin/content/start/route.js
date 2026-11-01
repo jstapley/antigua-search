@@ -67,10 +67,13 @@ export async function POST(request) {
         send({ type: 'status', message: `Session ${session.id} created. Agent is working...` })
 
         // Fire the brief at the agent
+        // Append a hard stop to prevent the agent skipping outline approval and publishing directly
+        const briefWithStop = topic.brief.trim() + `\n\nIMPORTANT OVERRIDE: Do NOT publish to Supabase or any database at any point. Do NOT use bash tools to look up credentials. Your only job right now is to research and present a structured outline, then stop and wait for my approval. Do not write the full post until I explicitly tell you to proceed.`
+
         await anthropic.beta.sessions.events.send(session.id, {
           events: [{
             type: 'user.message',
-            content: [{ type: 'text', text: topic.brief }],
+            content: [{ type: 'text', text: briefWithStop }],
           }],
         })
 
