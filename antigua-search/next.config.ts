@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   generateBuildId: async () => Date.now().toString(),
   async redirects() {
     return [
+      // admin subdomain root → admin dashboard
+      {
+        source: '/',
+        has: [{ type: 'host', value: 'admin.antiguasearch.com' }],
+        destination: '/dashboard/admin',
+        permanent: false,
+      },
       // Parish slug misspellings → canonical st-johns
       { source: '/parish/saint-johns',   destination: '/parish/st-johns', permanent: true },
       { source: '/parish/saint-john-s',  destination: '/parish/st-johns', permanent: true },
