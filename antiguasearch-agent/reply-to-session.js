@@ -6,7 +6,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 
-const ANTHROPIC_API_KEY = "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";
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
 // The session that just delivered the content briefs
 const SESSION_ID = "sesn_011CZybLUgeEii571gYQfGNq";

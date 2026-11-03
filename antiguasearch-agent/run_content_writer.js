@@ -9,7 +9,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { TOPICS, listTopics } from "./topic-queue.js";
 
-const ANTHROPIC_API_KEY = "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";
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const ENVIRONMENT_ID = "env_01F4Q94t6HUjMgzoWSZAWvci";
 const AGENT_ID = "agent_011CZycB68wWHhGjVwEUg8jX";
 

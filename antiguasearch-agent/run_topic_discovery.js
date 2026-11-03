@@ -8,7 +8,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 
 // Your Anthropic API key - get from console.anthropic.com -> API Keys
-const ANTHROPIC_API_KEY = "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";
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
 // Agent and environment IDs from Claude Console
 const AGENT_ID = "agent_011CZxg4zsxySGfHHEpPDU4J";

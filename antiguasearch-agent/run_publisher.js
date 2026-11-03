@@ -7,7 +7,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 
-const ANTHROPIC_API_KEY = "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";
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const ENVIRONMENT_ID = "env_01F4Q94t6HUjMgzoWSZAWvci";
 const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJobGtldG5wamF6Yndwemlya2V3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTIzMTU5MywiZXhwIjoyMDg0ODA3NTkzfQ.bWLUlhQOExCHbjTcaLzJ_psQor8moOk-DLwNVSByWNE";
 
