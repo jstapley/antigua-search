@@ -11,6 +11,13 @@ const nextConfig: NextConfig = {
         destination: '/dashboard/admin',
         permanent: false,
       },
+      // consignee subdomain root → consignee portal
+      {
+        source: '/',
+        has: [{ type: 'host', value: 'consignee.antiguasearch.com' }],
+        destination: '/dashboard/consignee',
+        permanent: false,
+      },
       // Parish slug misspellings → canonical st-johns
       { source: '/parish/saint-johns',   destination: '/parish/st-johns', permanent: true },
       { source: '/parish/saint-john-s',  destination: '/parish/st-johns', permanent: true },

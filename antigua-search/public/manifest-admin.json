@@ -1,7 +1,7 @@
 {
   "id": "/dashboard/admin",
-  "name": "AntiguaSearch Admin",
-  "short_name": "AS Admin",
+  "name": "Admin",
+  "short_name": "Admin",
   "description": "Admin panel for AntiguaSearch.com",
   "start_url": "/dashboard/admin",
   "display": "standalone",
