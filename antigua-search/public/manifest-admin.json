@@ -1,0 +1,79 @@
+{
+  "id": "/dashboard/admin",
+  "name": "AntiguaSearch Admin",
+  "short_name": "AS Admin",
+  "description": "Admin panel for AntiguaSearch.com",
+  "start_url": "/dashboard/admin",
+  "display": "standalone",
+  "background_color": "#991b1b",
+  "theme_color": "#991b1b",
+  "orientation": "portrait-primary",
+  "scope": "/dashboard/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {
+      "name": "All Listings",
+      "short_name": "Listings",
+      "url": "/dashboard/admin?tab=listings",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pending Claims",
+      "short_name": "Claims",
+      "url": "/dashboard/admin?tab=pending-claims",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Reviews",
+      "short_name": "Reviews",
+      "url": "/dashboard/admin?tab=reviews",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
