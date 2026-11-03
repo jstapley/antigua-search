@@ -7,7 +7,7 @@ async function getReviews(): Promise<Review[]> {
     .from('reviews')
     .select('*')
     .order('created_at', { ascending: false })
-    .limit(6)
+    .limit(8)
 
   if (error || !data || data.length === 0) {
     return [
@@ -24,21 +24,24 @@ async function getReviews(): Promise<Review[]> {
   return data as Review[]
 }
 
-// Generate a consistent color from initials
-function getAvatarColor(name: string): string {
-  const colors = [
-    'bg-[#0c2749]', 'bg-blue-600', 'bg-indigo-600', 'bg-violet-600',
-    'bg-teal-600', 'bg-emerald-600', 'bg-rose-600', 'bg-amber-600',
-  ]
-  const idx = name.charCodeAt(0) % colors.length
-  return colors[idx]
+function getInitials(name: string) {
+  return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
 }
 
-function StarRating({ rating }: { rating: number }) {
+// Consistent navy-family color per person
+const AVATAR_COLORS = [
+  'bg-[#0c2749]', 'bg-[#0a1f3a]', 'bg-blue-700', 'bg-indigo-700',
+  'bg-[#0c2749]', 'bg-blue-800', 'bg-indigo-800', 'bg-[#0a1f3a]',
+]
+function getAvatarColor(name: string) {
+  return AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length]
+}
+
+function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} size={13} className={i < rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'} />
+        <Star key={i} size={size} className={i < rating ? 'text-[#0c2749] fill-[#0c2749]' : 'text-gray-200 fill-gray-200'} />
       ))}
     </div>
   )
@@ -46,7 +49,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function GoogleLogo() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24">
+    <svg width="18" height="18" viewBox="0 0 24 24">
       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -56,29 +59,34 @@ function GoogleLogo() {
 }
 
 function ReviewCard({ review }: { review: Review }) {
-  const initials = review.author_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+  const initials = getInitials(review.author_name)
   const avatarColor = getAvatarColor(review.author_name)
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-      <div className="flex items-center justify-between mb-3">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
+      {/* Rating row */}
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-gray-900 text-lg">{review.rating}</span>
+          <span className="font-bold text-gray-900 text-lg leading-none">{review.rating}</span>
           <StarRating rating={review.rating} />
         </div>
         <span className="text-gray-400 text-xs">{review.time}</span>
       </div>
-      <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-4">{review.text}</p>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+
+      {/* Review text */}
+      <p className="text-gray-600 text-sm leading-relaxed flex-1 line-clamp-4">{review.text}</p>
+
+      {/* Author row */}
+      <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center gap-2.5">
           {review.profile_photo_url ? (
-            <img src={review.profile_photo_url} alt={review.author_name} className="w-8 h-8 rounded-full object-cover" />
+            <img src={review.profile_photo_url} alt={review.author_name} className="w-9 h-9 rounded-full object-cover" />
           ) : (
-            <div className={`w-8 h-8 rounded-full ${avatarColor} flex items-center justify-center`}>
+            <div className={`w-9 h-9 rounded-full ${avatarColor} flex items-center justify-center flex-shrink-0`}>
               <span className="text-white text-xs font-bold">{initials}</span>
             </div>
           )}
-          <span className="text-sm font-medium text-gray-700">{review.author_name}</span>
+          <span className="text-sm font-medium text-gray-800">{review.author_name}</span>
         </div>
         <GoogleLogo />
       </div>
@@ -90,50 +98,56 @@ export default async function ReviewsSection() {
   const reviews = await getReviews()
   const avgRating = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(2)
 
-  // Split into columns: 2 left, 2 center, 2 right-stacked (matches original 4-col layout)
   const col1 = reviews.filter((_, i) => i % 4 === 0)
   const col2 = reviews.filter((_, i) => i % 4 === 1)
   const col3 = reviews.filter((_, i) => i % 4 === 2)
   const col4 = reviews.filter((_, i) => i % 4 === 3)
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <h2 className="font-display font-bold text-3xl md:text-4xl text-gray-900 text-center mb-2">
-          What Our Clients Are Saying About RE/MAX 365
-        </h2>
-        <div className="w-20 h-0.5 bg-teal-500 mx-auto mb-10" />
+
+        {/* Section heading — navy, brand styled */}
+        <div className="text-center mb-10">
+          <h2 className="font-display font-bold text-3xl md:text-4xl text-[#0c2749] mb-3">
+            What Our Clients Are Saying About RE/MAX 365
+          </h2>
+          <div className="w-16 h-0.5 bg-[#0c2749] mx-auto" />
+        </div>
 
         {/* Summary bar */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-6 pb-8 border-b border-gray-100">
           <div>
             <p className="font-bold text-gray-900 text-base">What are people saying?</p>
-            <p className="text-gray-500 text-sm mt-0.5 max-w-md">
+            <p className="text-gray-500 text-sm mt-1 max-w-md leading-relaxed">
               From first impressions to lasting results, discover why people choose us again and again through their honest reviews.
             </p>
           </div>
-          <div className="flex items-center gap-5">
-            <div className="text-center">
-              <p className="text-5xl font-black text-gray-900 leading-none">{avgRating}</p>
-              <div className="flex justify-center mt-1 gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={16} className="text-amber-400 fill-amber-400" />
-                ))}
+          <div className="flex items-center gap-6 flex-shrink-0">
+            <div className="flex items-center gap-3">
+              <span className="text-5xl font-black text-gray-900 leading-none">{avgRating}</span>
+              <div>
+                <div className="flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} size={18} className="text-[#0c2749] fill-[#0c2749]" />
+                  ))}
+                </div>
+                <p className="text-gray-400 text-xs mt-1">{reviews.length} reviews</p>
               </div>
-              <p className="text-gray-400 text-xs mt-1">{reviews.length} reviews</p>
             </div>
+            <div className="w-px h-10 bg-gray-200" />
             <a
               href="https://g.page/r/YOUR_PLACE_ID/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold text-gray-900 text-sm hover:text-[#0c2749] transition-colors underline underline-offset-2"
+              className="font-bold text-[#0c2749] text-sm hover:underline underline-offset-2 whitespace-nowrap"
             >
               Write a review
             </a>
           </div>
         </div>
 
-        {/* 4-column review grid matching original layout */}
+        {/* 4-column masonry-style grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="flex flex-col gap-4">
             {col1.map(r => <ReviewCard key={r.id} review={r} />)}
@@ -148,6 +162,7 @@ export default async function ReviewsSection() {
             {col4.map(r => <ReviewCard key={r.id} review={r} />)}
           </div>
         </div>
+
       </div>
     </section>
   )

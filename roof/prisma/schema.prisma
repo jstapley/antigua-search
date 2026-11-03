@@ -1,0 +1,71 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["roof"]
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  name          String?
+  password      String
+  plan          Plan       @default(FREE)
+  estimatesLeft Int        @default(3)
+  estimates     Estimate[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@schema("roof")
+}
+
+model Estimate {
+  id           String         @id @default(cuid())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address      String
+  lat          Float?
+  lng          Float?
+  roofAreaSqft      Float?
+  roofType          String?
+  pitch             String?
+  complexity        String?
+  stories           Int?
+  lowEstimate       Float?
+  highEstimate      Float?
+  aiNotes           String?
+  imageUrl          String?
+  // Solar API enriched fields
+  dataSource        String?   // "solar_api" | "ai_vision"
+  facetCount        Int?
+  predominantPitch  String?   // e.g. "7/12"
+  facetsJson        Json?     // RoofFacet[]
+  pitchBreakdown    Json?     // {pitch, areaFt2, pct}[]
+  status            EstimateStatus @default(PENDING)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@schema("roof")
+}
+
+enum Plan {
+  FREE
+  STARTER
+  PRO
+
+  @@schema("roof")
+}
+
+enum EstimateStatus {
+  PENDING
+  PROCESSING
+  COMPLETE
+  FAILED
+
+  @@schema("roof")
+}

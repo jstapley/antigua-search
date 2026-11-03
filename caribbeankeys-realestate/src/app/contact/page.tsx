@@ -1,19 +1,28 @@
-// @ts-nocheck
 "use client"
 
-import { useState } from "react"
-import { supabase } from "@/lib/supabase/client"
+import { useState, useRef } from "react"
+import Script from "next/script"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { GA } from "@/lib/analytics"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Phone, Mail, MapPin, Send, CheckCircle } from "lucide-react"
+
+declare global {
+  interface Window {
+    turnstile: any
+  }
+}
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
+  const [turnstileToken, setTurnstileToken] = useState("")
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const widgetIdRef = useRef<string | null>(null)
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -26,6 +35,16 @@ export default function ContactPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const renderTurnstile = () => {
+    if (turnstileRef.current && window.turnstile && !widgetIdRef.current) {
+      widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+        callback: (token: string) => setTurnstileToken(token),
+        "expired-callback": () => setTurnstileToken(""),
+      })
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,6 +65,10 @@ export default function ContactPage() {
         throw new Error("Please enter a valid email address")
       }
 
+      if (!turnstileToken) {
+        throw new Error("Please complete the verification checkbox before submitting.")
+      }
+
       // Prepare inquiry data
       const inquiryData = {
         first_name: formData.first_name.trim(),
@@ -53,91 +76,27 @@ export default function ContactPage() {
         name: `${formData.first_name.trim()} ${formData.last_name.trim()}`,
         email: formData.email.trim().toLowerCase(),
         phone: formData.phone.trim(),
-        interest: formData.interest || null,
-        message: formData.message.trim() || null,
-        created_at: new Date().toISOString()
+        interest: formData.interest || 'General Inquiry',
+        message: formData.message.trim() || 'No message provided',
+        turnstileToken,
       }
 
-      // 1. Save to Supabase
-      const { data: supabaseData, error: supabaseError } = await supabase
-        .from('property_inquiries')
-        .insert([inquiryData])
-        .select()
-        .single()
+      // Submit through the API route, which verifies the Turnstile token
+      // server-side before writing to Supabase
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inquiryData),
+      })
 
-      if (supabaseError) {
-        console.error('Supabase error:', supabaseError)
-        throw new Error('Failed to submit inquiry. Please try again.')
-      }
+      const result = await res.json()
 
-      console.log('Saved to Supabase:', supabaseData)
-
-      // 2. Send to GoHighLevel API (if configured)
-      try {
-        const ghlApiKey = process.env.NEXT_PUBLIC_GHL_API_KEY
-        const ghlLocationId = process.env.NEXT_PUBLIC_GHL_LOCATION_ID
-        
-        if (ghlApiKey && ghlLocationId) {
-          // Build tags array - always include "Website Lead" + the interest if selected
-          const tags = ['Website Lead']
-          if (formData.interest) {
-            // Convert interest to short-form tag
-            const interestTagMap: Record<string, string> = {
-              'Citizenship by Investment': 'CIP',
-              'Investment': 'Invest',
-              'Buying': 'Buy',
-              'Selling': 'Sell',
-              'Renting': 'Rent'
-            }
-            const interestTag = interestTagMap[formData.interest] || formData.interest
-            tags.push(interestTag)
-          }
-
-          const ghlPayload = {
-            firstName: formData.first_name.trim(),
-            lastName: formData.last_name.trim(),
-            email: formData.email.trim().toLowerCase(),
-            phone: formData.phone.trim(),
-            source: 'Caribbean Keys Website',
-            tags: tags,
-            customFields: [
-              {
-                key: 'message',
-                value: formData.message.trim() || 'No message provided'
-              }
-            ]
-          }
-
-          const ghlResponse = await fetch(`https://services.leadconnectorhq.com/contacts/`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${ghlApiKey}`,
-              'Content-Type': 'application/json',
-              'Version': '2021-07-28'
-            },
-            body: JSON.stringify({
-              ...ghlPayload,
-              locationId: ghlLocationId
-            })
-          })
-
-          if (ghlResponse.ok) {
-            const ghlData = await ghlResponse.json()
-            console.log('Contact created in GHL:', ghlData)
-          } else {
-            const errorText = await ghlResponse.text()
-            console.warn('GHL API failed:', errorText)
-            console.warn('But inquiry saved to database successfully')
-          }
-        } else {
-          console.log('GHL API credentials not configured')
-        }
-      } catch (ghlError) {
-        // GHL error doesn't fail the submission since we have it in Supabase
-        console.warn('GHL API error:', ghlError)
+      if (!res.ok) {
+        throw new Error(result.error || 'Failed to submit inquiry. Please try again.')
       }
 
       // Success!
+      GA.contactFormSubmit()
       setSuccess(true)
       setFormData({
         first_name: "",
@@ -147,6 +106,12 @@ export default function ContactPage() {
         interest: "",
         message: ""
       })
+
+      // Reset the Turnstile widget so it's ready for another submission
+      if (window.turnstile && widgetIdRef.current) {
+        window.turnstile.reset(widgetIdRef.current)
+      }
+      setTurnstileToken("")
 
       // Reset success message after 5 seconds
       setTimeout(() => setSuccess(false), 5000)
@@ -161,6 +126,12 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        strategy="afterInteractive"
+        onLoad={renderTurnstile}
+      />
+
       {/* Hero Section */}
       <section className="relative h-[300px] bg-gradient-to-r from-caribbean-navy to-caribbean-blue">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -224,7 +195,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-caribbean-navy mb-1">Location</h3>
                     <p className="text-gray-700">
-                      St. John's, Antigua and Barbuda
+                      Jolly Harbour, St. Mary, Antigua
                     </p>
                   </div>
                 </div>
@@ -329,6 +300,9 @@ export default function ContactPage() {
                     rows={5}
                   />
                 </div>
+
+                {/* Turnstile Widget */}
+                <div ref={turnstileRef}></div>
 
                 {/* Success Message - Right above submit button */}
                 {success && (

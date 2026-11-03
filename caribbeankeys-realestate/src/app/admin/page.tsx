@@ -17,15 +17,18 @@ import { formatPrice } from "@/lib/utils"
 export default function AdminDashboard() {
   const [properties, setProperties] = useState<any[]>([])
   const [inquiries, setInquiries] = useState<any[]>([])
+  const [totalInquiries, setTotalInquiries] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch properties
+        // Fetch properties (excluding archived - those only show in the full
+        // properties list behind the "Show archived" toggle)
         const { data: propertiesData, error: propertiesError } = await supabase
           .from('properties')
           .select('*')
+          .eq('is_archived', false)
           .order('created_at', { ascending: false })
 
         if (propertiesError) {
@@ -34,7 +37,20 @@ export default function AdminDashboard() {
           setProperties(propertiesData || [])
         }
 
-        // Fetch inquiries
+        // Total inquiry count (unlimited) - used for the stat card.
+        // Kept separate from the 5-row preview below so the count is accurate
+        // once there are more than 5 inquiries.
+        const { count, error: countError } = await supabase
+          .from('property_inquiries')
+          .select('*', { count: 'exact', head: true })
+
+        if (countError) {
+          console.error('Error fetching inquiry count:', countError)
+        } else {
+          setTotalInquiries(count || 0)
+        }
+
+        // Fetch just the 5 most recent inquiries for the Recent Clients preview
         const { data: inquiriesData, error: inquiriesError } = await supabase
           .from('property_inquiries')
           .select('*')
@@ -95,7 +111,7 @@ export default function AdminDashboard() {
               <div>
                 <p className="text-sm text-gray-600 mb-1">Total Inquiries</p>
                 <p className="text-3xl font-bold text-caribbean-navy">
-                  {loading ? '...' : inquiries.length}
+                  {loading ? '...' : totalInquiries}
                 </p>
               </div>
               <div className="bg-caribbean-gold/20 p-3 rounded-full">
@@ -182,10 +198,10 @@ export default function AdminDashboard() {
             </Button>
           </div>
 
-          {/* Recent Inquiries */}
+          {/* Recent Clients */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-caribbean-navy">Recent Inquiries</h2>
+              <h2 className="text-xl font-bold text-caribbean-navy">Recent Clients</h2>
             </div>
 
             <div className="space-y-3">
@@ -211,13 +227,13 @@ export default function AdminDashboard() {
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <MessageSquare className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p>No inquiries yet</p>
+                  <p>No clients yet</p>
                 </div>
               )}
             </div>
 
             <Button asChild variant="outline" className="w-full mt-4 border-caribbean-gold text-caribbean-gold hover:bg-caribbean-gold hover:text-white">
-              <Link href="/admin/inquiries">View All Inquiries</Link>
+              <Link href="/admin/clients">View All Clients</Link>
             </Button>
           </div>
         </div>

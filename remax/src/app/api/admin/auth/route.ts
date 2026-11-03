@@ -1,27 +1,22 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { getServiceSupabase } from '@/lib/supabase'
 
 export async function POST(req: Request) {
-  const { password } = await req.json()
-
-  if (password !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
+  const { email, password } = await req.json()
+  
+  const supabase = getServiceSupabase()
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  
+  if (error || !data.session) {
+    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
   }
 
-  // Set a simple session cookie
-  const cookieStore = cookies()
-  cookieStore.set('admin_session', process.env.ADMIN_PASSWORD!, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    path: '/',
-  })
-
-  return NextResponse.json({ success: true })
+  return NextResponse.json({ success: true, user: data.user })
 }
 
 export async function DELETE() {
+  // Legacy logout support
   const cookieStore = cookies()
   cookieStore.delete('admin_session')
   return NextResponse.json({ success: true })

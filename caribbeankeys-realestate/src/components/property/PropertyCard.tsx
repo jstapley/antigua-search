@@ -16,18 +16,19 @@ interface PropertyCardProps {
     price_asking: number | null
     images: any
     is_featured: boolean
+    is_cip_approved: boolean
     listing_status: string
   }
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
-  // Get first image or use placeholder
   const imageUrl = property.images && Array.isArray(property.images) && property.images.length > 0
     ? property.images[0]
     : "/images/placeholder-property.jpg"
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group">
+    <Link href={`/properties/${property.slug}`} className="block">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer">
       {/* Property Image */}
       <div className="relative h-64 overflow-hidden">
         <Image
@@ -37,7 +38,15 @@ export function PropertyCard({ property }: PropertyCardProps) {
           className="object-cover group-hover:scale-110 transition-transform duration-300"
         />
         
-        {/* Status Badges */}
+      {/* Parish Badge - Top Left */}
+        <div className="absolute top-4 left-4">
+          <span className="bg-white/90 backdrop-blur-sm text-caribbean-navy px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+            <MapPin className="h-3 w-3" />
+            {property.parish}
+          </span>
+        </div>
+
+        {/* Featured / Status Badges - Top Right */}
         <div className="absolute top-4 right-4 flex flex-col gap-2">
           {property.is_featured && (
             <span className="bg-caribbean-gold text-caribbean-navy px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
@@ -61,13 +70,14 @@ export function PropertyCard({ property }: PropertyCardProps) {
           )}
         </div>
 
-        {/* Parish Badge */}
-        <div className="absolute top-4 left-4">
-          <span className="bg-white/90 backdrop-blur-sm text-caribbean-navy px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-            <MapPin className="h-3 w-3" />
-            {property.parish}
-          </span>
-        </div>
+        {/* CIP Approved Badge - Bottom Left */}
+        {property.is_cip_approved && (
+          <div className="absolute bottom-4 left-4">
+            <span className="bg-caribbean-navy text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide flex items-center gap-1">
+              🛡️ CIP Approved
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Property Details */}
@@ -103,16 +113,12 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <div className="text-2xl font-bold text-caribbean-navy">
             {formatPrice(property.price_asking)}
           </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            asChild 
-            className="border-caribbean-gold text-caribbean-gold hover:bg-caribbean-gold hover:text-white font-semibold"
-          >
-            <Link href={`/properties/${property.slug}`}>View Details</Link>
-          </Button>
+          <span className="text-sm font-semibold text-caribbean-gold border border-caribbean-gold px-3 py-1.5 rounded-md group-hover:bg-caribbean-gold group-hover:text-white transition">
+            View Details
+          </span>
         </div>
       </div>
     </div>
+    </Link>
   )
 }

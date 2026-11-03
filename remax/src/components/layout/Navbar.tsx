@@ -7,10 +7,9 @@ import { Menu, X, Phone, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const services = [
-  { label: 'Buy a Property', href: '/properties' },
-  { label: 'Sell Your Property', href: '/services/sell' },
-  { label: 'Property Management', href: '/services/management' },
-  { label: 'Citizenship by Investment', href: '/services/citizenship' },
+  { label: 'Buy a Property', href: '/services/buying-property-antigua' },
+  { label: 'Sell a Property', href: '/services/selling-property-antigua' },
+  { label: 'Citizenship by Investment (CBI)', href: '/services/citizenship-by-investment-antigua' },
 ]
 
 export default function Navbar() {
@@ -53,12 +52,14 @@ export default function Navbar() {
               Services <ChevronDown size={14} className={cn('transition-transform duration-200', servicesOpen && 'rotate-180')} />
             </button>
             {servicesOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                {services.map(s => (
-                  <Link key={s.href} href={s.href} className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#0c2749] transition-colors">
-                    {s.label}
-                  </Link>
-                ))}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 w-52 z-50 pt-2">
+                <div className="bg-white rounded-xl shadow-xl border border-gray-100 py-2">
+                  {services.map(s => (
+                    <Link key={s.href} href={s.href} className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#0c2749] transition-colors">
+                      {s.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -81,11 +82,23 @@ export default function Navbar() {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {open && (
         <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-1">
-          {[{ label: 'Home', href: '/' }, { label: 'Properties', href: '/properties' }, { label: 'FAQ', href: '/faq' }, { label: 'Services', href: '/services' }, { label: 'Contact Us', href: '/contact' }].map(item => (
+          {[
+            { label: 'Home', href: '/' },
+            { label: 'Properties', href: '/properties' },
+            { label: 'FAQ', href: '/faq' },
+            { label: 'Contact Us', href: '/contact' },
+          ].map(item => (
             <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="py-3 text-gray-700 font-medium border-b border-gray-50 text-sm">
               {item.label}
+            </Link>
+          ))}
+          <p className="py-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Services</p>
+          {services.map(s => (
+            <Link key={s.href} href={s.href} onClick={() => setOpen(false)} className="py-2.5 pl-3 text-gray-600 border-b border-gray-50 text-sm">
+              {s.label}
             </Link>
           ))}
           <a href="tel:+12687249308" className="flex items-center gap-2 text-[#0c2749] font-semibold pt-3 text-sm">

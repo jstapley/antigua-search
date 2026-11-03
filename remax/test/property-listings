@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .filters-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-icon {
+            color: #0c2749;
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-label {
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #0c2749;
+            box-shadow: 0 0 0 3px rgba(12, 39, 73, 0.1);
+        }
+        
+        .search-input {
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.3s ease;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #0c2749;
+            box-shadow: 0 0 0 3px rgba(12, 39, 73, 0.1);
+        }
+        
+        .search-input::placeholder {
+            color: #999;
+            font-weight: 400;
+        }
+        
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: #666;
+            font-size: 16px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .clear-search {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .clear-search.visible {
+            opacity: 1;
+        }
+        
+        .clear-search:hover {
+            color: #666;
+        }
+        
+        .refresh-btn {
+            background: #0c2749;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: #0a1f3a;
+            transform: translateY(-1px);
+        }
+        
+        .results-count {
+            margin-left: auto;
+            font-weight: 600;
+            color: #0c2749;
+            white-space: nowrap;
+        }
+        
+        .properties-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+            justify-content: flex-start;
+        }
+        
+        .property-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+            flex: 1 1 calc(50% - 15px);
+            max-width: calc(50% - 15px);
+            min-width: 350px;
+        }
+        
+        @media (max-width: 1200px) {
+            .property-card {
+                flex: 1 1 calc(50% - 15px);
+                max-width: calc(50% - 15px);
+            }
+        }
+        
+        @media (max-width: 800px) {
+            .properties-grid {
+                gap: 20px;
+            }
+            
+            .property-card {
+                flex: 1 1 100%;
+                max-width: 100%;
+                min-width: auto;
+            }
+        }
+        
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .property-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            cursor: pointer;
+        }
+        
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-bottom: 3px solid #6366f1;
+        }
+        
+        .property-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .badge {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .badge-featured {
+            background: #ff6b35;
+            color: white;
+        }
+        
+        .badge-type {
+            background: #4a90e2;
+            color: white;
+        }
+        
+        .property-content {
+            padding: 25px;
+        }
+        
+        .property-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .property-price {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        
+        .property-features {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .view-btn {
+            display: inline-block;
+            background: #0c2749;
+            color: white;
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .view-btn:hover {
+            background: #0a1f3a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(12, 39, 73, 0.3);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .pagination button {
+            padding: 10px 15px;
+            border: 2px solid #0c2749;
+            background: white;
+            color: #0c2749;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination button:hover:not(:disabled) {
+            background: #0c2749;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .pagination button.active {
+            background: #0c2749;
+            color: white;
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-info {
+            margin: 0 20px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .no-properties {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .filters-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .filter-group {
+                justify-content: space-between;
+            }
+            
+            .filter-select {
+                min-width: auto;
+                flex: 1;
+            }
+            
+            .search-input {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .results-count {
+                margin-left: 0;
+                text-align: center;
+            }
+            
+            .property-card {
+                width: 100%;
+                flex: 1 1 100%;
+            }
+            
+            .property-features {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .pagination {
+                gap: 5px;
+            }
+            
+            .pagination button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            
+            .page-info {
+                margin: 0 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="filters-section">
+            <span class="filter-icon">🔍</span>
+            <span class="filter-title">Filter Properties</span>
+            
+            <div class="filter-group">
+                <label class="filter-label">Search:</label>
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search by property name or location...">
+                    <button class="clear-search" id="clear-search" onclick="clearSearch()">×</button>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Property Type:</label>
+                <select id="property-type-filter" class="filter-select">
+                    <option value="all">All Types</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="condo">Condo</option>
+                    <option value="house">House</option>
+                    <option value="land">Land</option>
+                    <option value="townhouse">Townhouse</option>
+                    <option value="villa">Villa</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Sort by:</label>
+                <select id="price-sort-filter" class="filter-select">
+                    <option value="high-to-low">Price: High to Low</option>
+                    <option value="low-to-high">Price: Low to High</option>
+                </select>
+            </div>
+            
+            <button class="refresh-btn" onclick="applyFilters()">Refresh</button>
+            
+            <div class="results-count" id="results-count">
+                <!-- Results count will be updated here -->
+            </div>
+        </div>
+        
+        <div id="properties-container">
+            <!-- Properties will be loaded here -->
+        </div>
+        
+        <div id="pagination-container">
+            <!-- Pagination will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const PROPERTIES = [
+            {
+                title: "421E North Finger, Jolly Harbour, Antigua",
+                price: "$369,000",
+                priceValue: 369000,
+                type: "Under Contract",
+                bedrooms: 2,
+                bathrooms: 2.5,
+                sqft: "1,400",
+                lot_sqft: "",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bab7e9af0b9da8ea7384c3.jpeg",
+                url: "/421E-jolly-harbour-north-finger-antigua"
+            },
+            {
+                title: "421F North Finger, Jolly Harbour, Antigua",
+                price: "$469,000",
+                priceValue: 469000,
+                type: "Under Contract",
+                bedrooms: 2,
+                bathrooms: 2.5,
+                sqft: "1,400",
+                lot_sqft: "",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bab98f2398ef97cec136ce.jpeg",
+                url: "/421F-jolly-harbour-north-finger-antigua"
+            },
+            {
+                title: "408A North Finger, Jolly Harbour, Antigua",
+                price: "$595,000",
+                priceValue: 595000,
+                type: "SOLD",
+                bedrooms: 2,
+                bathrooms: 2.5,
+                sqft: "1,400",
+                lot_sqft: "",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68b8e3d4f0a54bd35e55fa85.jpeg",
+                url: "/408A-jolly-harbour-north-finger-antigua"
+            },
+            {
+                title: "408E North Finger, Jolly Harbour, Antigua",
+                price: "$375,000",
+                priceValue: 375000,
+                type: "Under Contract",
+                bedrooms: 2,
+                bathrooms: 2.5,
+                sqft: "1,400",
+                lot_sqft: "",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68babbc322e8c736f2d2f2e3.jpeg",
+                url: "/408E-jolly-harbour-north-finger-antigua"
+            },
+            {
+                title: "Jeff Test, Jolly Harbour, Antigua",
+                price: "$700,000",
+                priceValue: 700000,
+                type: "villa",
+                bedrooms: 3,
+                bathrooms: 3,
+                sqft: "2,000",
+                lot_sqft: "4,000",
+                featured: "no",
+                withdrawn: "no",
+                image: "",
+                url: "https://www.google.com"
+            },
+            {
+                title: "Casa Del Arco, Jolly Harbour, Antigua",
+                price: "$895,000",
+                priceValue: 895000,
+                type: "villa",
+                bedrooms: 3,
+                bathrooms: 3,
+                sqft: "1,850",
+                lot_sqft: "",
+                featured: "no",
+                withdrawn: "yes",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68ca7d7d10510f1c2fee82a9.jpeg",
+                url: "/casa-del-arco-jolly-harbour-antigua"
+            },
+            {
+                title: "Cedar Valley Plots, Antigua",
+                price: "$111,720",
+                priceValue: 111720,
+                type: "under contract",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "0",
+                lot_sqft: "9975",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bace0722e8c723dad5ae80.jpeg",
+                url: "/cedar-valley-plots-antigua"
+            },
+            {
+                title: "Indian Creek, Piccadilly, Antigua",
+                price: "$395,000",
+                priceValue: 395000,
+                type: "under contract",
+                bedrooms: 3,
+                bathrooms: 3,
+                sqft: "2200",
+                lot_sqft: "13000",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc059f29ca9612af8378f3.jpeg",
+                url: "/indian-creek-piccadilly-antigua"
+            },
+            {
+                title: "The Top House, Crabbe Hill, Antigua",
+                price: "$425,000",
+                priceValue: 425000,
+                type: "sold",
+                bedrooms: 2,
+                bathrooms: 2,
+                sqft: "1335",
+                lot_sqft: "6100",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc074d1ff6ea8c03217c35.jpeg",
+                url: "/the-top-house-crabbe-hill-antigua"
+            },
+            {
+                title: "Creekside Warehouse, Big Creek, Antigua",
+                price: "$495,000",
+                priceValue: 495000,
+                type: "sold",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "6500",
+                lot_sqft: "10890",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc0865a63326317d3e62bd.jpeg",
+                url: "/creekside-warehouse-big-creek-antigua"
+            },
+            {
+                title: "Lot 729, Seatons, Antigua",
+                price: "$470,488",
+                priceValue: 470488,
+                type: "land",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "",
+                lot_sqft: "31363",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc0955b20028e2e0fda12a.jpeg",
+                url: "/lot-729-seatons-antigua"
+            },
+            {
+                title: "The White House, McKinnons, Antigua",
+                price: "$435,000",
+                priceValue: 435000,
+                type: "Under Contract",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "2800",
+                lot_sqft: "22702",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc0a4ba21ae66921b5606f.jpeg",
+                url: "/the-white-house-mckinnons-antigua"
+            },
+            {
+                title: "BeachSands, South Finger, Jolly Harbour",
+                price: "$575,000",
+                priceValue: 575000,
+                type: "Active",
+                bedrooms: 2,
+                bathrooms: 1,
+                sqft: "",
+                lot_sqft: "",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc0ac71ff6eae6e023545a.jpeg",
+                url: "/beachsands-south-finger-jolly-harbour-antigua"
+            },
+            {
+                title: "Sugar Ridge, Antigua",
+                price: "$600,000",
+                priceValue: 600000,
+                type: "land",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "",
+                lot_sqft: "12052",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc0c9129ca96b258871c33.jpeg",
+                url: "/sugar-ridge-antigua"
+            },
+            {
+                title: "Harbour Island Townhouse #3, Jolly Harbour",
+                price: "$850,000",
+                priceValue: 850000,
+                type: "townhouse",
+                bedrooms: 3,
+                bathrooms: 3,
+                sqft: "1800",
+                lot_sqft: "750",
+                featured: "yes",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc0df729ca9607ee87cf1a.jpeg",
+                url: "/harbour-island-townhouse-3-jolly-harbour-antigua"
+            },
+            {
+                title: "Hibiscus House, Valley Church, Antigua",
+                price: "$825,000",
+                priceValue: 825000,
+                type: "under contract",
+                bedrooms: 4,
+                bathrooms: 4.5,
+                sqft: "",
+                lot_sqft: "13068",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc0f380f0b06143161bf71.jpeg",
+                url: "/hibiscus-house-valley-church-antigua"
+            },
+            {
+                title: "Sugar Ridge Condos, Antigua",
+                price: "$849,000",
+                priceValue: 849000,
+                type: "condo",
+                bedrooms: 2,
+                bathrooms: 2,
+                sqft: "1200",
+                lot_sqft: "1200",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc10211ff6eae67b25c815.png",
+                url: "/sugar-ridge-condos-antigua"
+            },
+            {
+                title: "Pearns Point, Antigua",
+                price: "$1,253,562",
+                priceValue: 1253562,
+                type: "land",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "0",
+                lot_sqft: "19286",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc11601ff6ea4493265fe5.jpeg",
+                url: "/pearns-point-antigua"
+            },
+            {
+                title: "Horseferd Hill, Antigua",
+                price: "$1,600,000",
+                priceValue: 1600000,
+                type: "under offer",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "0",
+                lot_sqft: "96704",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68c861e309ca6235560acbf5.jpeg",
+                url: "/horseferd-hill-antigua"
+            },
+            {
+                title: "Paradise View, Dickenson Bay, Antigua",
+                price: "$1,698,000",
+                priceValue: 1698000,
+                type: "villa",
+                bedrooms: 3,
+                bathrooms: 3.5,
+                sqft: "4820",
+                lot_sqft: "19602",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc135ea63326088b43a017.jpeg",
+                url: "/paradise-view-dickenson-bay-antigua"
+            },
+            {
+                title: "Galley Bay Heights Plot, Antigua",
+                price: "$1,925,350",
+                priceValue: 1925350,
+                type: "land",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "0",
+                lot_sqft: "113256",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc14681ff6ea3bc32781d7.jpeg",
+                url: "/galley-bay-heights-plot-antigua"
+            },
+            {
+                title: "Palm Villa, St. Mary, Antigua",
+                price: "$2,100,000",
+                priceValue: 2100000,
+                type: "house",
+                bedrooms: 3,
+                bathrooms: 3,
+                sqft: "2800",
+                lot_sqft: "19797",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68c86e4234fadb7f3a8fcda0.jpeg",
+                url: "/palm-villa-st-mary-antigua"
+            },
+            {
+                title: "Villa Seabreeze, St. Paul, Antigua",
+                price: "$4,500,000",
+                priceValue: 4500000,
+                type: "house",
+                bedrooms: 5,
+                bathrooms: 5,
+                sqft: "8500",
+                lot_sqft: "35284",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/68bc165929ca961dc38b9626.jpeg",
+                url: "/villa-seabreeze-st-paul-antigua"
+            },
+            {
+                title: "Jolly Manor, South Finger, Jolly Harbour",
+                price: "$4,800,000",
+                priceValue: 4800000,
+                type: "house",
+                bedrooms: 10,
+                bathrooms: 10,
+                sqft: "9195",
+                lot_sqft: "13875",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/693ae4cdeac0a8220900e4a3.jpg",
+                url: "/jolly-manor-south-finger-jolly-harbour-antigua"
+            },
+            {
+                title: "416D North Finger, Jolly Harbour",
+                price: "$385,000",
+                priceValue: 385000,
+                type: "sold",
+                bedrooms: 3,
+                bathrooms: 2.5,
+                sqft: "1400",
+                lot_sqft: "750",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/6924b626e7b094c7ed22051c.jpg",
+                url: "/416d-jolly-harbour-north-finger-antigua"
+            },
+            {
+                title: "332F Golf Course Way, Jolly Harbour",
+                price: "$340,000",
+                priceValue: 340000,
+                type: "sold",
+                bedrooms: 2,
+                bathrooms: 2.5,
+                sqft: "1400",
+                lot_sqft: "750",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/6924c730a6fefe19fc49e1ee.jpg",
+                url: "/332f-jolly-harbour-golf-course-way-antigua"
+            },
+            {
+                title: "Jolly Harbour Villa 335C",
+                price: "$450,000",
+                priceValue: 450000,
+                type: "Active",
+                bedrooms: 3,
+                bathrooms: 2.5,
+                sqft: "1200",
+                lot_sqft: "600",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://assets.cdn.filesafe.space/xS6pXoe1oOW7UonWTw65/media/6a33187b5408771d16562673.jpeg",
+                url: "/335c-jolly-harbour"
+            },
+            {
+                title: "Valley Church Artisan Retreat",
+                price: "$620,000",
+                priceValue: 620000,
+                type: "house",
+                bedrooms: 4,
+                bathrooms: 4,
+                sqft: "1700",
+                lot_sqft: "11761",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/6936dad32922aeb676e65574.jpg",
+                url: "/valley-church-artisan-retreat"
+            },
+            {
+                title: "Blue Haven, Jolly Harbour",
+                price: "$839,000",
+                priceValue: 839000,
+                type: "house",
+                bedrooms: 3,
+                bathrooms: 2,
+                sqft: "1750",
+                lot_sqft: "5663",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/6936e761b480b30c11886e10.jpg",
+                url: "/blue-haven-jolly-harbour"
+            },
+                        {
+                title: "Verandah Estates Plot 27",
+                price: "$125,000",
+                priceValue: 125000,
+                type: "land",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "0",
+                lot_sqft: "10608 ",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/696ebd04d4fb9086f059cc4b.jpg",
+                url: "/verandah-estates-plot-27"
+            },
+            {
+                title: "Verandah Estates Plot 35",
+                price: "$98,388",
+                priceValue: 98388,
+                type: "land",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "0",
+                lot_sqft: "10932",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/696ebd1b9b21f005a24fe658.jpg",
+                url: "//verandah-estates-plot-35"
+            },
+            {
+                title: "South Beach, Jolly Harbour",
+                price: "$4,699,000",
+                priceValue: 4699000,
+                type: "under offer",
+                bedrooms: 3,
+                bathrooms: 4,
+                sqft: "5000",
+                lot_sqft: "13939",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/69834db3d017c35f5162f860.jpg",
+                url: "//south-beach-jolly-harbour"
+            },
+            {
+                title: "Flamboyant House",
+                price: "$1,300,000",
+                priceValue: 1300000,
+                type: "under contract",
+                bedrooms: 4,
+                bathrooms: 5,
+                sqft: "5000",
+                lot_sqft: "8712",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/6983f6207732b5491b46d65f.jpg",
+                url: "//flamboyant-house"
+            },
+            {
+                title: "Driftwood Villa",
+                price: "$4,250,000",
+                priceValue: 4250000,
+                type: "house",
+                bedrooms: 9,
+                bathrooms: 7,
+                sqft: "11800",
+                lot_sqft: "75360",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://storage.googleapis.com/msgsndr/xS6pXoe1oOW7UonWTw65/media/698b1cd07305aa1b6a29beae.jpg",
+                url: "//driftwood-villa"
+            },
+            {
+                title: "The Villas @ Nikki Beach Resort & Residences",
+                price: "$5,500,000",
+                priceValue: 5500000,
+                type: "villa",
+                bedrooms: 4,
+                bathrooms: 5,
+                sqft: "6571",
+                lot_sqft: "6571",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://assets.cdn.filesafe.space/xS6pXoe1oOW7UonWTw65/media/69e1515f83b092a6c7c71c06.jpg",
+                url: "//jolly-beach-nikki-beach-villas"
+            },
+            {
+                title: "The Condos @ Nikki Beach Resort & Residences",
+                price: "$1,200,000",
+                priceValue: 1200000,
+                type: "condo",
+                bedrooms: 1,
+                bathrooms: 1,
+                sqft: "700",
+                lot_sqft: "700",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://assets.cdn.filesafe.space/xS6pXoe1oOW7UonWTw65/media/69e1514ac56ad279083259fe.jpg",
+                url: "//jolly-beach-nikki-beach-condos"
+            },
+            {
+                title: "Foxtail House, Royal Gardens",
+                price: "$575,000",
+                priceValue: 575000,
+                type: "house",
+                bedrooms: 3,
+                bathrooms: 2,
+                sqft: "1800",
+                lot_sqft: "8900",
+                featured: "yes",
+                withdrawn: "no",
+                image: "https://assets.cdn.filesafe.space/xS6pXoe1oOW7UonWTw65/media/6a464fcb7f3b0b00347803aa.jpg",
+                url: "//foxtail-house-royal-gardens"
+            },
+            {
+                title: "Piccolo Restaurant, English Harbour",
+                price: "$55,000",
+                priceValue: 55000,
+                type: "commercial",
+                bedrooms: 0,
+                bathrooms: 0,
+                sqft: "1200",
+                lot_sqft: "1200",
+                featured: "yes",
+                withdrawn: "no",
+                image: "https://assets.cdn.filesafe.space/xS6pXoe1oOW7UonWTw65/media/6a7a488a5a64f2b567a79b5a.jpg",
+                url: "//piccolo-restaurant-dockyard-drive"
+            },
+            {
+                title: "The Escape @ Nonsuch Bay",
+                price: "$390,000",
+                priceValue: 390000,
+                type: "condo",
+                bedrooms: 1,
+                bathrooms: 1,
+                sqft: "600",
+                lot_sqft: "600",
+                featured: "no",
+                withdrawn: "no",
+                image: "https://assets.cdn.filesafe.space/xS6pXoe1oOW7UonWTw65/media/6a0cd71cf6564722838413ce.jpg",
+                url: "//the-escape-3304"
+            }
+        ];
+
+        const PROPERTIES_PER_PAGE = 10;
+        let currentPage = 1;
+        let filteredProperties = [...PROPERTIES];
+
+        function hasValue(value) {
+            if (value === null || value === undefined || value === '') {
+                return false;
+            }
+            const stringValue = String(value).trim();
+            return stringValue !== '' && stringValue !== '0';
+        }
+
+        function searchProperties(searchTerm) {
+            if (!searchTerm || searchTerm.trim() === '') {
+                return [...PROPERTIES];
+            }
+            
+            const term = searchTerm.toLowerCase().trim();
+            return PROPERTIES.filter(property => 
+                property.title.toLowerCase().includes(term)
+            );
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = '';
+            updateClearButton();
+            applyFilters();
+        }
+
+        function updateClearButton() {
+            const searchInput = document.getElementById('search-input');
+            const clearButton = document.getElementById('clear-search');
+            
+            if (searchInput.value.trim() !== '') {
+                clearButton.classList.add('visible');
+            } else {
+                clearButton.classList.remove('visible');
+            }
+        }
+
+        function saveState() {
+            const state = {
+                currentPage: currentPage,
+                propertyType: document.getElementById('property-type-filter').value,
+                sortOrder: document.getElementById('price-sort-filter').value,
+                searchTerm: document.getElementById('search-input').value
+            };
+            
+            window.propertyListingState = state;
+            
+            const url = new URL(window.location);
+            url.searchParams.set('page', currentPage);
+            url.searchParams.set('type', state.propertyType);
+            url.searchParams.set('sort', state.sortOrder);
+            if (state.searchTerm) {
+                url.searchParams.set('search', state.searchTerm);
+            } else {
+                url.searchParams.delete('search');
+            }
+            
+            window.history.replaceState({}, '', url);
+        }
+
+        function loadState() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageFromUrl = parseInt(urlParams.get('page')) || null;
+            const typeFromUrl = urlParams.get('type') || null;
+            const sortFromUrl = urlParams.get('sort') || null;
+            const searchFromUrl = urlParams.get('search') || null;
+            
+            const sessionState = window.propertyListingState || null;
+            
+            currentPage = pageFromUrl || (sessionState ? sessionState.currentPage : 1);
+            
+            const propertyType = typeFromUrl || (sessionState ? sessionState.propertyType : 'all');
+            const sortOrder = sortFromUrl || (sessionState ? sessionState.sortOrder : 'high-to-low');
+            const searchTerm = searchFromUrl || (sessionState ? sessionState.searchTerm : '');
+            
+            document.getElementById('property-type-filter').value = propertyType;
+            document.getElementById('price-sort-filter').value = sortOrder;
+            document.getElementById('search-input').value = searchTerm;
+            
+            updateClearButton();
+            
+            return { currentPage, propertyType, sortOrder, searchTerm };
+        }
+
+        function filterAndSortProperties() {
+            const typeFilter = document.getElementById('property-type-filter').value;
+            const sortFilter = document.getElementById('price-sort-filter').value;
+            const searchTerm = document.getElementById('search-input').value;
+            
+            let searchFiltered = searchProperties(searchTerm);
+            
+            // Filter out withdrawn properties
+            searchFiltered = searchFiltered.filter(property => property.withdrawn !== 'yes');
+            
+            if (typeFilter === 'all') {
+                filteredProperties = searchFiltered;
+            } else {
+                filteredProperties = searchFiltered.filter(property => property.type === typeFilter);
+            }
+            
+            if (sortFilter === 'high-to-low') {
+                filteredProperties.sort((a, b) => b.priceValue - a.priceValue);
+            } else {
+                filteredProperties.sort((a, b) => a.priceValue - b.priceValue);
+            }
+            
+            document.getElementById('results-count').textContent = `${filteredProperties.length} Properties Found`;
+            
+            const totalPages = Math.ceil(filteredProperties.length / PROPERTIES_PER_PAGE);
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = totalPages;
+            } else if (currentPage < 1) {
+                currentPage = 1;
+            }
+            
+            saveState();
+        }
+
+        function renderProperties(page) {
+            const container = document.getElementById('properties-container');
+            const totalPages = Math.ceil(filteredProperties.length / PROPERTIES_PER_PAGE);
+            const startIndex = (page - 1) * PROPERTIES_PER_PAGE;
+            const endIndex = startIndex + PROPERTIES_PER_PAGE;
+            const pageProperties = filteredProperties.slice(startIndex, endIndex);
+
+            if (pageProperties.length === 0) {
+                container.innerHTML = '<div class="no-properties">No properties found matching your criteria.</div>';
+                return;
+            }
+
+            const propertiesHTML = `
+                <div class="properties-grid">
+                    ${pageProperties.map(property => {
+                        const fullUrl = `https://remax-365-antigua.com${property.url}`;
+                        const features = [];
+                        
+                        if (hasValue(property.bedrooms)) {
+                            features.push(`🛏️ ${property.bedrooms} beds`);
+                        }
+                        
+                        if (hasValue(property.bathrooms)) {
+                            features.push(`🚿 ${property.bathrooms} baths`);
+                        }
+                        
+                        if (hasValue(property.sqft)) {
+                            features.push(`📐 ${property.sqft} sqft`);
+                        }
+                        
+                        if (hasValue(property.lot_sqft)) {
+                            features.push(`🏞️ ${property.lot_sqft} lot sqft`);
+                        }
+
+                        return `
+                            <div class="property-card">
+                                <div class="property-image-wrapper" onclick="window.open('${fullUrl}', '_blank')">
+                                    <img src="${property.image}" alt="${property.title}" class="property-image" onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop&crop=center'">
+                                    <div class="property-badges">
+                                        ${property.featured === 'yes' ? '<div class="badge badge-featured">Featured</div>' : ''}
+                                        <div class="badge badge-type">${property.type}</div>
+                                    </div>
+                                </div>
+                                <div class="property-content">
+                                    <h3 class="property-title">${property.title}</h3>
+                                    <div class="property-price">${property.price}</div>
+                                    ${features.length > 0 ? `
+                                        <div class="property-features">
+                                            ${features.map(feature => `<div class="feature">${feature}</div>`).join('')}
+                                        </div>
+                                    ` : ''}
+                                    <a href="${fullUrl}" target="_blank" class="view-btn" onclick="saveState()">View Details</a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            container.innerHTML = propertiesHTML;
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('pagination-container');
+            const totalPages = Math.ceil(filteredProperties.length / PROPERTIES_PER_PAGE);
+            
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '<div class="pagination">';
+            
+            paginationHTML += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Previous</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="active" onclick="changePage(${i})">${i}</button>`;
+                } else if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
+                    paginationHTML += `<button onclick="changePage(${i})">${i}</button>`;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += '<span>...</span>';
+                }
+            }
+            
+            paginationHTML += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next →</button>`;
+            
+            const startItem = ((currentPage - 1) * PROPERTIES_PER_PAGE) + 1;
+            const endItem = Math.min(currentPage * PROPERTIES_PER_PAGE, filteredProperties.length);
+            paginationHTML += `<div class="page-info">Showing ${startItem}-${endItem} of ${filteredProperties.length} properties</div>`;
+            
+            paginationHTML += '</div>';
+            
+            container.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredProperties.length / PROPERTIES_PER_PAGE);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            saveState();
+            renderProperties(currentPage);
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function applyFilters() {
+            currentPage = 1;
+            filterAndSortProperties();
+            renderProperties(currentPage);
+            renderPagination();
+        }
+
+        window.addEventListener('popstate', function(event) {
+            loadState();
+            filterAndSortProperties();
+            renderProperties(currentPage);
+            renderPagination();
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                const savedState = loadState();
+                if (savedState) {
+                    filterAndSortProperties();
+                    renderProperties(currentPage);
+                    renderPagination();
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadState();
+            
+            filterAndSortProperties();
+            renderProperties(currentPage);
+            renderPagination();
+            
+            document.getElementById('property-type-filter').addEventListener('change', applyFilters);
+            document.getElementById('price-sort-filter').addEventListener('change', applyFilters);
+            
+            const searchInput = document.getElementById('search-input');
+            
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                updateClearButton();
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    applyFilters();
+                }, 300);
+            });
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    clearTimeout(searchTimeout);
+                    applyFilters();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

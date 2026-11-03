@@ -4,6 +4,10 @@ import { ArrowLeft } from 'lucide-react'
 import { getServiceSupabase } from '@/lib/supabase'
 import { Property } from '@/types'
 import PropertyForm from '@/components/ui/PropertyForm'
+import PropertyDocuments from '@/components/ui/PropertyDocuments'
+
+export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 async function getProperty(id: string): Promise<Property | null> {
   const supabase = getServiceSupabase()
@@ -26,6 +30,9 @@ export default async function EditPropertyPage({ params }: { params: { id: strin
       </div>
       <p className="text-gray-500 text-sm mb-8 ml-8">{property.title}</p>
       <PropertyForm property={property} />
+      <div className="mt-8">
+        <PropertyDocuments propertyId={property.id} propertyTitle={property.title} />
+      </div>
     </div>
   )
 }

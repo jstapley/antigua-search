@@ -10,6 +10,7 @@ import { supabase } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { GA } from "@/lib/analytics"
 import { Textarea } from "@/components/ui/textarea"
 import { PropertyCard } from "@/components/property/PropertyCard"
 import { 
@@ -28,6 +29,7 @@ import {
 } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
 import { PropertyMap } from "@/components/property/PropertyMap"
+import { FeatureBooklet } from "@/components/property/FeatureBooklet"
 
 // Convert YouTube/Vimeo URLs to embed format
 function getVideoEmbedUrl(url: string): string {
@@ -56,6 +58,7 @@ interface PropertyDetailClientProps {
 export function PropertyDetailClient({ property, similarProperties }: PropertyDetailClientProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [showLightbox, setShowLightbox] = useState(false)
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null)
   
   // Inquiry form state
   const [inquiryLoading, setInquiryLoading] = useState(false)
@@ -80,10 +83,12 @@ export function PropertyDetailClient({ property, similarProperties }: PropertyDe
     : ['/images/properties/garden1.jpg', '/images/properties/garden2.jpg', '/images/properties/garden3.jpg']
 
   const nextImage = () => {
+    setImageDimensions(null)
     setCurrentImageIndex((prev) => (prev + 1) % images.length)
   }
 
   const prevImage = () => {
+    setImageDimensions(null)
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
   }
 
@@ -122,7 +127,7 @@ export function PropertyDetailClient({ property, similarProperties }: PropertyDe
         created_at: new Date().toISOString()
       }
 
-      // 1. Save to Supabase
+      // Save to Supabase
       const { error: supabaseError } = await supabase
         .from('property_inquiries')
         .insert([inquiryData])
@@ -132,51 +137,8 @@ export function PropertyDetailClient({ property, similarProperties }: PropertyDe
         throw new Error('Failed to submit inquiry. Please try again.')
       }
 
-      // 2. Send to GoHighLevel API
-      try {
-        const ghlApiKey = process.env.NEXT_PUBLIC_GHL_API_KEY
-        const ghlLocationId = process.env.NEXT_PUBLIC_GHL_LOCATION_ID
-        
-        if (ghlApiKey && ghlLocationId) {
-          const tags = ['Website Lead', 'Property Inquiry', property.parish]
-
-          const ghlPayload = {
-            firstName: inquiryForm.first_name.trim(),
-            lastName: inquiryForm.last_name.trim(),
-            email: inquiryForm.email.trim().toLowerCase(),
-            phone: inquiryForm.phone.trim(),
-            source: `Caribbean Keys - ${property.property_name}`,
-            tags: tags,
-            customFields: [
-              {
-                key: 'property_interest',
-                value: property.property_name
-              },
-              {
-                key: 'message',
-                value: propertyMessage
-              }
-            ]
-          }
-
-          await fetch(`https://services.leadconnectorhq.com/contacts/`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${ghlApiKey}`,
-              'Content-Type': 'application/json',
-              'Version': '2021-07-28'
-            },
-            body: JSON.stringify({
-              ...ghlPayload,
-              locationId: ghlLocationId
-            })
-          })
-        }
-      } catch (ghlError) {
-        console.warn('GHL API error:', ghlError)
-      }
-
       // Success!
+      GA.propertyInquirySubmit(property.property_name)
       setInquirySuccess(true)
       setInquiryForm({
         first_name: "",
@@ -294,6 +256,17 @@ export function PropertyDetailClient({ property, similarProperties }: PropertyDe
                   variant="outline"
                   size="sm"
                   className="border-caribbean-gold text-caribbean-gold hover:bg-caribbean-gold hover:text-white"
+                  onClick={() => {
+                    GA.shareProperty(property.property_name)
+                    const url = window.location.href
+                    const title = property.property_name
+                    if (navigator.share) {
+                      navigator.share({ title, url })
+                    } else {
+                      navigator.clipboard.writeText(url)
+                      alert("Link copied to clipboard!")
+                    }
+                  }}
                 >
                   <Share2 className="h-4 w-4 mr-2" />
                   Share Property
@@ -307,13 +280,25 @@ export function PropertyDetailClient({ property, similarProperties }: PropertyDe
               
               {/* Main Carousel */}
               <div className="relative">
-                <div className="relative h-[400px] rounded-lg overflow-hidden bg-gray-100">
+                <div 
+                  className="relative rounded-lg overflow-hidden bg-gray-100 transition-all duration-500"
+                  style={{
+                    // Adaptive height based on image aspect ratio, capped between 300px and 600px
+                    height: imageDimensions
+                      ? `${Math.min(600, Math.max(300, Math.round(imageDimensions.height / imageDimensions.width * Math.min(800, typeof window !== 'undefined' ? window.innerWidth * 0.6 : 600))))  }px`
+                      : '400px'
+                  }}
+                >
                   <Image
                     src={images[currentImageIndex]}
                     alt={`${property.property_name} - Image ${currentImageIndex + 1}`}
                     fill
-                    className="object-cover cursor-pointer"
+                    className="object-contain cursor-pointer"
                     onClick={() => setShowLightbox(true)}
+                    onLoad={(e) => {
+                      const img = e.target as HTMLImageElement
+                      setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
+                    }}
                   />
                   
                   {/* Navigation Arrows */}
@@ -371,6 +356,9 @@ export function PropertyDetailClient({ property, similarProperties }: PropertyDe
                 <p className="whitespace-pre-line">{property.property_description}</p>
               </div>
             </div>
+
+            {/* Feature Booklet (only renders if this property has spreads) */}
+            <FeatureBooklet propertyId={property.id} />
 
             {/* Features */}
             {features.length > 0 && (
@@ -542,22 +530,9 @@ export function PropertyDetailClient({ property, similarProperties }: PropertyDe
               </form>
 
               <div className="mt-6 pt-6 border-t space-y-3">
-                <Button 
-                  className="w-full bg-caribbean-navy hover:bg-caribbean-navy/90 text-white font-semibold"
-                  asChild
-                >
-                  <a 
-                    href="https://api.leadconnectorhq.com/widget/booking/SvIBBVEDScQOGhfhK5eS"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Schedule Viewing
-                  </a>
-                </Button>
-
                 <a
                   href="tel:+17057255824"
+                  onClick={() => GA.phoneClick()}
                   className="flex items-center justify-center w-full px-4 py-2 border-2 border-caribbean-gold text-caribbean-gold hover:bg-caribbean-gold hover:text-white rounded-md transition font-semibold"
                 >
                   <Phone className="h-4 w-4 mr-2" />

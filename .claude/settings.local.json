@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest mgl-365 --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git)",
+      "WebFetch(domain:mgl365antigua.com)",
+      "Bash(ls /c/Users/jeffs/projects/mgl-365/.env*)",
+      "Bash(cp \"public/images/hero-bg.JPG\" \"public/images/hero-bg.jpg\")",
+      "Bash(ls public/images/hero-bg*)",
+      "Bash(xargs grep:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

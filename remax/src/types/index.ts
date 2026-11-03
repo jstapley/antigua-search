@@ -15,11 +15,14 @@ export interface Property {
   area: string | null
   images: string[]
   featured: boolean
-  status: 'active' | 'sold' | 'pending'
+  cbi_eligible: boolean
+  status: 'active' | 'under_offer' | 'under_contract' | 'sold'
   slug: string
   amenities: string[]
   video_url: string | null
+  tiktok_url: string | null
   map_embed: string | null
+  agent_id?: string | null
 }
 
 export interface Review {

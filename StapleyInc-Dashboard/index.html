@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Dashboard — StapleyInc</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0d1117;
+      --surface:    #161b27;
+      --surface-2:  #1c2333;
+      --border:     #2d3748;
+      --border-hi:  #374151;
+      --text:       #e2e8f0;
+      --muted:      #64748b;
+      --accent:     #6366f1;
+      --accent-dim: rgba(99,102,241,0.12);
+      --green:      #22c55e;
+      --green-dim:  rgba(34,197,94,0.10);
+      --red:        #ef4444;
+      --red-dim:    rgba(239,68,68,0.10);
+      --yellow:     #f59e0b;
+      --yellow-dim: rgba(245,158,11,0.10);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ─── LOGIN ──────────────────────────────────────────────── */
+    #login {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%; max-width: 380px;
+      text-align: center;
+    }
+
+    .login-icon {
+      width: 52px; height: 52px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 24px;
+    }
+
+    .login-card h1 { font-size: 1.375rem; font-weight: 700; margin-bottom: 4px; }
+    .login-card .sub { color: var(--muted); font-size: 0.8rem; margin-bottom: 32px; }
+
+    .login-card input[type="password"] {
+      width: 100%;
+      padding: 13px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-card input:focus { border-color: var(--accent); }
+
+    .btn-primary {
+      width: 100%; padding: 13px;
+      background: var(--accent);
+      border: none; border-radius: 10px;
+      color: white; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    .login-error {
+      color: var(--red); font-size: 0.78rem;
+      margin-top: 10px; min-height: 18px;
+    }
+
+    /* ─── APP SHELL ──────────────────────────────────────────── */
+    #app { display: none; }
+
+    .app-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 28px 40px;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────────── */
+    .app-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 16px; flex-wrap: wrap;
+    }
+
+    .header-title h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+    .header-title p  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    /* ─── PERIOD TABS ────────────────────────────────────────── */
+    .period-tabs {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px; gap: 2px;
+    }
+
+    .period-tabs button {
+      padding: 6px 16px;
+      background: transparent; border: none;
+      border-radius: 7px;
+      color: var(--muted); font-size: 0.8rem; font-weight: 500;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .period-tabs button.active { background: var(--accent); color: white; }
+    .period-tabs button:not(.active):hover { color: var(--text); background: var(--surface-2); }
+
+    /* ─── REFRESH ────────────────────────────────────────────── */
+    .btn-refresh {
+      padding: 7px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted); font-size: 0.78rem;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn-refresh:hover { color: var(--text); border-color: var(--border-hi); }
+
+    /* ─── WIDGET GRID ────────────────────────────────────────── */
+    .widget-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 960px)  { .widget-grid { grid-template-columns: 1fr; } }
+
+    /* ─── WIDGET ─────────────────────────────────────────────── */
+    .widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .widget.placeholder {
+      background: rgba(255,255,255,0.015);
+      border-style: dashed;
+    }
+
+    .widget-head {
+      display: flex; align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .widget-head h2 { font-size: 0.95rem; font-weight: 700; }
+    .widget-head .site { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    .badges { display: flex; gap: 6px; align-items: center; flex-shrink: 0; margin-left: 12px; }
+
+    .badge {
+      font-size: 0.67rem; font-weight: 700;
+      padding: 3px 8px; border-radius: 20px;
+      letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .badge-live { background: var(--green-dim); color: var(--green); }
+    .badge-cur  { background: var(--accent-dim); color: var(--accent); }
+    .badge-soon { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+    /* ─── KPI GRID ───────────────────────────────────────────── */
+    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .kpi {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .kpi.full { grid-column: 1 / -1; }
+
+    .kpi-label {
+      font-size: 0.67rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      font-weight: 600; margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 1.55rem; font-weight: 700;
+      letter-spacing: -0.02em; line-height: 1;
+      color: var(--text);
+    }
+
+    .kpi-value.g { color: var(--green); }
+    .kpi-value.r { color: var(--red); }
+    .kpi-value.y { color: var(--yellow); }
+    .kpi-value.a { color: var(--accent); }
+
+    .kpi-sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    /* shimmer skeleton */
+    .skel {
+      width: 70%; height: 26px;
+      background: var(--border); border-radius: 6px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+
+    /* ─── ERROR ──────────────────────────────────────────────── */
+    .widget-err {
+      grid-column: 1 / -1;
+      text-align: center; padding: 20px;
+      color: var(--red); font-size: 0.8rem;
+      border-radius: 8px; background: var(--red-dim);
+    }
+
+    /* ─── PLACEHOLDER ────────────────────────────────────────── */
+    .ph-body {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 20px; gap: 8px;
+      color: var(--muted);
+    }
+    .ph-body .ph-icon { font-size: 2rem; opacity: 0.3; }
+    .ph-body p { font-size: 0.8rem; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .app-footer {
+      text-align: center; margin-top: 24px;
+      color: var(--muted); font-size: 0.72rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ LOGIN ════════════════════════════════ -->
+<div id="login">
+  <div class="login-card">
+    <div class="login-icon">📊</div>
+    <h1>Business Dashboard</h1>
+    <p class="sub">Private · StapleyInc</p>
+    <input type="password" id="pw" placeholder="Enter password" autocomplete="current-password" />
+    <button class="btn-primary" onclick="doLogin()">Enter Dashboard</button>
+    <div class="login-error" id="login-err"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ APP ══════════════════════════════════ -->
+<div id="app">
+  <div class="app-inner">
+
+    <header class="app-header">
+      <div class="header-title">
+        <h1>Business Dashboard</h1>
+        <p id="period-label">–</p>
+      </div>
+      <div class="header-right">
+        <div class="period-tabs" id="period-tabs">
+          <button data-p="mtd" class="active">MTD</button>
+          <button data-p="30d">30 Days</button>
+          <button data-p="90d">90 Days</button>
+          <button data-p="ytd">YTD</button>
+        </div>
+        <button class="btn-refresh" onclick="refreshAll()">↻ Refresh</button>
+      </div>
+    </header>
+
+    <div class="widget-grid">
+
+      <!-- ── Antigua Marine Solutions ──────────────────────── -->
+      <div class="widget">
+        <div class="widget-head">
+          <div>
+            <h2>Antigua Marine Solutions</h2>
+            <p class="site">antiguamarinesolutions.com</p>
+          </div>
+          <div class="badges">
+            <span class="badge badge-live">● LIVE</span>
+            <span class="badge badge-cur">XCD</span>
+          </div>
+        </div>
+        <div class="kpi-grid" id="am-kpis"></div>
+      </div>
+
+      <!-- ── StapleyInc ─────────────────────────────────────── -->
+      <div class="widget">
+        <div class="widget-head">
+          <div>
+            <h2>StapleyInc</h2>
+            <p class="site">stapleyinc.com</p>
+          </div>
+          <div class="badges">
+            <span class="badge badge-live">● LIVE</span>
+            <span class="badge badge-cur">USD</span>
+          </div>
+        </div>
+        <div class="kpi-grid" id="si-kpis"></div>
+      </div>
+
+      <!-- ── Antigua Tourism Directory ─────────────────────── -->
+      <div class="widget placeholder">
+        <div class="widget-head">
+          <div>
+            <h2>Antigua Tourism Directory</h2>
+            <p class="site">antiguatourismdirectory.com</p>
+          </div>
+          <span class="badge badge-soon">Not Yet Monetized</span>
+        </div>
+        <div class="ph-body">
+          <div class="ph-icon">🏝️</div>
+          <p>No revenue data yet — connect Supabase when ready</p>
+        </div>
+      </div>
+
+      <!-- ── Grenada Search ─────────────────────────────────── -->
+      <div class="widget placeholder">
+        <div class="widget-head">
+          <div>
+            <h2>Grenada Search</h2>
+            <p class="site">grenadasearch.com</p>
+          </div>
+          <span class="badge badge-soon">Not Yet Monetized</span>
+        </div>
+        <div class="ph-body">
+          <div class="ph-icon">🌴</div>
+          <p>No revenue data yet — connect Supabase when ready</p>
+        </div>
+      </div>
+
+    </div><!-- /widget-grid -->
+
+    <p class="app-footer" id="footer-ts"></p>
+
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  ⚠️  SECURITY: This file contains service role keys with full DB access.
+//      FOR LOCAL USE ONLY. Never deploy, host, or share this file.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── CONFIGURATION — edit values below ────────────────────────────────────
+
+const DASHBOARD_PASSWORD = 'Ant1gua01!'; // <── change this
+
+const AM = {
+  url:  'https://rvffwmgkuhcywsmjihkc.supabase.co',
+  key:  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2ZmZ3bWdrdWhjeXdzbWppaGtjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MTcxNjU3MywiZXhwIjoyMDg3MjkyNTczfQ.uo_VGblUVALhaiWewKsp_cNJhDl3v_a9K8Gv_ToH8qs',
+  paid: ['paid', 'complete', 'shipped', 'delivered'],
+  cur:  'XCD',
+};
+
+const SI = {
+  url:    'https://mkegrugusxbmkoenadbm.supabase.co',
+  key:    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rZWdydWd1c3hibWtvZW5hZGJtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzQ0NjM1OSwiZXhwIjoyMDg5MDIyMzU5fQ.RM6Q2QGRVgYeV0N-ME4D6kTBkKvqFVkIWz1Ki13mwjI',
+  schema: 'stapleyinc',
+  cur:    'USD',
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let activePeriod = 'mtd';
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────
+function doLogin() {
+  const pw = document.getElementById('pw').value;
+  if (pw === DASHBOARD_PASSWORD) {
+    sessionStorage.setItem('dash_auth', '1');
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').style.display   = 'block';
+    init();
+  } else {
+    document.getElementById('login-err').textContent = 'Incorrect password.';
+    document.getElementById('pw').value = '';
+    document.getElementById('pw').focus();
+  }
+}
+
+document.getElementById('pw').addEventListener('keydown', e => {
+  document.getElementById('login-err').textContent = '';
+  if (e.key === 'Enter') doLogin();
+});
+
+// Skip login if already authenticated this session
+if (sessionStorage.getItem('dash_auth') === '1') {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display   = 'block';
+}
+
+// ─── DATE UTILITIES ───────────────────────────────────────────────────────
+function getRange(period) {
+  const now  = new Date();
+  const ymd  = d => d.toISOString().split('T')[0];
+  const today = ymd(now);
+  let start;
+  switch (period) {
+    case 'mtd': start = ymd(new Date(now.getFullYear(), now.getMonth(), 1)); break;
+    case '30d': { const d = new Date(now); d.setDate(d.getDate() - 30);  start = ymd(d); break; }
+    case '90d': { const d = new Date(now); d.setDate(d.getDate() - 90);  start = ymd(d); break; }
+    case 'ytd': start = `${now.getFullYear()}-01-01`; break;
+    default:    start = ymd(new Date(now.getFullYear(), now.getMonth(), 1));
+  }
+  return { start, end: today };
+}
+
+function periodLabel(period) {
+  const { start, end } = getRange(period);
+  const f = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric'
+  });
+  return `${f(start)} – ${f(end)}`;
+}
+
+// ─── SUPABASE REST HELPER ─────────────────────────────────────────────────
+// Supports multiple filters on the same column (e.g. date ranges).
+// Pass filters as an array of [key, value] pairs.
+async function sb(cfg, table, filters = [], schema = null) {
+  const url = new URL(`${cfg.url}/rest/v1/${table}`);
+  filters.forEach(([k, v]) => url.searchParams.append(k, v));
+
+  const headers = {
+    'apikey':        cfg.key,
+    'Authorization': `Bearer ${cfg.key}`,
+  };
+  if (schema) headers['Accept-Profile'] = schema;
+
+  const res = await fetch(url.toString(), { headers });
+  if (!res.ok) {
+    const msg = await res.text().catch(() => res.statusText);
+    throw new Error(`[${table}] ${res.status}: ${msg}`);
+  }
+  return res.json();
+}
+
+// ─── FORMATTING ───────────────────────────────────────────────────────────
+const money = (n, cur) => new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: cur,
+  minimumFractionDigits: 0, maximumFractionDigits: 0,
+}).format(n || 0);
+
+const num = n => new Intl.NumberFormat('en-US').format(n || 0);
+
+// ─── SKELETON LOADER ──────────────────────────────────────────────────────
+function showSkeleton(id, count = 4) {
+  document.getElementById(id).innerHTML = Array.from({ length: count }, () => `
+    <div class="kpi">
+      <div class="kpi-label">Loading…</div>
+      <div class="skel"></div>
+    </div>
+  `).join('');
+}
+
+// ─── RENDER HELPERS ───────────────────────────────────────────────────────
+function renderKPIs(id, items) {
+  document.getElementById(id).innerHTML = items.map(({ label, value, sub, color, full }) => `
+    <div class="kpi${full ? ' full' : ''}">
+      <div class="kpi-label">${label}</div>
+      <div class="kpi-value${color ? ` ${color}` : ''}">${value}</div>
+      ${sub ? `<div class="kpi-sub">${sub}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderError(id, msg) {
+  document.getElementById(id).innerHTML =
+    `<div class="widget-err">⚠️ Could not load data: ${msg}</div>`;
+}
+
+// ─── ANTIGUA MARINE ───────────────────────────────────────────────────────
+async function loadAM(period) {
+  showSkeleton('am-kpis');
+  const { start, end } = getRange(period);
+
+  try {
+    const statusFilter = `in.(${AM.paid.join(',')})`;
+    const orders = await sb(AM, 'orders', [
+      ['select',     'total,subtotal,shipping_total,discount'],
+      ['status',     statusFilter],
+      ['created_at', `gte.${start}T00:00:00`],
+      ['created_at', `lte.${end}T23:59:59`],
+    ]);
+
+    const revenue  = orders.reduce((s, o) => s + (parseFloat(o.total)          || 0), 0);
+    const shipping = orders.reduce((s, o) => s + (parseFloat(o.shipping_total) || 0), 0);
+    const discount = orders.reduce((s, o) => s + (parseFloat(o.discount)       || 0), 0);
+    const count    = orders.length;
+    const aov      = count > 0 ? revenue / count : 0;
+
+    renderKPIs('am-kpis', [
+      { label: 'Revenue',            value: money(revenue, AM.cur),  color: 'g',
+        sub: `${num(count)} paid order${count !== 1 ? 's' : ''}` },
+      { label: 'Avg Order Value',    value: money(aov, AM.cur),      color: 'a' },
+      { label: 'Shipping Collected', value: money(shipping, AM.cur) },
+      { label: 'Discounts Applied',  value: money(discount, AM.cur),
+        sub: discount > 0 ? 'across period' : 'none' },
+    ]);
+  } catch (e) {
+    console.error('AM:', e);
+    renderError('am-kpis', e.message);
+  }
+}
+
+// ─── STAPLEYINC ───────────────────────────────────────────────────────────
+async function loadSI(period) {
+  showSkeleton('si-kpis');
+  const { start, end } = getRange(period);
+  const today = new Date().toISOString().split('T')[0];
+
+  try {
+    const [paidInvs, openInvs, customers] = await Promise.all([
+
+      // Paid invoices — filtered by paid_at within selected period
+      sb(SI, 'invoices', [
+        ['select',  'total,subtotal,tax_amount,paid_at'],
+        ['status',  'eq.paid'],
+        ['paid_at', `gte.${start}T00:00:00`],
+        ['paid_at', `lte.${end}T23:59:59`],
+      ], SI.schema),
+
+      // Open invoices (sent + overdue) — always current state, not period-filtered
+      sb(SI, 'invoices', [
+        ['select', 'id,status,due_date,total'],
+        ['status', 'in.(sent,overdue)'],
+      ], SI.schema),
+
+      // All customers — total count, not period-filtered
+      sb(SI, 'customers', [
+        ['select', 'id'],
+      ], SI.schema),
+    ]);
+
+    const revenue    = paidInvs.reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
+    const paidCount  = paidInvs.length;
+
+    // Overdue = status 'overdue' OR (status 'sent' AND past due date)
+    const overdueList = openInvs.filter(i =>
+      i.status === 'overdue' || (i.status === 'sent' && i.due_date && i.due_date < today)
+    );
+    const overdueAmt   = overdueList.reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
+
+    // Pending = sent but not yet overdue
+    const pendingList = openInvs.filter(i =>
+      i.status === 'sent' && (!i.due_date || i.due_date >= today)
+    );
+    const pendingAmt  = pendingList.reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
+
+    renderKPIs('si-kpis', [
+      { label: 'Revenue',           value: money(revenue, SI.cur),    color: 'g',
+        sub: `${num(paidCount)} paid invoice${paidCount !== 1 ? 's' : ''}` },
+      { label: 'Total Clients',     value: num(customers.length),      color: 'a',
+        sub: 'all time' },
+      { label: 'Overdue',           value: money(overdueAmt, SI.cur),
+        color: overdueList.length > 0 ? 'r' : '',
+        sub: `${num(overdueList.length)} invoice${overdueList.length !== 1 ? 's' : ''} · current` },
+      { label: 'Pending (Sent)',    value: money(pendingAmt, SI.cur),   color: 'y',
+        sub: `${num(pendingList.length)} invoice${pendingList.length !== 1 ? 's' : ''} · current` },
+    ]);
+  } catch (e) {
+    console.error('SI:', e);
+    renderError('si-kpis', e.message);
+  }
+}
+
+// ─── PERIOD TABS ──────────────────────────────────────────────────────────
+document.getElementById('period-tabs').addEventListener('click', e => {
+  const btn = e.target.closest('[data-p]');
+  if (!btn) return;
+  document.querySelectorAll('#period-tabs button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activePeriod = btn.dataset.p;
+  document.getElementById('period-label').textContent = periodLabel(activePeriod);
+  loadAM(activePeriod);
+  loadSI(activePeriod);
+});
+
+// ─── REFRESH ──────────────────────────────────────────────────────────────
+function refreshAll() {
+  loadAM(activePeriod);
+  loadSI(activePeriod);
+  document.getElementById('footer-ts').textContent =
+    `Last refreshed: ${new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}`;
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function init() {
+  document.getElementById('period-label').textContent = periodLabel(activePeriod);
+  refreshAll();
+}
+
+// Auto-init if session already authenticated (e.g. page reload)
+if (sessionStorage.getItem('dash_auth') === '1') init();
+</script>
+
+</body>
+</html>

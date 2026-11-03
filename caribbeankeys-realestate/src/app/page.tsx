@@ -70,7 +70,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div className="max-w-3xl">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white">
-                Your Trusted Real Estate Partner in Antigua & Barbuda
+                YOUR TRUSTED REAL ESTATE PARTNER IN ANTIGUA
               </h1>
               <p className="text-xl sm:text-2xl mb-8 text-white/90">
                 Expert guidance for luxury real estate, beachfront villas, and investment opportunities across Antigua's premier communities
@@ -80,13 +80,9 @@ export default function HomePage() {
                   <Link href="/properties">Browse Properties</Link>
                 </Button>
                 <Button size="lg" asChild className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-caribbean-navy backdrop-blur-sm font-semibold">
-                  <a 
-                    href="https://api.leadconnectorhq.com/widget/booking/SvIBBVEDScQOGhfhK5eS"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Schedule Viewing
-                  </a>
+                  <Link href="/contact">
+                    Contact Us
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -97,35 +93,6 @@ export default function HomePage() {
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
           <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
             <div className="w-1 h-3 bg-white/50 rounded-full mt-2"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Stats */}
-      <section className="bg-white py-12 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="bg-caribbean-blue/20 p-4 rounded-full mb-4">
-                <Home className="h-8 w-8 text-caribbean-navy" />
-              </div>
-              <div className="text-3xl font-bold text-caribbean-navy mb-2">150+</div>
-              <div className="text-gray-600">Properties Listed</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-caribbean-blue/20 p-4 rounded-full mb-4">
-                <TrendingUp className="h-8 w-8 text-caribbean-navy" />
-              </div>
-              <div className="text-3xl font-bold text-caribbean-navy mb-2">50+</div>
-              <div className="text-gray-600">Properties Sold</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-caribbean-blue/20 p-4 rounded-full mb-4">
-                <MapPin className="h-8 w-8 text-caribbean-navy" />
-              </div>
-              <div className="text-3xl font-bold text-caribbean-navy mb-2">6</div>
-              <div className="text-gray-600">Parishes Covered</div>
-            </div>
           </div>
         </div>
       </section>
@@ -161,9 +128,9 @@ export default function HomePage() {
                 const firstImage = property.images && property.images.length > 0 ? property.images[0] : '/images/placeholder-property.jpg'
                 
                 return (
+                  <Link key={property.id} href={`/properties/${property.slug}`} className="block">
                   <div 
-                    key={property.id} 
-                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group"
+                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer"
                   >
                     {/* Property Image */}
                     <div className="relative h-64 overflow-hidden">
@@ -173,19 +140,27 @@ export default function HomePage() {
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-300"
                       />
-                      {/* Featured Badge */}
-                      <div className="absolute top-4 right-4">
-                        <span className="bg-caribbean-gold text-caribbean-navy px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
-                          Featured
-                        </span>
-                      </div>
-                      {/* Parish Badge */}
+                      {/* Parish Badge - Top Left */}
                       <div className="absolute top-4 left-4">
                         <span className="bg-white/90 backdrop-blur-sm text-caribbean-navy px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                           <MapPin className="h-3 w-3" />
                           {property.parish}
                         </span>
                       </div>
+                      {/* Featured Badge - Top Right */}
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-caribbean-gold text-caribbean-navy px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                          Featured
+                        </span>
+                      </div>
+                      {/* CIP Approved Badge - Bottom Left */}
+                      {property.is_cip_approved && (
+                        <div className="absolute bottom-4 left-4">
+                          <span className="bg-caribbean-navy text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide flex items-center gap-1">
+                            🛡️ CIP Approved
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Property Details */}
@@ -221,12 +196,13 @@ export default function HomePage() {
                         <div className="text-2xl font-bold text-caribbean-navy">
                           {property.price_asking ? formatPrice(property.price_asking) : 'Contact for Price'}
                         </div>
-                        <Button variant="outline" size="sm" asChild className="border-caribbean-gold text-caribbean-gold hover:bg-caribbean-gold hover:text-white font-semibold">
-                          <Link href={`/properties/${property.slug}`}>View Details</Link>
-                        </Button>
+                        <span className="text-sm font-semibold text-caribbean-gold border border-caribbean-gold px-3 py-1.5 rounded-md group-hover:bg-caribbean-gold group-hover:text-white transition">
+                          View Details
+                        </span>
                       </div>
                     </div>
                   </div>
+                  </Link>
                 )
               })
             ) : (
@@ -266,14 +242,21 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {["St. John's", "St. Peter", "St. Philip", "St. Paul", "St. Mary", "St. George"].map((parish) => (
+            {[
+              { name: "St. John's", slug: "st-john" },
+              { name: "St. Peter", slug: "st-peter" },
+              { name: "St. Philip", slug: "st-philip" },
+              { name: "St. Paul", slug: "st-paul" },
+              { name: "St. Mary", slug: "st-mary" },
+              { name: "St. George", slug: "st-george" },
+            ].map(({ name, slug }) => (
               <Link
-                key={parish}
-                href={`/properties/parish/${parish.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '')}`}
+                key={slug}
+                href={`/locations/${slug}`}
                 className="group bg-caribbean-seafoam hover:bg-caribbean-seafoam/80 rounded-lg p-6 text-center transition-all shadow-sm hover:shadow-md"
               >
                 <MapPin className="h-8 w-8 text-caribbean-navy mx-auto mb-2 group-hover:scale-110 transition-transform" />
-                <div className="font-semibold text-caribbean-navy text-sm">{parish}</div>
+                <div className="font-semibold text-caribbean-navy text-sm">{name}</div>
               </Link>
             ))}
           </div>

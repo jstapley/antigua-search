@@ -17,7 +17,7 @@ export default function HeroSection() {
             poster="https://yhblxzdydirndlprmnan.supabase.co/storage/v1/object/public/media/why-buy-in-antigua.jpeg"
           >
             <source
-              src="https://yhblxzdydirndlprmnan.supabase.co/storage/v1/object/public/media/remax-365-homepage-23mb.mp4"
+              src="https://yhblxzdydirndlprmnan.supabase.co/storage/v1/object/public/media/homepage_video.mp4"
               type="video/mp4"
             />
           </video>

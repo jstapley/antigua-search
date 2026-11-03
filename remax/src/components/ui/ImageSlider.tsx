@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
 
@@ -10,139 +10,135 @@ interface Props {
 }
 
 export default function ImageSlider({ images, title }: Props) {
-  const [current, setCurrent] = useState(0)
-  const [lightbox, setLightbox] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
 
-  const prev = useCallback(() => setCurrent(i => (i - 1 + images.length) % images.length), [images.length])
-  const next = useCallback(() => setCurrent(i => (i + 1) % images.length), [images.length])
+  const prev = useCallback(() => {
+    setSelectedIndex(i => (i === 0 ? images.length - 1 : i - 1))
+  }, [images.length])
+
+  const next = useCallback(() => {
+    setSelectedIndex(i => (i === images.length - 1 ? 0 : i + 1))
+  }, [images.length])
+
+  const lightboxPrev = useCallback(() => {
+    setLightboxIndex(i => (i === 0 ? images.length - 1 : i - 1))
+  }, [images.length])
+
+  const lightboxNext = useCallback(() => {
+    setLightboxIndex(i => (i === images.length - 1 ? 0 : i + 1))
+  }, [images.length])
+
+  useEffect(() => {
+    if (!lightboxOpen) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') lightboxPrev()
+      if (e.key === 'ArrowRight') lightboxNext()
+      if (e.key === 'Escape') setLightboxOpen(false)
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [lightboxOpen, lightboxPrev, lightboxNext])
 
   if (!images || images.length === 0) return null
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index)
+    setLightboxOpen(true)
+  }
 
   return (
     <>
       {/* Main slider */}
-      <div className="relative w-full h-[55vh] md:h-[65vh] bg-gray-900 overflow-hidden group">
-        <Image
-          src={images[current]}
-          alt={`${title} - photo ${current + 1}`}
-          fill
-          className="object-cover transition-opacity duration-300"
-          priority={current === 0}
-          unoptimized
-        />
-
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-
-        {/* Zoom button */}
-        <button
-          onClick={() => setLightbox(true)}
-          className="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white p-2 rounded-xl backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
-        >
-          <ZoomIn size={18} />
-        </button>
-
-        {/* Prev / Next arrows — only show if more than 1 image */}
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2.5 rounded-xl backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
-            >
-              <ChevronLeft size={22} />
-            </button>
-            <button
-              onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2.5 rounded-xl backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
-            >
-              <ChevronRight size={22} />
-            </button>
-          </>
-        )}
-
-        {/* Counter */}
-        {images.length > 1 && (
-          <div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm">
-            {current + 1} / {images.length}
+      <div className="w-full">
+        {/* Main image */}
+        <div className="relative w-full aspect-[16/9] bg-gray-100 overflow-hidden group cursor-pointer"
+          onClick={() => openLightbox(selectedIndex)}>
+          <Image
+            src={images[selectedIndex]}
+            alt={`${title} — photo ${selectedIndex + 1} of ${images.length}`}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            priority={selectedIndex === 0}
+            unoptimized
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+            <ZoomIn size={32} className="text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
           </div>
-        )}
+          {images.length > 1 && (
+            <>
+              <button onClick={e => { e.stopPropagation(); prev() }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100">
+                <ChevronLeft size={20} />
+              </button>
+              <button onClick={e => { e.stopPropagation(); next() }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100">
+                <ChevronRight size={20} />
+              </button>
+              <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2.5 py-1 rounded-full">
+                {selectedIndex + 1} / {images.length}
+              </div>
+            </>
+          )}
+        </div>
 
-        {/* Back button */}
-        <a
-          href="/properties"
-          className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#0c2749] px-4 py-2 rounded-xl flex items-center gap-2 font-medium text-sm hover:bg-white transition-colors shadow-sm"
-        >
-          <ChevronLeft size={16} /> All Properties
-        </a>
-      </div>
-
-      {/* Thumbnail strip */}
-      {images.length > 1 && (
-        <div className="bg-gray-900 px-4 py-3">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide max-w-6xl mx-auto">
+        {/* Thumbnails */}
+        {images.length > 1 && (
+          <div className="flex gap-2 mt-2 overflow-x-auto pb-1 px-4 sm:px-6 max-w-6xl mx-auto">
             {images.map((img, i) => (
               <button
                 key={i}
-                onClick={() => setCurrent(i)}
-                className={`relative flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden transition-all ${
-                  i === current
-                    ? 'ring-2 ring-white opacity-100'
-                    : 'opacity-50 hover:opacity-80'
+                onClick={() => setSelectedIndex(i)}
+                className={`relative flex-shrink-0 w-20 h-14 rounded-lg overflow-hidden border-2 transition-colors ${
+                  i === selectedIndex ? 'border-[#0c2749]' : 'border-transparent hover:border-gray-300'
                 }`}
               >
-                <Image src={img} alt={`Thumbnail ${i + 1}`} fill className="object-cover" unoptimized />
+                <Image
+                  src={img}
+                  alt={`${title} — photo ${i + 1} of ${images.length}`}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
               </button>
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Lightbox */}
-      {lightbox && (
-        <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-          onClick={() => setLightbox(false)}
-        >
-          <button
-            className="absolute top-4 right-4 text-white/80 hover:text-white p-2"
-            onClick={() => setLightbox(false)}
-          >
-            <X size={28} />
+      {lightboxOpen && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={() => setLightboxOpen(false)}>
+          <button onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors z-10">
+            <X size={20} />
           </button>
-
           {images.length > 1 && (
             <>
-              <button
-                onClick={e => { e.stopPropagation(); prev() }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-all"
-              >
-                <ChevronLeft size={28} />
+              <button onClick={e => { e.stopPropagation(); lightboxPrev() }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors z-10">
+                <ChevronLeft size={24} />
               </button>
-              <button
-                onClick={e => { e.stopPropagation(); next() }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-all"
-              >
-                <ChevronRight size={28} />
+              <button onClick={e => { e.stopPropagation(); lightboxNext() }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors z-10">
+                <ChevronRight size={24} />
               </button>
             </>
           )}
-
-          <div
-            className="relative max-w-5xl max-h-[85vh] w-full mx-8"
-            onClick={e => e.stopPropagation()}
-          >
+          <div className="relative w-full h-full max-w-6xl max-h-[90vh] mx-4"
+            onClick={e => e.stopPropagation()}>
             <Image
-              src={images[current]}
-              alt={`${title} - photo ${current + 1}`}
-              width={1200}
-              height={800}
-              className="object-contain w-full h-full max-h-[85vh] rounded-xl"
+              src={images[lightboxIndex]}
+              alt={`${title} — photo ${lightboxIndex + 1} of ${images.length}`}
+              fill
+              className="object-contain"
               unoptimized
             />
           </div>
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
-            {current + 1} / {images.length}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-sm px-3 py-1 rounded-full">
+            {lightboxIndex + 1} / {images.length}
           </div>
         </div>
       )}

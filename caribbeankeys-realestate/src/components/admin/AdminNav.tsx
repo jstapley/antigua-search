@@ -8,23 +8,36 @@ import {
   Home, 
   Building2, 
   ImageIcon, 
-  MessageSquare, 
+  Users, 
+  Star,
+  TrendingUp,
   LogOut,
   Menu,
   X
 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 
 export function AdminNav() {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function getUser() {
+      const { data } = await supabase.auth.getUser()
+      setUserEmail(data.user?.email || null)
+    }
+    getUser()
+  }, [])
 
   const navigation = [
     { name: "Dashboard", href: "/admin", icon: Home },
     { name: "Properties", href: "/admin/properties", icon: Building2 },
-    { name: "Inquiries", href: "/admin/inquiries", icon: MessageSquare },
+    { name: "Clients", href: "/admin/clients", icon: Users },
+    { name: "VIP Clients", href: "/admin/vip-clients", icon: Star },
+    { name: "Metrics", href: "/admin/metrics", icon: TrendingUp },
   ]
 
   const handleLogout = async () => {
@@ -73,6 +86,11 @@ export function AdminNav() {
               )
             })}
 
+            {userEmail && (
+              <span className="text-sm text-white/70 hidden lg:inline">
+                {userEmail}
+              </span>
+            )}
             <Button
               onClick={handleLogout}
               variant="outline"
@@ -115,6 +133,11 @@ export function AdminNav() {
                 </Link>
               )
             })}
+            {userEmail && (
+              <div className="px-3 py-1 text-xs text-white/60">
+                Logged in as {userEmail}
+              </div>
+            )}
             <Button
               onClick={handleLogout}
               variant="outline"

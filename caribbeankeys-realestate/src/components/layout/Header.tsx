@@ -19,7 +19,6 @@ export function Header() {
     { name: "PROJECTS", href: "#", hasDropdown: true },
     { name: "LOCATIONS", href: "#", hasDropdown: true },
     { name: "ABOUT", href: "/about" },
-    { name: "CONTACT", href: "/contact" },
   ]
 
   const projects = [
@@ -160,13 +159,9 @@ export function Header() {
           {/* CTA Button */}
           <div className="hidden lg:block">
             <Button asChild className="bg-caribbean-gold hover:bg-caribbean-gold/90 text-caribbean-navy uppercase tracking-wider font-semibold">
-              <a 
-                href="https://api.leadconnectorhq.com/widget/booking/SvIBBVEDScQOGhfhK5eS"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Schedule Viewing
-              </a>
+              <Link href="/contact">
+                Contact Us
+              </Link>
             </Button>
           </div>
 
@@ -254,13 +249,9 @@ export function Header() {
               )
             ))}
             <Button asChild className="w-full bg-caribbean-gold hover:bg-caribbean-gold/90 text-caribbean-navy uppercase tracking-wider font-semibold">
-              <a 
-                href="https://api.leadconnectorhq.com/widget/booking/SvIBBVEDScQOGhfhK5eS"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Schedule Viewing
-              </a>
+              <Link href="/contact">
+                Contact Us
+              </Link>
             </Button>
           </div>
         </div>

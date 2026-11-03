@@ -10,7 +10,7 @@ interface Props {
 
 declare global {
   interface Window {
-    google: typeof google
+    google: any
     initMapPicker: () => void
   }
 }
@@ -29,83 +29,97 @@ function parseLatLngFromEmbed(url: string): { lat: number; lng: number } | null 
 
 export default function MapPicker({ value, onChange }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<google.maps.Map | null>(null)
-  const markerRef = useRef<google.maps.Marker | null>(null)
+  const mapInstanceRef = useRef<any>(null)
+  const markerRef = useRef<any>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const autocompleteRef = useRef<any>(null)
   const [loaded, setLoaded] = useState(false)
-  const [searching, setSearching] = useState(false)
   const [pinned, setPinned] = useState<{ lat: number; lng: number } | null>(
     value ? parseLatLngFromEmbed(value) : null
   )
 
-  // Load Google Maps script once
+  // Load Google Maps script
   useEffect(() => {
     if (window.google?.maps) { setLoaded(true); return }
-    if (document.getElementById('gmap-script')) return
-
+    if (document.getElementById('gmap-script')) {
+      const interval = setInterval(() => {
+        if (window.google?.maps) {
+          setLoaded(true)
+          clearInterval(interval)
+        }
+      }, 100)
+      return () => clearInterval(interval)
+    }
     window.initMapPicker = () => setLoaded(true)
     const script = document.createElement('script')
     script.id = 'gmap-script'
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMapPicker`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMapPicker&loading=async`
     script.async = true
     document.head.appendChild(script)
   }, [])
 
-  // Init map once script is loaded
+  // Initialize map — use setTimeout(0) to ensure mapRef.current is committed to DOM
   useEffect(() => {
-    if (!loaded || !mapRef.current) return
+    if (!loaded) return
 
-    const initialCenter = pinned || { lat: 17.0747, lng: -61.8175 } // Antigua
+    setTimeout(() => {
+      if (!mapRef.current || mapInstanceRef.current) return
 
-    const map = new window.google.maps.Map(mapRef.current, {
-      center: initialCenter,
-      zoom: pinned ? 15 : 11,
-      mapTypeControl: true,
-      streetViewControl: false,
-      fullscreenControl: false,
-    })
-    mapInstanceRef.current = map
-
-    // If we already have a pinned location (editing), drop marker
-    if (pinned) {
-      const marker = new window.google.maps.Marker({
-        position: pinned,
-        map,
-        draggable: true,
-        animation: window.google.maps.Animation.DROP,
+      const initialCenter = pinned || { lat: 17.0747, lng: -61.8175 }
+      const map = new window.google.maps.Map(mapRef.current, {
+        center: initialCenter,
+        zoom: pinned ? 15 : 11,
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        zoomControlOptions: {
+          position: window.google.maps.ControlPosition.RIGHT_CENTER,
+        },
       })
-      markerRef.current = marker
-      marker.addListener('dragend', () => {
-        const pos = marker.getPosition()
-        if (pos) updatePin(pos.lat(), pos.lng())
-      })
-    }
+      mapInstanceRef.current = map
 
-    // Click on map to drop/move pin
-    map.addListener('click', (e: google.maps.MapMouseEvent) => {
-      if (!e.latLng) return
-      placeMarker(e.latLng.lat(), e.latLng.lng(), map)
-    })
+      if (pinned) {
+        const marker = new window.google.maps.Marker({
+          position: pinned,
+          map,
+          draggable: true,
+          animation: window.google.maps.Animation.DROP,
+        })
+        markerRef.current = marker
+        marker.addListener('dragend', () => {
+          const pos = marker.getPosition()
+          if (pos) updatePin(pos.lat(), pos.lng())
+        })
+      }
 
-    // Set up Places Autocomplete on the input
-    if (inputRef.current) {
-      const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-        fields: ['geometry', 'formatted_address'],
+      map.addListener('click', (e: any) => {
+        if (!e.latLng) return
+        placeMarker(e.latLng.lat(), e.latLng.lng(), map)
       })
-      autocomplete.addListener('place_changed', () => {
-        setSearching(false)
-        const place = autocomplete.getPlace()
-        if (!place.geometry?.location) return
-        const lat = place.geometry.location.lat()
-        const lng = place.geometry.location.lng()
-        map.setCenter({ lat, lng })
-        map.setZoom(16)
-        placeMarker(lat, lng, map)
-      })
-    }
+
+      // Init autocomplete here after map is ready
+      if (inputRef.current && !autocompleteRef.current) {
+        const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
+          fields: ['geometry', 'formatted_address'],
+          componentRestrictions: { country: 'ag' },
+        })
+        autocompleteRef.current = autocomplete
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace()
+          if (!place.geometry?.location) return
+          const lat = place.geometry.location.lat()
+          const lng = place.geometry.location.lng()
+          map.setCenter({ lat, lng })
+          map.setZoom(16)
+          placeMarker(lat, lng, map)
+        })
+      }
+    }, 0)
   }, [loaded])
 
-  const placeMarker = (lat: number, lng: number, map: google.maps.Map) => {
+  const placeMarker = (lat: number, lng: number, map: any) => {
     if (markerRef.current) {
       markerRef.current.setPosition({ lat, lng })
     } else {
@@ -141,33 +155,31 @@ export default function MapPicker({ value, onChange }: Props) {
 
   return (
     <div className="space-y-3">
-      {/* Search bar */}
       <div className="relative">
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
         <input
           ref={inputRef}
           type="text"
           placeholder="Search for the property address..."
-          onFocus={() => setSearching(true)}
-          onBlur={() => setTimeout(() => setSearching(false), 200)}
           className="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#0c2749]/20 focus:border-[#0c2749] transition-colors"
           disabled={!loaded}
         />
       </div>
 
-      {/* Map */}
-      {!loaded ? (
-        <div className="h-72 rounded-2xl bg-gray-100 flex items-center justify-center">
+      {/* Always render map div so mapRef.current is always available */}
+      {!loaded && (
+        <div className="h-80 rounded-2xl bg-gray-100 flex items-center justify-center">
           <div className="flex flex-col items-center gap-2 text-gray-400">
             <div className="w-6 h-6 border-2 border-gray-300 border-t-[#0c2749] rounded-full animate-spin" />
             <p className="text-sm">Loading map...</p>
           </div>
         </div>
-      ) : (
-        <div ref={mapRef} className="h-72 rounded-2xl overflow-hidden border border-gray-200 shadow-sm" />
       )}
+      <div
+        ref={mapRef}
+        className={`h-80 rounded-2xl overflow-hidden border border-gray-200 shadow-sm ${!loaded ? 'hidden' : ''}`}
+      />
 
-      {/* Pin status */}
       {pinned ? (
         <div className="flex items-center justify-between bg-green-50 border border-green-100 rounded-xl px-4 py-2.5">
           <div className="flex items-center gap-2 text-green-700 text-sm">

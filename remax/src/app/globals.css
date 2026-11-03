@@ -32,3 +32,8 @@
     @apply w-20 h-0.5 bg-amber-400 mx-auto;
   }
 }
+
+@media print {
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @page { margin: 1cm; }
+}

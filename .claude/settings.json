@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:roofr.com)",
+      "WebFetch(domain:www.sugarridgehomes.com)"
+    ]
+  }
+}
