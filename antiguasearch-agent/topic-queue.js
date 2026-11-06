@@ -13,6 +13,50 @@ export const TOPICS = [
   // ── CRITICAL: Seasonal / time-sensitive ───────────────────────────────────
 
   {
+    title: "Antigua & Barbuda Art Week 2026: Exhibitions, Workshops & Open-Air Showcases",
+    session_title: "Antigua Art Week 2026",
+    brief: `
+APPROVED TOPIC BRIEF - Please begin the full writing workflow.
+
+TOPIC: Antigua & Barbuda Art Week 2026: Exhibitions, Workshops & Open-Air Showcases
+PRIMARY KEYWORD: antigua art week 2026
+SUPPORTING KEYWORDS: antigua art exhibitions, barbuda art week, antigua cultural events, antigua art galleries
+TARGET CATEGORY: https://www.antiguasearch.com/category/events-entertainment
+TARGET PARISH: https://www.antiguasearch.com/parish/saint-johns
+SEASONAL URGENCY: CRITICAL - Antigua & Barbuda Art Week runs November 11–18, 2026. Event is happening now. Searches are live.
+COMPETITOR GAP: No editorial guide covers the full programme of events, venues, and what visitors can expect beyond the official tourism board page.
+SUGGESTED ANGLE: A visitor's guide to Art Week — where the exhibitions are, which workshops are open to the public, the best open-air showcases, and local galleries worth visiting. Cross-link any relevant directory listings (galleries, studios, cultural centres).
+RECOMMENDED IMAGE: antigua-art-week-2026.jpg
+TRAFFIC POTENTIAL: High - time-sensitive, strong social sharing potential.
+
+Begin with Step 1 (sitemap scan), then research, then present the outline for my approval before writing anything.
+`,
+  },
+
+  {
+    title: "Antigua Charter Yacht Show 2026: What to Expect at the Caribbean's Premier Yacht Event",
+    session_title: "Antigua Charter Yacht Show 2026",
+    brief: `
+APPROVED TOPIC BRIEF - Please begin the full writing workflow.
+
+TOPIC: Antigua Charter Yacht Show 2026: What to Expect at the Caribbean's Premier Yacht Event
+PRIMARY KEYWORD: antigua charter yacht show 2026
+SUPPORTING KEYWORDS: antigua yacht show december, falmouth harbour yacht show, charter yacht antigua, antigua sailing december
+TARGET CATEGORY: https://www.antiguasearch.com/category/sailing-watersports
+TARGET PARISH: https://www.antiguasearch.com/parish/saint-paul
+SEASONAL URGENCY: CRITICAL - Show runs December 4–9, 2026. High-value marine and tourism audience actively searching now.
+COMPETITOR GAP: Only the official event page and marina press releases exist. No independent editorial guide covers what the show means for visitors, charterers, and the local economy.
+SUGGESTED ANGLE: Cover the show from multiple angles — what it is, who attends, how to view the yachts, the best shoreside events and parties, nearby restaurants and bars in Falmouth Harbour for the week, and directory listings for local marine businesses and charters.
+RECOMMENDED IMAGE: antigua-charter-yacht-show-2026.jpg
+TRAFFIC POTENTIAL: High - affluent marine/tourism audience, strong for directory cross-linking.
+
+Begin with Step 1 (sitemap scan), then research, then present the outline for my approval before writing anything.
+`,
+  },
+
+
+
+  {
     title: "Christmas Shopping in Antigua 2026: Markets, Malls & Local Finds",
     session_title: "Christmas Shopping Antigua 2026",
     brief: `
