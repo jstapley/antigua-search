@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { source: '/parish/saint-john-s',  destination: '/parish/st-johns', permanent: true },
       { source: '/parish/st-john-s',     destination: '/parish/st-johns', permanent: true },
       { source: '/parish/stjohns',       destination: '/parish/st-johns', permanent: true },
+      { source: '/parish/st-johnss',     destination: '/parish/st-johns', permanent: true },
       { source: '/parish/saint-john',    destination: '/parish/st-johns', permanent: true },
       { source: '/parish/st-john',       destination: '/parish/st-johns', permanent: true },
     ]
