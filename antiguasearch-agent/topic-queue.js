@@ -22,7 +22,7 @@ TOPIC: Antigua & Barbuda Art Week 2026: Exhibitions, Workshops & Open-Air Showca
 PRIMARY KEYWORD: antigua art week 2026
 SUPPORTING KEYWORDS: antigua art exhibitions, barbuda art week, antigua cultural events, antigua art galleries
 TARGET CATEGORY: https://www.antiguasearch.com/category/events-entertainment
-TARGET PARISH: https://www.antiguasearch.com/parish/saint-johns
+TARGET PARISH: https://www.antiguasearch.com/parish/st-johns
 SEASONAL URGENCY: CRITICAL - Antigua & Barbuda Art Week runs November 11–18, 2026. Event is happening now. Searches are live.
 COMPETITOR GAP: No editorial guide covers the full programme of events, venues, and what visitors can expect beyond the official tourism board page.
 SUGGESTED ANGLE: A visitor's guide to Art Week — where the exhibitions are, which workshops are open to the public, the best open-air showcases, and local galleries worth visiting. Cross-link any relevant directory listings (galleries, studios, cultural centres).
@@ -66,7 +66,7 @@ TOPIC: Christmas Shopping in Antigua 2026: Markets, Malls & Local Finds
 PRIMARY KEYWORD: christmas shopping antigua
 SUPPORTING KEYWORDS: antigua christmas market, twist mall antigua, woods centre christmas, antigua gifts local
 TARGET CATEGORY: https://www.antiguasearch.com/category/shopping
-TARGET PARISH: https://www.antiguasearch.com/parish/saint-johns
+TARGET PARISH: https://www.antiguasearch.com/parish/st-johns
 SEASONAL URGENCY: CRITICAL - Christmas is 8 weeks away. Searches for gift ideas, markets, and local shopping are ramping up now.
 COMPETITOR GAP: No editorial guide exists covering all shopping options in one place — malls, markets, local craft vendors, and duty-free. Existing results are thin listicles or outdated.
 SUGGESTED ANGLE: A practical gift-hunter's guide covering the major malls (Twist, Woods), the Heritage Quay duty-free strip, St. John's Public Market, pop-up craft markets, and tips for finding authentic local products (hot sauce, rum, art, pottery).
@@ -87,7 +87,7 @@ TOPIC: New Year's Eve in Antigua 2026: Best Events, Parties & Spots
 PRIMARY KEYWORD: new years eve antigua 2026
 SUPPORTING KEYWORDS: antigua nye party, fireworks antigua 2026, new year antigua barbuda, english harbour nye
 TARGET CATEGORY: https://www.antiguasearch.com/category/events-entertainment
-TARGET PARISH: https://www.antiguasearch.com/parish/saint-johns
+TARGET PARISH: https://www.antiguasearch.com/parish/st-johns
 SEASONAL URGENCY: CRITICAL - NYE searches begin in earnest from mid-November. Tourists booking travel and locals planning nights out are actively searching now.
 COMPETITOR GAP: Only tourism board pages and resort event listings exist. No independent editorial roundup covers beach parties, restaurant dinners, English Harbour events, and fireworks viewing spots in a single guide.
 SUGGESTED ANGLE: Cover the full spectrum — upscale resort gala dinners, beach parties (Jolly Harbour, Dickenson Bay), English Harbour bar scene, best fireworks vantage points, and where locals actually go. Include practical tips: reservations needed, pricing expectations, transport options late at night.
@@ -240,7 +240,7 @@ TOPIC: Opening a Bank Account in Antigua as an Expat or New Resident (2026)
 PRIMARY KEYWORD: opening bank account antigua
 SUPPORTING KEYWORDS: antigua bank account non-resident, acb bank antigua, cibc antigua, ecab antigua bank account
 TARGET CATEGORY: https://www.antiguasearch.com/category/financial-services
-TARGET PARISH: https://www.antiguasearch.com/parish/saint-johns
+TARGET PARISH: https://www.antiguasearch.com/parish/st-johns
 SEASONAL URGENCY: MEDIUM - Financial services content (banks, credit union, social security) consistently ranks in the top 10 blog posts. This fills a gap for relocating visitors.
 COMPETITOR GAP: Only individual bank homepages exist. No guide compares all banks (ACB, CIBC, ECAB, Antigua Barbuda Investment Bank), documents required, how long it takes, or whether non-residents can open accounts.
 SUGGESTED ANGLE: Step-by-step guide: which banks accept non-residents, required documents checklist, typical processing times, minimum balance requirements, and which bank is best for different needs (digital banking, business accounts, mortgages).
