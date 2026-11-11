@@ -9,7 +9,7 @@ export default function BlogPostClient({ post }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const components = {
-    h1: ({ children }) => <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mt-10 mb-4">{children}</h1>,
+    h1: ({ children }) => <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mt-10 mb-4">{children}</h2>,
     h2: ({ children }) => <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mt-8 mb-4">{children}</h2>,
     h3: ({ children }) => <h3 className="text-xl md:text-2xl font-bold text-gray-900 mt-6 mb-3">{children}</h3>,
     p: ({ children }) => <p className="text-gray-700 text-base md:text-lg leading-relaxed mb-4">{children}</p>,

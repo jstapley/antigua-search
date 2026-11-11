@@ -35,10 +35,10 @@ export async function generateMetadata({ params }) {
     .eq('status', 'active')
 
   const listingCount = count || 0
-  const description = `Browse ${listingCount} verified businesses in ${parish.name}, Antigua & Barbuda. Find hotels, restaurants, tours, and local services. Discover the best of ${parish.name} on AntiguaSearch.com.`
+  const description = `Browse ${listingCount} verified businesses in ${parish.name}, Antigua & Barbuda. Find hotels, restaurants, tours, and local services.`
 
   return {
-    title: `Businesses in ${parish.name}, Antigua (${listingCount} Listings) - AntiguaSearch.com`,
+    title: `${parish.name} Businesses, Antigua | AntiguaSearch`,
     description,
     alternates: {
       canonical: `https://www.antiguasearch.com/parish/${slug}`,

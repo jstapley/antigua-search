@@ -35,10 +35,10 @@ export async function generateMetadata({ params }) {
     .eq('status', 'active')
 
   const listingCount = count || 0
-  const description = `Browse ${listingCount} verified ${category.name.toLowerCase()} in Antigua & Barbuda. Find contact details, locations, and reviews across all parishes. List your business free on AntiguaSearch.com.`
+  const description = `Browse ${listingCount} verified ${category.name.toLowerCase()} in Antigua & Barbuda. Find contact details, locations, and reviews across all parishes.`
 
   return {
-    title: `${category.name} in Antigua & Barbuda (${listingCount} Listings) - AntiguaSearch.com`,
+    title: `${category.name} in Antigua & Barbuda | AntiguaSearch`,
     description,
     alternates: {
       canonical: `https://www.antiguasearch.com/category/${slug}`,
